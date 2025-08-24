@@ -82,7 +82,7 @@ const Form = ({ initialData, onFormChange, onSubmit, setFormTrigger }) => {
 
     return { subtotal, tax, total };
   }, [
-    watchedValues.invoice?.items,
+    JSON.stringify(watchedValues.invoice?.items || []),
     watchedValues.invoice?.tax_rate
   ]);
 
@@ -128,12 +128,23 @@ const Form = ({ initialData, onFormChange, onSubmit, setFormTrigger }) => {
 
     return () => clearTimeout(timeoutId);
   }, [
-    watchedValues.user,
-    watchedValues.client,
+    watchedValues.user?.name,
+    watchedValues.user?.address,
+    watchedValues.user?.email,
+    watchedValues.user?.phone,
+    watchedValues.user?.bank_name,
+    watchedValues.user?.bank_account_name,
+    watchedValues.user?.bank_account_number,
+    watchedValues.client?.name,
+    watchedValues.client?.address,
+    watchedValues.client?.email,
+    watchedValues.client?.phone,
     watchedValues.invoice?.invoice_number,
     watchedValues.invoice?.issue_date,
     watchedValues.invoice?.due_date,
     watchedValues.invoice?.notes,
+    watchedValues.invoice?.tax_rate,
+    JSON.stringify(watchedValues.invoice?.items || []),
     calculatedValues
   ]);
 

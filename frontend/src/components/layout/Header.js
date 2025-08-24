@@ -23,7 +23,7 @@ export default function Header() {
               <a
                 key={item.name}
                 href={item.href}
-                className={`text-sm/6 font-medium text-gray-900 hover:text-indigo-700 hover:cursor-pointer hover:font-semibold ${pathname.startsWith(item.href) ? "text-indigo-600 font-semibold" : ""}`}
+                className={`text-sm font-medium text-gray-900 hover:text-indigo-600 hover:cursor-pointer ${pathname.startsWith(item.href) ? "text-indigo-600 font-semibold" : ""}`}
               >
                 {item.name}
               </a>
@@ -40,8 +40,8 @@ export default function Header() {
                   aria-haspopup="true"
                   aria-expanded={profileOpen ? "true" : "false"}
                 >
-                  <span className="flex items-center text-sm/6 font-medium text-gray-700 group-hover:text-indigo-600">
-                    <div className="size-10 flex-none rounded-full bg-indigo-100 flex items-center justify-center text-indigo-700 font-semibold text-md uppercase ring-1 ring-gray-900/10">
+                  <span className="flex items-center text-xs font-medium text-gray-700 group-hover:text-indigo-600">
+                    <div className="size-8 flex-none rounded-full bg-indigo-100 flex items-center justify-center text-indigo-700 font-semibold text-md uppercase ring-1 ring-gray-900/10">
                       {user &&
                         user?.name
                           .split(" ")
@@ -61,12 +61,12 @@ export default function Header() {
                   <div className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-xl bg-white py-1 shadow-lg ring-1 ring-gray-900/5 focus:outline-none">
                     <a
                       href="/settings"
-                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      className="block px-4 py-2 text-xs text-gray-700 hover:bg-gray-100"
                     >
                       Settings
                     </a>
                     <a
-                      className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                      className="block px-4 py-2 text-xs text-gray-700 hover:bg-gray-100"
                       onClick={(e) => {
                         e.preventDefault();
                         logout();

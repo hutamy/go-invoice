@@ -7,7 +7,6 @@ import InvoiceList from "@/components/invoice/InvoiceList";
 import { classNames } from "@/lib/helper";
 import { withAuth } from "@/components/withAuth";
 import { Cards } from "@/constants/dashboard";
-import { data } from "autoprefixer";
 
 function Dashboard() {
   const [clients, setClients] = useState({
@@ -28,7 +27,11 @@ function Dashboard() {
       total_pages: 0,
     },
   });
-  const [summary, setSummary] = useState([]);
+  const [summary, setSummary] = useState({
+    paid: 0,
+    unpaid: 0,
+    past_due: 0,
+  });
 
   async function fetchClients() {
     try {
@@ -51,9 +54,18 @@ function Dashboard() {
   async function fetchSummary() {
     try {
       const response = await invoiceSummary();
-      setSummary(response);
+      setSummary(response.data);
     } catch (error) {
       console.error("Failed to fetch invoice summary:", error);
+    }
+  }
+
+  async function onInvoicePageChange(page) {
+    try {
+      const response = await getInvoices({ page, page_size: 5 });
+      setInvoices(response.data);
+    } catch (error) {
+      console.error("Failed to fetch invoices for page:", page, error);
     }
   }
 
@@ -89,7 +101,7 @@ function Dashboard() {
                     {stat.label}
                   </dt>
                   <dd className="w-full flex-none text-3xl/10 font-medium tracking-tight text-gray-900">
-                    {summary.currency} {summary[stat.key]?.toLocaleString()}
+                    IDR {summary[stat.key]?.toLocaleString()}
                   </dd>
                 </div>
               ))}
@@ -116,16 +128,14 @@ function Dashboard() {
               <h2 className="mx-auto max-w-2xl text-base font-semibold text-gray-900 lg:mx-0 lg:max-w-none">
                 Invoice list
               </h2>
-              <a
-                href="/invoices"
-                className="text-sm/6 font-medium text-indigo-500 hover:text-indigo-600 hover:font-semibold"
-              >
-                Manage invoices
-              </a>
             </div>
             <div className="mt-6 overflow-hidden">
               <div className="mx-auto max-w-7xl ">
-                <InvoiceList invoices={invoices} disabled={true} />
+                <InvoiceList
+                  invoices={invoices}
+                  disabled={true}
+                  onPageChange={onInvoicePageChange}
+                />
               </div>
             </div>
           </div>
@@ -135,12 +145,6 @@ function Dashboard() {
                 <h2 className="text-base/7 font-semibold text-gray-900">
                   Client list
                 </h2>
-                <a
-                  href="/clients"
-                  className="text-sm/6 font-medium text-indigo-500 hover:text-indigo-600 hover:font-semibold"
-                >
-                  Manage clients
-                </a>
               </div>
               <ClientList clients={clients} disabled={true} />
             </div>

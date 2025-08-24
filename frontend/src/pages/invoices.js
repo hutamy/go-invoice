@@ -19,7 +19,15 @@ import { getClients } from "@/api/clientApi";
 function Invoices() {
   const [showForm, setShowForm] = useState(false);
   const { user } = useAuth();
-  const [invoicesList, setInvoicesList] = useState([]);
+  const [invoicesList, setInvoicesList] = useState({
+    data: [],
+    pagination: {
+      page: 1,
+      page_size: 10,
+      total_items: 0,
+      total_pages: 0,
+    },
+  });
   const [message, setMessage] = useState("");
   const [isError, setIsError] = useState(false);
   const [clientsList, setClientsList] = useState([]);
@@ -379,7 +387,7 @@ function Invoices() {
                   <button
                     type="button"
                     className={
-                      "rounded-md px-3 py-2 text-center text-sm font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 hover:cursor-pointer focus-visible:outline-blue-600 bg-blue-600 hover:bg-blue-500"
+                      "rounded-md px-3 py-2 text-center text-sm font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 hover:cursor-pointer focus-visible:outline-indigo-600 bg-indigo-600 hover:bg-indigo-500"
                     }
                     onClick={() => setShowForm(true)}
                   >

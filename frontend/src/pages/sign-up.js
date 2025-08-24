@@ -81,7 +81,7 @@ export default function SignUp() {
         <div className="flex items-center h-full justify-start space-x-4">
           <a
             href="/"
-            className="text-sm/6 font-semibold text-gray-900 hover:text-blue-700"
+            className="text-sm/6 font-semibold text-gray-900 hover:text-indigo-700"
           >
             <span aria-hidden="true" className="mr-2">
               &larr;
@@ -107,7 +107,7 @@ export default function SignUp() {
             Already have an account?{" "}
             <a
               href="/sign-in"
-              className="font-semibold text-blue-600 hover:text-blue-500"
+              className="font-semibold text-indigo-600 hover:text-indigo-500"
             >
               Sign in
             </a>

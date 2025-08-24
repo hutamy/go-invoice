@@ -18,14 +18,14 @@ export async function createInvoice(data) {
   return response.json();
 }
 
-export async function getInvoices() {
+export async function getInvoices({ page = 1, page_size = 10 } = {}) {
   const token = AuthService.getAccessToken();
   const headers = { "Content-Type": "application/json" };
   if (token) {
     headers["Authorization"] = `Bearer ${token}`;
   }
 
-  const response = await fetch(`${API_URL}/v1/protected/invoices`, {
+  const response = await fetch(`${API_URL}/v1/protected/invoices?page=${page}&page_size=${page_size}`, {
     method: "GET",
     headers,
   });

@@ -8,7 +8,7 @@ const Preview = ({
   loading,
   setLoading,
   downloadPDF,
-}) => {
+}) => {  
   return (
     <div className="w-full md:w-1/2 overflow-hidden">
       <div
@@ -304,31 +304,31 @@ const Preview = ({
 export default Preview;
 Preview.defaultProps = {
   invoice: {
-    InvoiceNumber: "",
-    IssueDate: new Date().toISOString(),
-    DueDate: new Date().toISOString(),
-    Items: [],
-    Currency: "$",
-    Subtotal: 0,
-    TaxRate: 0,
-    Tax: 0,
-    Total: 0,
-    Notes: "",
+    invoice_number: "",
+    issue_date: new Date().toISOString(),
+    due_date: new Date().toISOString(),
+    items: [],
+    currency: "$",
+    subtotal: 0,
+    tax_rate: 0,
+    tax: 0,
+    total: 0,
+    notes: "",
   },
   user: {
-    Name: "",
-    Address: "",
-    Email: "",
-    Phone: "",
-    BankName: "",
-    BankAccountName: "",
-    BankAccountNumber: "",
+    name: "",
+    address: "",
+    email: "",
+    phone: "",
+    bank_name: "",
+    bank_account_name: "",
+    bank_account_number: "",
   },
   client: {
-    Name: "",
-    Address: "",
-    Email: "",
-    Phone: "",
+    name: "",
+    address: "",
+    email: "",
+    phone: "",
   },
   handleInputChange: () => {},
   handleItemChange: () => {},

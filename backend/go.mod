@@ -1,8 +1,6 @@
 module github.com/hutamy/invoice-generator-backend
 
-go 1.23.0
-
-toolchain go1.23.9
+go 1.23.9
 
 require (
 	github.com/caarlos0/env v3.5.0+incompatible
