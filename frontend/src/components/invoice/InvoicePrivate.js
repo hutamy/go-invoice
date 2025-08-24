@@ -2,7 +2,7 @@ import React from "react";
 import InvoicePreview from "./InvoicePreview";
 import InvoiceFormPrivate from "./InvoiceFormPrivate";
 
-export default function InvoiceGeneratorPrivate({
+export default function InvoicePrivate({
   clients,
   setShowForm,
   clearForm,

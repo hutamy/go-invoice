@@ -2,7 +2,7 @@ import { Header, Toast } from "@/components/ui";
 import { PlusIcon } from "@heroicons/react/20/solid";
 import InvoiceList from "@/components/invoice/InvoiceList";
 import { useState, useEffect } from "react";
-import InvoiceGeneratorPrivate from "@/components/invoice/InvoiceGeneratorPrivate";
+import InvoicePrivate from "@/components/invoice/InvoicePrivate";
 import { withAuth } from "@/components/withAuth";
 import { useAuth } from "@/contexts/AuthContext";
 import {
@@ -29,7 +29,15 @@ function Invoices() {
   });
   const [message, setMessage] = useState("");
   const [isError, setIsError] = useState(false);
-  const [clientsList, setClientsList] = useState([]);
+  const [clients, setClients] = useState({
+    data: [],
+    pagination: {
+      page: 1,
+      page_size: 10,
+      total_items: 0,
+      total_pages: 0,
+    },
+  });
   const [invoiceData, setInvoiceData] = useState({
     invoice: {
       id: 0,
@@ -83,18 +91,8 @@ function Invoices() {
 
   async function fetchClients() {
     try {
-      const response = await getClients();
-      setClientsList(response.data);
-    } catch (error) {
-      setMessage("Failed to fetch clients");
-      setIsError(true);
-    }
-  }
-
-  async function fetchClients() {
-    try {
-      const response = await getClients();
-      setClientsList(response.data);
+      const response = await getClients({ page_size: 10, page: 1});
+      setClients(response.data);
     } catch (error) {
       setMessage("Failed to fetch clients");
       setIsError(true);
@@ -262,7 +260,6 @@ function Invoices() {
     } catch (error) {
       setMessage("Failed to create invoice");
       setIsError(true);
-      console.error("Error creating invoice:", error);
     }
   }
 
@@ -275,7 +272,6 @@ function Invoices() {
     } catch (error) {
       setMessage("Failed to delete invoice");
       setIsError(true);
-      console.error("Error deleting invoice:", error);
     }
   }
 
@@ -298,7 +294,6 @@ function Invoices() {
     } catch (error) {
       setMessage("Failed to download invoice");
       setIsError(true);
-      console.error("Error downloading invoice:", error);
     }
   }
 
@@ -311,7 +306,6 @@ function Invoices() {
     } catch (error) {
       setMessage("Failed to update invoice status");
       setIsError(true);
-      console.error("Error updating invoice status:", error);
     }
   }
 
@@ -334,7 +328,6 @@ function Invoices() {
     } catch (error) {
       setMessage("Failed to update invoice");
       setIsError(true);
-      console.error("Error updating invoice:", error);
     }
   }
 
@@ -405,8 +398,8 @@ function Invoices() {
           <div className="mt-8 flow-root">
             <div className="-mx-4 -my-2 overflow-x-auto sm:-mx-6 lg:-mx-8">
               {showForm ? (
-                <InvoiceGeneratorPrivate
-                  clients={clientsList}
+                <InvoicePrivate
+                  clients={clients.data}
                   setShowForm={setShowForm}
                   clearForm={clearForm}
                   invoiceData={invoiceData}
