@@ -7,6 +7,7 @@ import InvoiceList from "@/components/invoice/InvoiceList";
 import { classNames } from "@/lib/helper";
 import { withAuth } from "@/components/withAuth";
 import { Cards } from "@/constants/dashboard";
+import Toast from "@/components/ui/Toast";
 
 function Dashboard() {
   const [clients, setClients] = useState({
@@ -32,13 +33,17 @@ function Dashboard() {
     unpaid: 0,
     past_due: 0,
   });
+  const [error, setError] = useState("");
+  const [isInitialLoading, setIsInitialLoading] = useState(true);
+  const [isLoadingInvoices, setIsLoadingInvoices] = useState(false);
+  const [isLoadingClients, setIsLoadingClients] = useState(false);
 
   async function fetchClients() {
     try {
       const response = await getClients();
       setClients(response.data);
     } catch (error) {
-      console.error("Failed to fetch clients:", error);
+      setError("Failed to load clients. Please try again.");
     }
   }
 
@@ -47,7 +52,7 @@ function Dashboard() {
       const response = await getInvoices();
       setInvoices(response.data);
     } catch (error) {
-      console.error("Failed to fetch invoices:", error);
+      setError("Failed to load invoices. Please try again.");
     }
   }
 
@@ -56,27 +61,56 @@ function Dashboard() {
       const response = await invoiceSummary();
       setSummary(response.data);
     } catch (error) {
-      console.error("Failed to fetch invoice summary:", error);
+      setError("Failed to load dashboard summary. Please try again.");
     }
   }
 
   async function onInvoicePageChange(page) {
     try {
-      const response = await getInvoices({ page, page_size: 5 });
+      setIsLoadingInvoices(true);
+      const response = await getInvoices({ page, page_size: 6 });
       setInvoices(response.data);
     } catch (error) {
-      console.error("Failed to fetch invoices for page:", page, error);
+      setError("Failed to load invoices. Please try again.");
+    } finally {
+      setIsLoadingInvoices(false);
     }
   }
 
   useEffect(() => {
-    fetchClients();
-    fetchInvoices();
-    fetchSummary();
+    async function loadDashboardData() {
+      setIsInitialLoading(true);
+      try {
+        await Promise.all([fetchClients(), fetchInvoices(), fetchSummary()]);
+      } finally {
+        setIsInitialLoading(false);
+      }
+    }
+    loadDashboardData();
   }, []);
+
+  async function onClientPageChange(page) {
+    try {
+      setIsLoadingClients(true);
+      const response = await getClients({ page, page_size: 5 });
+      setClients(response.data);
+    } catch (error) {
+      setError("Failed to load clients. Please try again.");
+    } finally {
+      setIsLoadingClients(false);
+    }
+  }
 
   return (
     <div>
+      {error && (
+        <Toast
+          title="Error"
+          message={error}
+          isError={true}
+          setMessage={setError}
+        />
+      )}
       <div className="bg-white h-20 border-b border-gray-900/10 px-6 lg:px-8 flex-shrink-0">
         <Header />
       </div>
@@ -131,11 +165,17 @@ function Dashboard() {
             </div>
             <div className="mt-6 overflow-hidden">
               <div className="mx-auto max-w-7xl ">
-                <InvoiceList
-                  invoices={invoices}
-                  disabled={true}
-                  onPageChange={onInvoicePageChange}
-                />
+                {isInitialLoading || isLoadingInvoices ? (
+                  <div className="flex justify-center items-center py-8">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+                  </div>
+                ) : (
+                  <InvoiceList
+                    invoices={invoices}
+                    disabled={true}
+                    onPageChange={onInvoicePageChange}
+                  />
+                )}
               </div>
             </div>
           </div>
@@ -146,7 +186,17 @@ function Dashboard() {
                   Client list
                 </h2>
               </div>
-              <ClientList clients={clients} disabled={true} />
+              {isInitialLoading || isLoadingClients ? (
+                <div className="flex justify-center items-center py-8">
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+                </div>
+              ) : (
+                <ClientList
+                  clients={clients}
+                  disabled={true}
+                  onPageChange={onClientPageChange}
+                />
+              )}
             </div>
           </div>
         </div>

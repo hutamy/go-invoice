@@ -8,6 +8,7 @@ import {
 } from "@heroicons/react/20/solid";
 import { PencilIcon } from "@heroicons/react/24/outline";
 import { useState } from "react";
+import { useRouter } from "next/router";
 
 const statusMapper = {
   paid: "bg-green-50 ring-green-700/10 text-green-700",
@@ -36,6 +37,7 @@ export default function InvoiceList({
   onPageChange,
 }) {
   const [openActionsId, setOpenActionsId] = useState(null);
+  const router = useRouter();
 
   return (
     <div className="inline-block min-w-full py-2 align-middle sm:px-6 lg:px-8">
@@ -99,7 +101,7 @@ export default function InvoiceList({
             {invoices.data?.length === 0 ? (
               <tr>
                 <td colSpan={disabled ? 7 : 8} className="py-16">
-                  <div className="flex flex-col items-center justify-center">
+                  <div className="flex flex-col items-center justify-center cursor-pointer" onClick={() => router.push("/invoices")}>
                     <div className="mb-4">
                       <svg
                         width="48"
@@ -129,7 +131,7 @@ export default function InvoiceList({
                         No invoices found
                       </div>
                       <div className="text-gray-500 text-sm">
-                        You can add a new invoice by clicking the button above.
+                        You can add a new invoice on the invoices page.
                       </div>
                     </div>
                   </div>

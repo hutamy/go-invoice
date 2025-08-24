@@ -1,4 +1,3 @@
-import Header from "@/components/layout/Header";
 import { PlusIcon } from "@heroicons/react/20/solid";
 import { useState } from "react";
 import Form from "@/components/clients/ClientForm";
@@ -12,6 +11,7 @@ import {
   updateClient,
   deleteClient,
 } from "@/api/clientApi";
+import { Header } from "@/components/layout";
 
 function Clients() {
   const [showForm, setShowForm] = useState(false);
@@ -22,59 +22,39 @@ function Clients() {
     phone: "",
     address: "",
   });
-  const [errors, setErrors] = useState({});
   const [message, setMessage] = useState("");
   const [isError, setIsError] = useState(false);
 
-  const handleInputChange = (e) => {
-    setClient({ ...client, [e.target.name]: e.target.value });
-  };
-
-  const validate = () => {
-    let errs = {};
-    if (!client.name) errs.name = "Name is required";
-    if (!client.email) errs.email = "Email is required";
-    if (!client.phone) errs.phone = "Phone number is required";
-    if (!client.address) errs.address = "Address is required";
-    setErrors(errs);
-    return Object.keys(errs).length === 0;
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (validate()) {
-      try {
-        await createClient(client);
-        setClientsList((prev) => [...prev, client]);
-        clearForm();
-        setIsError(false);
-        setMessage("Client created successfully!");
-        setShowForm(false);
-      } catch (err) {
-        setIsError(true);
-        setMessage("Failed to create client. Please try again.");
-        console.error(err);
-      }
+  const handleCreateClient = async (formData) => {
+    try {
+      await createClient(formData);
+      setClientsList((prev) => [...prev, formData]);
+      clearForm();
+      setIsError(false);
+      setMessage("Client created successfully!");
+      setShowForm(false);
+    } catch (err) {
+      setIsError(true);
+      setMessage("Failed to create client. Please try again.");
+      ``;
     }
   };
 
-  const handleUpdate = async (e) => {
-    e.preventDefault();
-    if (validate()) {
-      try {
-        await updateClient(client.id, client);
-        setClientsList((prev) =>
-          prev.map((c) => (c.id === client.id ? client : c))
-        );
-        setMessage("Client updated successfully!");
-        clearForm();
-        setIsError(false);
-        setShowForm(false);
-      } catch (err) {
-        setIsError(true);
-        setMessage("Failed to update client. Please try again.");
-        console.error(err);
-      }
+  const handleUpdateClient = async (formData) => {
+    try {
+      const updatedClient = { ...formData, id: client.id };
+      await updateClient(client.id, formData);
+      setClientsList((prev) => ({
+        ...prev,
+        data: prev.data.map((c) => (c.id === client.id ? updatedClient : c)),
+      }));
+      setMessage("Client updated successfully!");
+      clearForm();
+      setIsError(false);
+      setShowForm(false);
+    } catch (err) {
+      setIsError(true);
+      setMessage("Failed to update client. Please try again.");
     }
   };
 
@@ -85,10 +65,19 @@ function Clients() {
       phone: "",
       address: "",
     });
-    setErrors({});
+    setIsEdit(false);
   };
 
-  const [clientsList, setClientsList] = useState([]);
+  const [clientsList, setClientsList] = useState({
+    data: [],
+    pagination: {
+      page: 1,
+      page_size: 9,
+      total_items: 0,
+      total_pages: 0,
+    },
+  });
+
   async function fetchClients() {
     try {
       const data = await getClients();
@@ -108,13 +97,22 @@ function Clients() {
     } catch (err) {
       setIsError(true);
       setMessage("Failed to delete client. Please try again.");
-      console.error(err);
     }
   };
 
   useEffect(() => {
     fetchClients();
   }, []);
+
+  const handlePageChange = async (page) => {
+    try {
+      const data = await getClients({ page, page_size: 9 });
+      setClientsList(data);
+    } catch (err) {
+      setIsError(true);
+      setMessage("Failed to fetch clients. Please try again.");
+    }
+  };
 
   return (
     <>
@@ -165,7 +163,7 @@ function Clients() {
                   <button
                     type="button"
                     className={
-                      "rounded-md px-3 py-2 text-center text-sm font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 hover:cursor-pointer focus-visible:outline-blue-600 bg-blue-600 hover:bg-blue-500"
+                      "rounded-md px-3 py-2 text-center text-sm font-semibold text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 hover:cursor-pointer focus-visible:outline-indigo-600 bg-indigo-600 hover:bg-indigo-500"
                     }
                     onClick={() => setShowForm(true)}
                   >
@@ -185,11 +183,10 @@ function Clients() {
           {showForm ? (
             <Form
               client={client}
-              handleInputChange={handleInputChange}
-              handleSubmit={isEdit ? handleUpdate : handleSubmit}
+              onSubmit={isEdit ? handleUpdateClient : handleCreateClient}
               clearForm={clearForm}
-              errors={errors}
               setShowForm={setShowForm}
+              isEdit={isEdit}
             />
           ) : (
             <List
@@ -198,6 +195,7 @@ function Clients() {
               setShowForm={setShowForm}
               setIsEdit={setIsEdit}
               handleDelete={handleDelete}
+              onPageChange={handlePageChange}
             />
           )}
         </div>
