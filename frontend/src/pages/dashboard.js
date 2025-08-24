@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import Header from "@/components/layout/Header";
 import { List as ClientList } from "@/components/clients";
 import { getClients } from "@/api/clientApi";
 import { getInvoices, invoiceSummary } from "@/api/invoiceApi";
@@ -7,7 +6,7 @@ import InvoiceList from "@/components/invoice/InvoiceList";
 import { classNames } from "@/lib/helper";
 import { withAuth } from "@/components/withAuth";
 import { Cards } from "@/constants/dashboard";
-import Toast from "@/components/ui/Toast";
+import { Toast, Header } from "@/components/ui";
 
 function Dashboard() {
   const [clients, setClients] = useState({

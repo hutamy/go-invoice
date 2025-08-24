@@ -3,14 +3,13 @@ import { useState } from "react";
 import { Form, List } from "@/components/clients";
 import { withAuth } from "@/components/withAuth";
 import { useEffect } from "react";
-import Toast from "@/components/ui/Toast";
 import {
   createClient,
   getClients,
   updateClient,
   deleteClient,
 } from "@/api/clientApi";
-import { Header } from "@/components/layout";
+import { Header, Toast } from "@/components/ui";
 
 function Clients() {
   const [showForm, setShowForm] = useState(false);

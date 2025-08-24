@@ -23,7 +23,7 @@ export default function Header() {
               <a
                 key={item.name}
                 href={item.href}
-                className={`text-sm font-medium text-gray-900 hover:text-indigo-600 hover:cursor-pointer ${pathname.startsWith(item.href) ? "text-indigo-600 font-semibold" : ""}`}
+                className={`text-sm font-medium text-gray-900 hover:text-indigo-600 hover:font-semibold hover:cursor-pointer ${pathname.startsWith(item.href) ? "text-indigo-500 font-semibold" : ""}`}
               >
                 {item.name}
               </a>

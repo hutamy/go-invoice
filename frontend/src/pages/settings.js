@@ -1,4 +1,3 @@
-import Header from "@/components/layout/Header";
 import { classNames } from "@/lib/helper";
 import { useAuth } from "@/contexts/AuthContext";
 import { withAuth } from "@/components/withAuth";
@@ -6,7 +5,7 @@ import { useState, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { Navigation } from "@/constants/settings";
-import { Text, Email, Toast, Button } from "@/components/ui";
+import { Text, Email, Toast, Button, Header } from "@/components/ui";
 import { UserSettingsSchema } from "@/schema/Settings";
 
 function Settings() {

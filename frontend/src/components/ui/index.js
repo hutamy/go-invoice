@@ -10,5 +10,6 @@ import Pill from "./Pill";
 import TextArea from "./TextArea";
 import Toast from "./Toast";
 import Button from "./Buttton"
+import Header from "./Header";
 
-export { Date, Email, Input, Text, Number, Pagination, Password, Select, Pill, TextArea, Toast, Button };
+export { Date, Email, Input, Text, Number, Pagination, Password, Select, Pill, TextArea, Toast, Button, Header };

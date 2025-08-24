@@ -1,11 +1,10 @@
-import Header from "@/components/layout/Header";
+import { Header, Toast } from "@/components/ui";
 import { PlusIcon } from "@heroicons/react/20/solid";
 import InvoiceList from "@/components/invoice/InvoiceList";
 import { useState, useEffect } from "react";
 import InvoiceGeneratorPrivate from "@/components/invoice/InvoiceGeneratorPrivate";
 import { withAuth } from "@/components/withAuth";
 import { useAuth } from "@/contexts/AuthContext";
-import Toast from "@/components/ui/Toast";
 import {
   getInvoices,
   createInvoice,
