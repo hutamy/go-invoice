@@ -1,14 +1,9 @@
 import { useForm, useFieldArray } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import Date from "../ui/Date";
-import Email from "../ui/Email";
-import Input from "../ui/Input";
-import Text from "../ui/Text";
-import TextArea from "../ui/TextArea";
 import InvoiceFormContainer from "./InvoiceFormContainer";
-import Number from "../ui/Number";
 import { useEffect, useRef, useMemo } from "react";
 import { PublicInvoiceSchema } from "@/schema/Home";
+import { Date, Email, Input, Text, TextArea, Number } from "@/components/ui"
 
 const Form = ({ initialData, onFormChange, onSubmit, setFormTrigger }) => {
   const {

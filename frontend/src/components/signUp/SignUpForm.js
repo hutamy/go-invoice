@@ -1,7 +1,4 @@
-import Text from "@/components/ui/Text";
-import Email from "@/components/ui/Email";
-import Password from "@/components/ui/Password";
-import { Button } from "../buttons";
+import { Text, Email, Password, Button } from "@/components/ui"
 
 export default function Form({
   step,

@@ -1,5 +1,5 @@
 import { useAuth } from "@/contexts/AuthContext";
-import { Button } from "../buttons";
+import { Button } from "@/components/ui";
 import { useRouter } from "next/router";
 
 export default function HomeHero() {

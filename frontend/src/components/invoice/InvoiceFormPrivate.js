@@ -1,11 +1,5 @@
-import Date from "../ui/Date";
-import Email from "../ui/Email";
-import Input from "../ui/Input";
-import Select from "../ui/Select";
-import Text from "../ui/Text";
-import TextArea from "../ui/TextArea";
 import InvoiceFormContainer from "./InvoiceFormContainer";
-import Number from "../ui/Number";
+import { Date, Email, Input, Select, Text, TextArea, Number } from "@/components/ui"
 
 const Form = ({
   invoiceData,

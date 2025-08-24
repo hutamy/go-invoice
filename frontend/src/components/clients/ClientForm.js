@@ -1,9 +1,8 @@
 import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
-import Text from "@/components/ui/Text";
-import Email from "@/components/ui/Email";
 import { ClientSchema } from "@/schema/Client";
+import { Text, Email, Button } from "@/components/ui";
 
 export default function Form({
   client,
@@ -16,7 +15,7 @@ export default function Form({
     register,
     handleSubmit,
     reset,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm({
     resolver: yupResolver(ClientSchema),
     defaultValues: {
@@ -104,12 +103,31 @@ export default function Form({
         >
           Cancel
         </button>
-        <button
-          type="submit"
-          className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600 hover:cursor-pointer"
-        >
-          {isEdit ? "Update" : "Save"}
-        </button>
+        <Button type="submit" disabled={isSubmitting}>
+          {isSubmitting ? (
+            <span className="space-x-2">
+              Saving...
+              <span className="inline-block mx-2 align-middle">
+                <span
+                  style={{
+                    display: "inline-block",
+                    width: "20px",
+                    height: "20px",
+                    border: "3px solid #ccc",
+                    borderTop: "3px solid #333",
+                    borderRadius: "50%",
+                    animation: "spin 0.8s linear infinite",
+                  }}
+                />
+                <style>
+                  {`@keyframes spin { 100% { transform: rotate(360deg); } }`}
+                </style>
+              </span>
+            </span>
+          ) : (
+            <span>Save</span>
+          )}
+        </Button>
       </div>
     </form>
   );

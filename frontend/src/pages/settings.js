@@ -2,48 +2,54 @@ import Header from "@/components/layout/Header";
 import { classNames } from "@/lib/helper";
 import { useAuth } from "@/contexts/AuthContext";
 import { withAuth } from "@/components/withAuth";
-import Text from "@/components/ui/Text";
-import Email from "@/components/ui/Email";
-import { useState } from "react";
-import Toast from "@/components/ui/Toast";
+import { useState, useEffect } from "react";
+import { useForm } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
 import { Navigation } from "@/constants/settings";
+import { Text, Email, Toast, Button } from "@/components/ui";
+import { UserSettingsSchema } from "@/schema/Settings";
 
 function Settings() {
   const { user, updateUser } = useAuth();
-  const [currrentUser, setCurrentUser] = useState({
-    name: user?.name || "",
-    email: user?.email || "",
-    phone: user?.phone || "",
-    address: user?.address || "",
-    bank_name: user?.bank_name || "",
-    bank_account_name: user?.bank_account_name || "",
-    bank_account_number: user?.bank_account_number || "",
-  });
-  const [error, setError] = useState({});
   const [message, setMessage] = useState("");
   const [isError, setIsError] = useState(false);
 
-  const validate = () => {
-    let errs = {};
-    if (!currrentUser.name) errs.name = "Name is required";
-    if (!currrentUser.email) errs.email = "Email is required";
-    if (!currrentUser.phone) errs.phone = "Phone number is required";
-    if (!currrentUser.address) errs.address = "Address is required";
-    if (!currrentUser.bank_name) errs.bank_name = "Bank name is required";
-    if (!currrentUser.bank_account_name)
-      errs.bank_account_name = "Bank account name is required";
-    if (!currrentUser.bank_account_number)
-      errs.bank_account_number = "Bank account number is required";
-    setError(errs);
-    return Object.keys(errs).length === 0;
-  };
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors, isSubmitting },
+  } = useForm({
+    resolver: yupResolver(UserSettingsSchema),
+    defaultValues: {
+      name: "",
+      email: "",
+      phone: "",
+      address: "",
+      bank_name: "",
+      bank_account_name: "",
+      bank_account_number: "",
+    },
+  });
 
-  async function handleSubmit(e) {
-    e.preventDefault();
-    setError({});
-    if (!validate()) return;
+  // Reset form when user data changes
+  useEffect(() => {
+    if (user) {
+      reset({
+        name: user.name || "",
+        email: user.email || "",
+        phone: user.phone || "",
+        address: user.address || "",
+        bank_name: user.bank_name || "",
+        bank_account_name: user.bank_account_name || "",
+        bank_account_number: user.bank_account_number || "",
+      });
+    }
+  }, [user, reset]);
+
+  const onSubmit = async (formData) => {
     try {
-      await updateUser(currrentUser);
+      await updateUser(formData);
       setIsError(false);
       setMessage("Settings updated successfully!");
     } catch (err) {
@@ -51,7 +57,7 @@ function Settings() {
       setIsError(true);
       setMessage("Failed to update settings. Please try again.");
     }
-  }
+  };
 
   return (
     <>
@@ -81,8 +87,8 @@ function Settings() {
                       href={item.href}
                       className={classNames(
                         item.current
-                          ? "bg-gray-50 text-blue-600"
-                          : "text-gray-600 hover:bg-gray-50 hover:text-blue-500",
+                          ? "bg-gray-50 text-indigo-600"
+                          : "text-gray-600 hover:bg-gray-50 hover:text-indigo-500",
                         "group flex gap-x-3 rounded-md py-2 pl-2 pr-3 text-sm/6 font-medium"
                       )}
                     >
@@ -90,8 +96,8 @@ function Settings() {
                         aria-hidden="true"
                         className={classNames(
                           item.current
-                            ? "text-blue-600"
-                            : "text-gray-400 group-hover:text-blue-600",
+                            ? "text-indigo-600"
+                            : "text-gray-400 group-hover:text-indigo-600",
                           "size-6 shrink-0"
                         )}
                       />
@@ -105,7 +111,7 @@ function Settings() {
 
           <form
             className="mx-auto my-8 lg:my-20 w-full"
-            onSubmit={handleSubmit}
+            onSubmit={handleSubmit(onSubmit)}
           >
             <div className="space-y-12">
               <div className="border-b border-gray-900/10 pb-12">
@@ -120,63 +126,31 @@ function Settings() {
                   <Text
                     componentclassname="sm:col-span-4"
                     label="Name"
-                    value={currrentUser.name}
-                    onChange={(e) =>
-                      setCurrentUser({
-                        ...currrentUser,
-                        name: e.target.value,
-                      })
-                    }
-                    id="name"
-                    name="name"
-                    errormessage={error.name}
-                    error={!!error.name}
+                    {...register("name")}
+                    errormessage={errors.name?.message}
+                    error={!!errors.name}
                   />
                   <Email
                     componentclassname="sm:col-span-4"
                     label="Email address"
-                    value={currrentUser.email}
-                    onChange={(e) =>
-                      setCurrentUser({
-                        ...currrentUser,
-                        email: e.target.value,
-                      })
-                    }
-                    id="email"
-                    name="email"
-                    errormessage={error.email}
-                    error={!!error.email}
+                    {...register("email")}
+                    errormessage={errors.email?.message}
+                    error={!!errors.email}
                   />
                   <Text
                     componentclassname="sm:col-span-4"
                     label="Phone"
-                    value={currrentUser.phone}
-                    onChange={(e) =>
-                      setCurrentUser({
-                        ...currrentUser,
-                        phone: e.target.value,
-                      })
-                    }
-                    id="phone"
-                    name="phone"
-                    errormessage={error.phone}
-                    error={!!error.phone}
+                    {...register("phone")}
+                    errormessage={errors.phone?.message}
+                    error={!!errors.phone}
                   />
 
                   <Text
                     componentclassname="sm:col-span-4"
                     label="Address"
-                    value={currrentUser.address}
-                    onChange={(e) =>
-                      setCurrentUser({
-                        ...currrentUser,
-                        address: e.target.value,
-                      })
-                    }
-                    id="address"
-                    name="address"
-                    errormessage={error.address}
-                    error={!!error.address}
+                    {...register("address")}
+                    errormessage={errors.address?.message}
+                    error={!!errors.address}
                   />
                 </div>
               </div>
@@ -195,58 +169,53 @@ function Settings() {
                   <Text
                     componentclassname="sm:col-span-4"
                     label="Bank Name"
-                    value={currrentUser.bank_name}
-                    onChange={(e) =>
-                      setCurrentUser({
-                        ...currrentUser,
-                        bank_name: e.target.value,
-                      })
-                    }
-                    id="bank_name"
-                    name="bank_name"
-                    errormessage={error.bank_name}
-                    error={!!error.bank_name}
+                    {...register("bank_name")}
+                    errormessage={errors.bank_name?.message}
+                    error={!!errors.bank_name}
                   />
                   <Text
                     componentclassname="sm:col-span-4"
                     label="Bank Account Name"
-                    value={currrentUser.bank_account_name}
-                    onChange={(e) =>
-                      setCurrentUser({
-                        ...currrentUser,
-                        bank_account_name: e.target.value,
-                      })
-                    }
-                    id="bank_account_name"
-                    name="bank_account_name"
-                    errormessage={error.bank_account_name}
-                    error={!!error.bank_account_name}
+                    {...register("bank_account_name")}
+                    errormessage={errors.bank_account_name?.message}
+                    error={!!errors.bank_account_name}
                   />
                   <Text
                     componentclassname="sm:col-span-4"
                     label="Bank Account Number"
-                    value={currrentUser.bank_account_number}
-                    onChange={(e) =>
-                      setCurrentUser({
-                        ...currrentUser,
-                        bank_account_number: e.target.value,
-                      })
-                    }
-                    id="bank_account_number"
-                    name="bank_account_number"
-                    errormessage={error.bank_account_number}
-                    error={!!error.bank_account_number}
+                    {...register("bank_account_number")}
+                    errormessage={errors.bank_account_number?.message}
+                    error={!!errors.bank_account_number}
                   />
                 </div>
               </div>
             </div>
             <div className="mt-6 flex items-center justify-end gap-x-6">
-              <button
-                type="submit"
-                className="rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
-              >
-                Save
-              </button>
+              <Button type="submit" disabled={isSubmitting}>
+                {isSubmitting ? (
+                  <span className="space-x-2">
+                    Saving...
+                    <span className="inline-block mx-2 align-middle">
+                      <span
+                        style={{
+                          display: "inline-block",
+                          width: "20px",
+                          height: "20px",
+                          border: "3px solid #ccc",
+                          borderTop: "3px solid #333",
+                          borderRadius: "50%",
+                          animation: "spin 0.8s linear infinite",
+                        }}
+                      />
+                      <style>
+                        {`@keyframes spin { 100% { transform: rotate(360deg); } }`}
+                      </style>
+                    </span>
+                  </span>
+                ) : (
+                  <span>Save</span>
+                )}
+              </Button>
             </div>
           </form>
         </div>

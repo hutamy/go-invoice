@@ -1,7 +1,6 @@
 import { PlusIcon } from "@heroicons/react/20/solid";
 import { useState } from "react";
-import Form from "@/components/clients/ClientForm";
-import List from "@/components/clients/ClientList";
+import { Form, List } from "@/components/clients";
 import { withAuth } from "@/components/withAuth";
 import { useEffect } from "react";
 import Toast from "@/components/ui/Toast";

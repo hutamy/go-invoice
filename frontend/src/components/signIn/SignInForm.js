@@ -1,12 +1,10 @@
-import Email from "@/components/ui/Email";
-import Password from "@/components/ui/Password";
-import { Button } from "../buttons";
 import { SignInSchema } from "@/schema/SignIn";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useAuth } from "@/contexts/AuthContext";
 import { useRouter } from "next/router";
 import { useState } from "react";
+import { Button, Email, Password } from "@/components/ui";
 
 export default function SignInForm({ setError }) {
   const { signIn } = useAuth();
@@ -31,9 +29,8 @@ export default function SignInForm({ setError }) {
       await signIn(data.email, data.password);
       router.push("/dashboard");
     } catch (error) {
-      setError(error.message || "Sign in failed");
-    } finally {
       setIsLoading(false);
+      setError(error.message || "Sign in failed");
     }
   };
 

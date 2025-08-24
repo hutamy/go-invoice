@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import Header from "@/components/layout/Header";
-import ClientList from "@/components/clients/ClientList";
+import { List as ClientList } from "@/components/clients";
 import { getClients } from "@/api/clientApi";
 import { getInvoices, invoiceSummary } from "@/api/invoiceApi";
 import InvoiceList from "@/components/invoice/InvoiceList";
