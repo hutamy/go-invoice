@@ -15,7 +15,7 @@ An open-source, full-stack web application for freelancers and small businesses 
 
 ## Tech Stack
 
-- **Frontend:** Next.js, React, Tailwind CSS
+- **Frontend:** Vite, React, Tailwind CSS
 - **Backend:** Go, Echo, PostgreSQL, GORM
 - **PDF Generation:** HTML templates + headless Chrome
 - **API Docs:** Swagger/OpenAPI
@@ -26,7 +26,7 @@ An open-source, full-stack web application for freelancers and small businesses 
 ```
 invoice-generator/
 ├── backend/   # Go API server
-└── frontend/  # Next.js web app
+└── frontend/  # Vite web app
 ```
 
 ## Getting Started
@@ -74,7 +74,7 @@ docker compose -f backend/docker-compose-local.yaml up --build
 
 ### Frontend (`frontend/`)
 
-- Next.js app, React components, Tailwind CSS
+- Vite app, React components, Tailwind CSS
 - Auth context, protected routes, API integration
 
 ## Contributing

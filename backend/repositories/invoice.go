@@ -97,7 +97,17 @@ func (r *invoiceRepository) UpdateInvoice(id uint, req *dto.UpdateInvoiceRequest
 
 	// Update simple fields if present
 	if req.ClientID != nil {
-		invoice.ClientID = *req.ClientID
+		invoice.ClientID = req.ClientID
+		invoice.ClientName = nil
+		invoice.ClientAddress = nil
+		invoice.ClientEmail = nil
+		invoice.ClientPhone = nil
+	} else {
+		invoice.ClientID = nil
+		invoice.ClientName = req.ClientName
+		invoice.ClientAddress = req.ClientAddress
+		invoice.ClientEmail = req.ClientEmail
+		invoice.ClientPhone = req.ClientPhone
 	}
 
 	if req.DueDate != nil {
@@ -132,26 +142,6 @@ func (r *invoiceRepository) UpdateInvoice(id uint, req *dto.UpdateInvoiceRequest
 
 	if req.InvoiceNumber != nil {
 		invoice.InvoiceNumber = *req.InvoiceNumber
-	}
-
-	if req.ClientID != nil {
-		invoice.ClientID = *req.ClientID
-	}
-
-	if req.ClientName != nil {
-		invoice.ClientName = *req.ClientName
-	}
-
-	if req.ClientEmail != nil {
-		invoice.ClientEmail = *req.ClientEmail
-	}
-
-	if req.ClientAddress != nil {
-		invoice.ClientAddress = *req.ClientAddress
-	}
-
-	if req.ClientPhone != nil {
-		invoice.ClientPhone = *req.ClientPhone
 	}
 
 	// Map existing items by ID
@@ -250,14 +240,9 @@ func (r *invoiceRepository) InvoiceSummary(userID uint) (summary dto.SummaryInvo
 		Scan(&summary.Paid)
 
 	r.db.Model(&models.Invoice{}).
-		Where("user_id = ? AND status IN ?", userID, []string{"draft", "open"}).
+		Where("user_id = ?", userID).
 		Select("SUM(total) as total").
-		Scan(&summary.Unpaid)
-
-	r.db.Model(&models.Invoice{}).
-		Where("user_id = ? AND status = ?", userID, "past_due").
-		Select("SUM(total) as total").
-		Scan(&summary.PastDue)
+		Scan(&summary.TotalRevenue)
 
 	return summary, nil
 }

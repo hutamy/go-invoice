@@ -85,7 +85,7 @@ curl --location 'http://localhost:8080/v1/public/auth/sign-up' \
     "name": "Jane Doe",
     "email": "jane@example.com",
     "password": "yourpassword",
-    "adderss": "some street",
+    "address": "some street",
     "phone_number": "1234567890",
     "bank_name": "bank name",
     "bank_account_name": "Jane Doe",
@@ -178,8 +178,13 @@ curl --location 'http://localhost:8080/v1/protected/invoices' \
 --header 'Authorization: Bearer <token>' \
 --data '{
     "client_id": 1,
+    "client_name": "Client",
+    "client_email": "client@mail.com",
+    "client_phone": "+1234567890",
+    "client_address": "some street",
     "invoice_number": "INV 30/VI/2025",
     "due_date": "2025-06-30",
+    "issue_date": "2025-05-30",
     "notes": "Make payment befor 30 days",
     "tax_rate": 10,
     "items": [
@@ -261,14 +266,14 @@ curl --location --request POST 'http://localhost:8080/v1/protected/invoices/1/pd
 curl --location 'http://localhost:8080/v1/public/invoices/generate-pdf' \
 --header 'Content-Type: application/json' \
 --data-raw '{
-    "invoice_number": "INV 30/VI/2025",
+    "invoice_number": "INV 30/VI/2025",s
     "due_date": "2025-06-30",
     "notes": "Make payment befor 30 days",
     "issue_date": "2025-06-01",
     "sender": {
         "name": "Jane Doe",
         "email": "jane@example.com",
-        "adderss": "some street",
+        "address": "some street",
         "phone_number": "1234567890",
         "bank_name": "bank name",
         "bank_account_name": "Jane Doe",

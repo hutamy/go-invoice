@@ -12,7 +12,10 @@ type AuthService interface {
 	SignUp(req dto.SignUpRequest) (models.User, error)
 	SignIn(email, password string) (models.User, error)
 	GetUserByID(id uint) (*models.User, error)
-	UpdateUser(req dto.UpdateUserRequest) error
+	ChangePassword(req dto.ChangePasswordRequest) error
+	UpdateUserBanking(req dto.UpdateUserBankingRequest) error
+	UpdateUserProfile(req dto.UpdateUserProfileRequest) error
+	DeactivateUser(id uint) error
 }
 
 type authService struct {
@@ -81,43 +84,36 @@ func (s *authService) GetUserByID(id uint) (*models.User, error) {
 	return s.authRepo.GetUserByID(id)
 }
 
-func (s *authService) UpdateUser(req dto.UpdateUserRequest) error {
-	existingUser, err := s.authRepo.GetUserByID(req.UserID)
+func (s *authService) ChangePassword(req dto.ChangePasswordRequest) error {
+	user, err := s.authRepo.GetUserByID(req.UserID)
 	if err != nil {
 		return err
 	}
 
-	if existingUser == nil {
+	if user == nil {
 		return errors.ErrUserNotFound
 	}
 
-	if req.Name != nil {
-		existingUser.Name = *req.Name
+	if !utils.CheckPasswordHash(req.OldPassword, user.Password) {
+		return errors.ErrInvalidOldPassword
 	}
 
-	if req.Email != nil {
-		existingUser.Email = *req.Email
+	hashedPassword, err := utils.HashPassword(req.NewPassword)
+	if err != nil {
+		return err
 	}
 
-	if req.Address != nil {
-		existingUser.Address = *req.Address
-	}
+	return s.authRepo.UpdatePassword(req.UserID, string(hashedPassword))
+}
 
-	if req.Phone != nil {
-		existingUser.Phone = *req.Phone
-	}
+func (s *authService) UpdateUserBanking(req dto.UpdateUserBankingRequest) error {
+	return s.authRepo.UpdateUserBanking(req)
+}
 
-	if req.BankName != nil {
-		existingUser.BankName = *req.BankName
-	}
+func (s *authService) UpdateUserProfile(req dto.UpdateUserProfileRequest) error {
+	return s.authRepo.UpdateUserProfile(req)
+}
 
-	if req.BankAccountName != nil {
-		existingUser.BankAccountName = *req.BankAccountName
-	}
-
-	if req.BankAccountNumber != nil {
-		existingUser.BankAccountNumber = *req.BankAccountNumber
-	}
-
-	return s.authRepo.UpdateUser(existingUser)
+func (s *authService) DeactivateUser(id uint) error {
+	return s.authRepo.DeleteUser(id)
 }

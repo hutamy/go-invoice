@@ -45,6 +45,10 @@ func (c *InvoiceController) CreateInvoice(ctx echo.Context) error {
 		return utils.Response(ctx, http.StatusBadRequest, err.Error(), nil)
 	}
 
+	if err := req.Validate(); err != nil {
+		return utils.Response(ctx, http.StatusBadRequest, err.Error(), nil)
+	}
+
 	userID := ctx.Get("user_id").(uint)
 	dueDate, err := time.Parse(time.DateOnly, req.DueDate)
 	if err != nil {
@@ -59,16 +63,16 @@ func (c *InvoiceController) CreateInvoice(ctx echo.Context) error {
 	invoice := models.Invoice{
 		UserID:        userID,
 		InvoiceNumber: req.InvoiceNumber,
-		ClientID:      req.ClientID,
 		IssueDate:     issueDate,
 		DueDate:       dueDate,
 		Notes:         req.Notes,
 		Status:        "draft", // default status
-		TaxRate:       req.TaxRate,
+		ClientID:      req.ClientID,
 		ClientName:    req.ClientName,
 		ClientEmail:   req.ClientEmail,
 		ClientAddress: req.ClientAddress,
 		ClientPhone:   req.ClientPhone,
+		TaxRate:       req.TaxRate,
 	}
 
 	for _, item := range req.Items {
@@ -187,7 +191,12 @@ func (c *InvoiceController) UpdateInvoice(ctx echo.Context) error {
 	if err := ctx.Bind(&req); err != nil {
 		return utils.Response(ctx, http.StatusBadRequest, errors.ErrBadRequest.Error(), nil)
 	}
+
 	if err := ctx.Validate(&req); err != nil {
+		return utils.Response(ctx, http.StatusBadRequest, errors.ErrBadRequest.Error(), nil)
+	}
+
+	if err := req.Validate(); err != nil {
 		return utils.Response(ctx, http.StatusBadRequest, errors.ErrBadRequest.Error(), nil)
 	}
 

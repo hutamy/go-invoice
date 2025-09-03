@@ -1,5 +1,11 @@
 package dto
 
+import (
+	"errors"
+
+	"github.com/go-playground/validator/v10"
+)
+
 type InvoiceItemRequest struct {
 	Description string  `json:"description" validate:"required"`
 	Quantity    int     `json:"quantity" validate:"required,min=1"`
@@ -7,17 +13,39 @@ type InvoiceItemRequest struct {
 }
 
 type CreateInvoiceRequest struct {
-	ClientID      uint                 `json:"client_id"`
+	ClientID      *uint                `json:"client_id"`
 	DueDate       string               `json:"due_date" validate:"required,datetime=2006-01-02"`
 	IssueDate     string               `json:"issue_date" validate:"required,datetime=2006-01-02"`
 	Items         []InvoiceItemRequest `json:"items" validate:"required,dive"`
 	Notes         string               `json:"notes"`
 	InvoiceNumber string               `json:"invoice_number" validate:"required"`
 	TaxRate       float64              `json:"tax_rate"`
-	ClientName    string               `json:"client_name" validate:"required"`
-	ClientEmail   string               `json:"client_email" validate:"required,email"`
-	ClientAddress string               `json:"client_address" validate:"required"`
-	ClientPhone   string               `json:"client_phone" validate:"required"`
+	ClientName    *string              `json:"client_name"`
+	ClientEmail   *string              `json:"client_email"`
+	ClientAddress *string              `json:"client_address"`
+	ClientPhone   *string              `json:"client_phone"`
+}
+
+func (c *CreateInvoiceRequest) Validate() error {
+	validate := validator.New()
+	if err := validate.Struct(c); err != nil {
+		return err
+	}
+	if c.ClientID == nil {
+		if c.ClientName == nil || *c.ClientName == "" {
+			return errors.New("client_name is required when client_id is null")
+		}
+		if c.ClientEmail == nil || *c.ClientEmail == "" {
+			return errors.New("client_email is required when client_id is null")
+		}
+		if c.ClientAddress == nil || *c.ClientAddress == "" {
+			return errors.New("client_address is required when client_id is null")
+		}
+		if c.ClientPhone == nil || *c.ClientPhone == "" {
+			return errors.New("client_phone is required when client_id is null")
+		}
+	}
+	return nil
 }
 
 type InvoiceItemUpdateRequest struct {
@@ -40,6 +68,28 @@ type UpdateInvoiceRequest struct {
 	ClientEmail   *string                    `json:"client_email,omitempty"`
 	ClientAddress *string                    `json:"client_address,omitempty"`
 	ClientPhone   *string                    `json:"client_phone,omitempty"`
+}
+
+func (c *UpdateInvoiceRequest) Validate() error {
+	validate := validator.New()
+	if err := validate.Struct(c); err != nil {
+		return err
+	}
+	if c.ClientID == nil {
+		if c.ClientName == nil || *c.ClientName == "" {
+			return errors.New("client_name is required when client_id is null")
+		}
+		if c.ClientEmail == nil || *c.ClientEmail == "" {
+			return errors.New("client_email is required when client_id is null")
+		}
+		if c.ClientAddress == nil || *c.ClientAddress == "" {
+			return errors.New("client_address is required when client_id is null")
+		}
+		if c.ClientPhone == nil || *c.ClientPhone == "" {
+			return errors.New("client_phone is required when client_id is null")
+		}
+	}
+	return nil
 }
 
 type GeneratePublicInvoiceRequest struct {
@@ -72,9 +122,8 @@ type UpdateInvoiceStatusRequest struct {
 }
 
 type SummaryInvoice struct {
-	Paid    float64 `json:"paid"`
-	Unpaid  float64 `json:"unpaid"`
-	PastDue float64 `json:"past_due"`
+	Paid         float64 `json:"paid"`
+	TotalRevenue float64 `json:"total_revenue"`
 }
 
 type GetInvoicesRequest struct {

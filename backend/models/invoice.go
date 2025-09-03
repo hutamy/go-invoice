@@ -7,11 +7,11 @@ import (
 type Invoice struct {
 	ID            uint          `json:"id" gorm:"primaryKey"`
 	UserID        uint          `json:"user_id" gorm:"not null;index"`
-	ClientID      uint          `json:"client_id" gorm:"index"`
-	ClientName    string        `json:"client_name" gorm:"not null"`
-	ClientEmail   string        `json:"client_email" gorm:"not null"`
-	ClientAddress string        `json:"client_address" gorm:"not null"`
-	ClientPhone   string        `json:"client_phone" gorm:"not null"`
+	ClientID      *uint         `json:"client_id" gorm:"index"`
+	ClientName    *string       `json:"client_name"`
+	ClientEmail   *string       `json:"client_email"`
+	ClientAddress *string       `json:"client_address"`
+	ClientPhone   *string       `json:"client_phone"`
 	InvoiceNumber string        `json:"invoice_number" gorm:"not null"`
 	IssueDate     time.Time     `json:"issue_date" gorm:"not null"`
 	DueDate       time.Time     `json:"due_date" gorm:"not null"`

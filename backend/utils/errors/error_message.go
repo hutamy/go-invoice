@@ -12,4 +12,5 @@ var (
 	ErrUnauthorized        = e.New("unauthorized access")
 	ErrNotFound            = e.New("resource not found")
 	ErrInvalidDateFormat   = e.New("invalid date format, expected YYYY-MM-DD")
+	ErrInvalidOldPassword  = e.New("invalid old password")
 )

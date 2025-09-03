@@ -203,21 +203,21 @@ func (c *AuthController) RefreshToken(ctx echo.Context) error {
 	})
 }
 
-// @Summary      Update User
-// @Description  Update user details
+// @Summary      Update User Banking
+// @Description  Update user banking details
 // @Tags         auth
 // @Accept       json
 // @Produce      json
 // @Security     BearerAuth
-// @Param        body  body      dto.UpdateUserRequest  true  "Update User Request"
+// @Param        body  body      dto.UpdateUserBankingRequest  true  "Update User Banking Request"
 // @Success      200   {object}  utils.GenericResponse
 // @Failure      400   {object}  utils.GenericResponse
 // @Failure      401   {object}  utils.GenericResponse
 // @Failure      404   {object}  utils.GenericResponse
 // @Failure      500   {object}  utils.GenericResponse
-// @Router       /v1/protected/me [put]
-func (c *AuthController) UpdateUser(ctx echo.Context) error {
-	req := new(dto.UpdateUserRequest)
+// @Router       /v1/protected/me/banking [put]
+func (c *AuthController) UpdateUserBanking(ctx echo.Context) error {
+	req := new(dto.UpdateUserBankingRequest)
 	if err := ctx.Bind(req); err != nil {
 		return utils.Response(ctx, http.StatusBadRequest, errors.ErrBadRequest.Error(), nil)
 	}
@@ -232,9 +232,104 @@ func (c *AuthController) UpdateUser(ctx echo.Context) error {
 	}
 
 	req.UserID = userID
-	if err := c.authService.UpdateUser(*req); err != nil {
+	if err := c.authService.UpdateUserBanking(*req); err != nil {
 		return utils.Response(ctx, http.StatusInternalServerError, err.Error(), nil)
 	}
 
-	return utils.Response(ctx, http.StatusOK, "User updated successfully", nil)
+	return utils.Response(ctx, http.StatusOK, "User banking information updated successfully", nil)
+}
+
+// @Summary      Change Password
+// @Description  Change user password
+// @Tags         auth
+// @Accept       json
+// @Produce      json
+// @Security     BearerAuth
+// @Param        body  body      dto.ChangePasswordRequest  true  "Change Password Request"
+// @Success      200   {object}  utils.GenericResponse
+// @Failure      400   {object}  utils.GenericResponse
+// @Failure      401   {object}  utils.GenericResponse
+// @Failure      404   {object}  utils.GenericResponse
+// @Failure      500   {object}  utils.GenericResponse
+// @Router       /v1/protected/me/change-password [post]
+func (c *AuthController) ChangePassword(ctx echo.Context) error {
+	req := new(dto.ChangePasswordRequest)
+	if err := ctx.Bind(req); err != nil {
+		return utils.Response(ctx, http.StatusBadRequest, errors.ErrBadRequest.Error(), nil)
+	}
+
+	if err := ctx.Validate(req); err != nil {
+		return utils.Response(ctx, http.StatusBadRequest, err.Error(), nil)
+	}
+
+	userID, ok := ctx.Get("user_id").(uint)
+	if !ok {
+		return utils.Response(ctx, http.StatusUnauthorized, errors.ErrUnauthorized.Error(), nil)
+	}
+
+	req.UserID = userID
+	if err := c.authService.ChangePassword(*req); err != nil {
+		return utils.Response(ctx, http.StatusInternalServerError, err.Error(), nil)
+	}
+
+	return utils.Response(ctx, http.StatusOK, "Password changed successfully", nil)
+}
+
+// @Summary      Update User Profile
+// @Description  Update user profile details
+// @Tags         auth
+// @Accept       json
+// @Produce      json
+// @Security     BearerAuth
+// @Param        body  body      dto.UpdateUserProfileRequest  true  "Update User Profile Request"
+// @Success      200   {object}  utils.GenericResponse
+// @Failure      400   {object}  utils.GenericResponse
+// @Failure      401   {object}  utils.GenericResponse
+// @Failure      404   {object}  utils.GenericResponse
+// @Failure      500   {object}  utils.GenericResponse
+// @Router       /v1/protected/me/profile [put]
+func (c *AuthController) UpdateUserProfile(ctx echo.Context) error {
+	req := new(dto.UpdateUserProfileRequest)
+	if err := ctx.Bind(req); err != nil {
+		return utils.Response(ctx, http.StatusBadRequest, errors.ErrBadRequest.Error(), nil)
+	}
+
+	if err := ctx.Validate(req); err != nil {
+		return utils.Response(ctx, http.StatusBadRequest, err.Error(), nil)
+	}
+
+	userID, ok := ctx.Get("user_id").(uint)
+	if !ok {
+		return utils.Response(ctx, http.StatusUnauthorized, errors.ErrUnauthorized.Error(), nil)
+	}
+
+	req.UserID = userID
+	if err := c.authService.UpdateUserProfile(*req); err != nil {
+		return utils.Response(ctx, http.StatusInternalServerError, err.Error(), nil)
+	}
+
+	return utils.Response(ctx, http.StatusOK, "User profile updated successfully", nil)
+}
+
+// @Summary      Deactivate User
+// @Description  Deactivate user account
+// @Tags         auth
+// @Accept       json
+// @Produce      json
+// @Security     BearerAuth
+// @Success      200   {object}  utils.GenericResponse
+// @Failure      401   {object}  utils.GenericResponse
+// @Failure      500   {object}  utils.GenericResponse
+// @Router       /v1/protected/me/deactivate [post]
+func (c *AuthController) DeactivateUser(ctx echo.Context) error {
+	userID, ok := ctx.Get("user_id").(uint)
+	if !ok {
+		return utils.Response(ctx, http.StatusUnauthorized, errors.ErrUnauthorized.Error(), nil)
+	}
+
+	if err := c.authService.DeactivateUser(userID); err != nil {
+		return utils.Response(ctx, http.StatusInternalServerError, err.Error(), nil)
+	}
+
+	return utils.Response(ctx, http.StatusOK, "User deactivated successfully", nil)
 }

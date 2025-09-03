@@ -84,5 +84,12 @@ func (r *clientRepository) UpdateClient(client *models.Client) error {
 }
 
 func (r *clientRepository) DeleteClient(id, userID uint) error {
-	return r.db.Where("id = ? AND user_id = ?", id, userID).Delete(&models.Client{}).Error
+	err := r.db.Model(&models.Client{}).
+		Where("id = ? AND user_id = ?", id, userID).
+		Update("deleted_at", gorm.DeletedAt{Time: r.db.NowFunc(), Valid: true}).Error
+	if err != nil {
+		return err
+	}
+
+	return err
 }

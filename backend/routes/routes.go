@@ -50,7 +50,10 @@ func InitRoutes(e *echo.Echo, db *gorm.DB) {
 	protected.Use(middleware.JWTMiddleware)
 
 	protected.GET("/me", authController.Me)
-	protected.PUT("/me", authController.UpdateUser)
+	protected.PUT("/me/banking", authController.UpdateUserBanking)
+	protected.PUT("/me/profile", authController.UpdateUserProfile)
+	protected.POST("/me/change-password", authController.ChangePassword)
+	protected.POST("/me/deactivate", authController.DeactivateUser)
 
 	authPrivateRoutes := protected.Group("/auth")
 	authPrivateRoutes.POST("/refresh-token", authController.RefreshToken)

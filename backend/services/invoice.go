@@ -96,14 +96,27 @@ func (s *invoiceService) UpdateInvoice(id uint, req *dto.UpdateInvoiceRequest) e
 }
 
 func (s *invoiceService) GenerateInvoicePDF(invoiceID uint) ([]byte, error) {
-	invoice, err := s.invoiceRepo.GetInvoiceByID(invoiceID)
+	var err error
+	var invoice *models.Invoice
+	invoice, err = s.invoiceRepo.GetInvoiceByID(invoiceID)
 	if err != nil {
 		return nil, err
 	}
 
-	client, err := s.clientRepo.GetClientByID(invoice.ClientID, invoice.UserID)
-	if err != nil {
-		return nil, err
+	var client *models.Client
+	if invoice.ClientID != nil {
+		client, err = s.clientRepo.GetClientByID(*invoice.ClientID, invoice.UserID)
+		if err != nil {
+			return nil, err
+		}
+	} else {
+		client = &models.Client{
+			ID:      0,
+			Name:    *invoice.ClientName,
+			Email:   *invoice.ClientEmail,
+			Address: *invoice.ClientAddress,
+			Phone:   *invoice.ClientPhone,
+		}
 	}
 
 	user, err := s.authRepo.GetUserByID(invoice.UserID)
