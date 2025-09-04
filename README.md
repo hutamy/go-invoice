@@ -34,7 +34,7 @@ invoice-generator/
 ### Prerequisites
 
 - Docker & Docker Compose
-- Node.js (for frontend dev)
+- Typescript (for frontend dev)
 - Go (for backend dev)
 
 ### 1. Clone the repository
