@@ -115,7 +115,7 @@ const InvoicePreview: React.FC<InvoicePreviewProps> = ({ data, className }) => {
               <th className="py-3 px-2 text-left bg-gray-50 font-semibold text-sm border-b-2 border-gray-200">
                 Unit Price
               </th>
-              <th className="py-3 px-2 text-right bg-gray-50 font-semibold text-sm border-b-2 border-gray-200">
+              <th className="py-3 px-2 text-left bg-gray-50 font-semibold text-sm border-b-2 border-gray-200">
                 Total
               </th>
             </tr>

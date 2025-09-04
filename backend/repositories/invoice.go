@@ -19,6 +19,8 @@ type InvoiceRepository interface {
 	DeleteInvoice(id uint) error
 	UpdateInvoiceStatus(id uint, status string) error
 	InvoiceSummary(userID uint) (dto.SummaryInvoice, error)
+	SoftDeleteAllByUserID(userID uint) error
+	RestoreAllByUserID(userID uint) error
 }
 
 type invoiceRepository struct {
@@ -57,24 +59,20 @@ func (r *invoiceRepository) ListInvoiceByUserIDWithPagination(req dto.GetInvoice
 
 	query := r.db.Where("user_id = ?", req.UserID)
 
-	// Add status filter if provided
 	if req.Status != "" {
 		query = query.Where("status = ?", req.Status)
 	}
 
-	// Add search functionality if search term is provided
 	if req.Search != "" {
 		searchTerm := "%" + req.Search + "%"
 		query = query.Where("invoice_number ILIKE ? OR client_name ILIKE ? OR client_email ILIKE ? OR notes ILIKE ?",
 			searchTerm, searchTerm, searchTerm, searchTerm)
 	}
 
-	// Count total items
 	if err := query.Model(&models.Invoice{}).Count(&totalItems).Error; err != nil {
 		return nil, 0, err
 	}
 
-	// Apply pagination
 	offset := (req.Page - 1) * req.PageSize
 	err := query.Preload("Items").
 		Order("created_at DESC").
@@ -95,7 +93,6 @@ func (r *invoiceRepository) UpdateInvoice(id uint, req *dto.UpdateInvoiceRequest
 		return err
 	}
 
-	// Update simple fields if present
 	if req.ClientID != nil {
 		invoice.ClientID = req.ClientID
 		invoice.ClientName = nil
@@ -144,18 +141,15 @@ func (r *invoiceRepository) UpdateInvoice(id uint, req *dto.UpdateInvoiceRequest
 		invoice.InvoiceNumber = *req.InvoiceNumber
 	}
 
-	// Map existing items by ID
 	existingItems := map[uint]models.InvoiceItem{}
 	for _, item := range invoice.Items {
 		existingItems[item.ID] = item
 	}
 
-	// Track IDs from request to keep
 	var idsToKeep []uint
 	var subtotal float64
 	for _, itemReq := range req.Items {
 		if itemReq.ID != nil {
-			// Update existing item
 			if existingItem, ok := existingItems[*itemReq.ID]; ok {
 				existingItem.Description = itemReq.Description
 				existingItem.Quantity = itemReq.Quantity
@@ -167,11 +161,9 @@ func (r *invoiceRepository) UpdateInvoice(id uint, req *dto.UpdateInvoiceRequest
 				}
 				idsToKeep = append(idsToKeep, *itemReq.ID)
 			} else {
-				// ID not found in DB, return error or ignore
 				return fmt.Errorf("invoice item with ID %d not found", *itemReq.ID)
 			}
 		} else {
-			// New item to create
 			newItem := models.InvoiceItem{
 				InvoiceID:   invoice.ID,
 				Description: itemReq.Description,
@@ -187,7 +179,6 @@ func (r *invoiceRepository) UpdateInvoice(id uint, req *dto.UpdateInvoiceRequest
 		}
 	}
 
-	// Delete items not in idsToKeep
 	for _, existingItem := range invoice.Items {
 		found := false
 		for _, id := range idsToKeep {
@@ -210,17 +201,9 @@ func (r *invoiceRepository) UpdateInvoice(id uint, req *dto.UpdateInvoiceRequest
 }
 
 func (r *invoiceRepository) DeleteInvoice(id uint) error {
-	var invoice models.Invoice
-	if err := r.db.First(&invoice, id).Error; err != nil {
-		return err
-	}
-
-	// Delete associated items first
-	if err := r.db.Where("invoice_id = ?", id).Delete(&models.InvoiceItem{}).Error; err != nil {
-		return err
-	}
-
-	return r.db.Delete(&invoice).Error
+	return r.db.Model(&models.Invoice{}).
+		Where("id = ?", id).
+		Update("deleted_at", gorm.DeletedAt{Time: r.db.NowFunc(), Valid: true}).Error
 }
 
 func (r *invoiceRepository) UpdateInvoiceStatus(id uint, status string) error {
@@ -245,4 +228,16 @@ func (r *invoiceRepository) InvoiceSummary(userID uint) (summary dto.SummaryInvo
 		Scan(&summary.TotalRevenue)
 
 	return summary, nil
+}
+
+func (r *invoiceRepository) SoftDeleteAllByUserID(userID uint) error {
+	return r.db.Model(&models.Invoice{}).
+		Where("user_id = ?", userID).
+		Update("deleted_at", gorm.DeletedAt{Time: r.db.NowFunc(), Valid: true}).Error
+}
+
+func (r *invoiceRepository) RestoreAllByUserID(userID uint) error {
+	return r.db.Unscoped().Model(&models.Invoice{}).
+		Where("user_id = ? AND deleted_at IS NOT NULL", userID).
+		Update("deleted_at", nil).Error
 }

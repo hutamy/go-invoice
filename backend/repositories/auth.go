@@ -11,11 +11,15 @@ import (
 type AuthRepository interface {
 	CreateUser(user *models.User) error
 	GetUserByEmail(email string) (*models.User, error)
+	GetUserByEmailIncludingDeleted(email string) (*models.User, error)
 	GetUserByID(id uint) (*models.User, error)
 	UpdatePassword(id uint, password string) error
 	UpdateUserProfile(req dto.UpdateUserProfileRequest) error
 	UpdateUserBanking(req dto.UpdateUserBankingRequest) error
 	DeleteUser(id uint) error
+	RestoreUser(id uint) error
+	RestoreAndUpdateUser(id uint, userData *models.User) error
+	GetDeletedUserByID(id uint) (*models.User, error)
 }
 
 type authRepository struct {
@@ -40,11 +44,24 @@ func (r *authRepository) GetUserByEmail(email string) (*models.User, error) {
 	return &user, err
 }
 
+func (r *authRepository) GetUserByEmailIncludingDeleted(email string) (*models.User, error) {
+	var user models.User
+	err := r.db.Unscoped().Where("email = ?", email).First(&user).Error
+	if errors.Is(err, gorm.ErrRecordNotFound) {
+		return nil, nil
+	}
+
+	return &user, err
+}
+
 func (r *authRepository) GetUserByID(id uint) (*models.User, error) {
 	var user models.User
-	res := r.db.First(&user, id)
-	if res.Error != nil {
-		return nil, res.Error
+	err := r.db.First(&user, id).Error
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, nil
+		}
+		return nil, err
 	}
 
 	return &user, nil
@@ -99,12 +116,71 @@ func (r *authRepository) UpdateUserBanking(req dto.UpdateUserBankingRequest) err
 }
 
 func (r *authRepository) DeleteUser(id uint) error {
-	err := r.db.Model(&models.User{}).
-		Where("id = ?", id).
-		Update("deleted_at", gorm.DeletedAt{Time: r.db.NowFunc(), Valid: true}).Error
-	if err != nil {
-		return err
+	result := r.db.Delete(&models.User{}, id)
+	if result.Error != nil {
+		return result.Error
 	}
 
-	return err
+	if result.RowsAffected == 0 {
+		return gorm.ErrRecordNotFound
+	}
+
+	return nil
+}
+
+func (r *authRepository) RestoreUser(id uint) error {
+	result := r.db.Unscoped().Model(&models.User{}).Where("id = ?", id).Update("deleted_at", nil)
+	if result.Error != nil {
+		return result.Error
+	}
+
+	if result.RowsAffected == 0 {
+		return gorm.ErrRecordNotFound
+	}
+
+	return nil
+}
+
+func (r *authRepository) RestoreAndUpdateUser(id uint, userData *models.User) error {
+	tx := r.db.Begin()
+	if tx.Error != nil {
+		return tx.Error
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			tx.Rollback()
+		}
+	}()
+
+	result := tx.Unscoped().Model(&models.User{}).Where("id = ?", id).Update("deleted_at", nil)
+	if result.Error != nil {
+		tx.Rollback()
+		return result.Error
+	}
+
+	if result.RowsAffected == 0 {
+		tx.Rollback()
+		return gorm.ErrRecordNotFound
+	}
+
+	updateResult := tx.Model(&models.User{}).Where("id = ?", id).Updates(userData)
+	if updateResult.Error != nil {
+		tx.Rollback()
+		return updateResult.Error
+	}
+
+	return tx.Commit().Error
+}
+
+func (r *authRepository) GetDeletedUserByID(id uint) (*models.User, error) {
+	var user models.User
+	err := r.db.Unscoped().Where("id = ? AND deleted_at IS NOT NULL", id).First(&user).Error
+	if err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return nil, nil
+		}
+		return nil, err
+	}
+
+	return &user, nil
 }

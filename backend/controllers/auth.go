@@ -91,6 +91,12 @@ func (c *AuthController) SignIn(ctx echo.Context) error {
 		if err == errors.ErrLoginFailed {
 			return utils.Response(ctx, http.StatusUnauthorized, err.Error(), nil)
 		}
+		if err == errors.ErrAccountDeactivated {
+			return utils.Response(ctx, http.StatusForbidden, err.Error(), echo.Map{
+				"can_restore": true,
+				"message":     "Your account has been deactivated. You can restore it by registering again with the same email.",
+			})
+		}
 
 		return utils.Response(ctx, http.StatusInternalServerError, err.Error(), nil)
 	}

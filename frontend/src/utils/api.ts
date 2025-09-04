@@ -183,6 +183,12 @@ class ApiService {
     return response.data.data!;
   }
 
+  // Deactivate user account (soft delete)
+  async deactivateUserAccount(): Promise<{ message: string }> {
+    const response: AxiosResponse<ApiResponse<{ message: string }>> = await this.api.post('/v1/protected/me/deactivate');
+    return response.data.data!;
+  }
+
   // Client methods
   async getClients(): Promise<Client[]> {
     const response: AxiosResponse<ApiResponse<{ data: Client[]; pagination: { page: number; page_size: number; total_items: number; total_pages: number } }>> = await this.api.get('/v1/protected/clients');

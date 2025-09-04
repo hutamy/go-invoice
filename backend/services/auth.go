@@ -19,11 +19,21 @@ type AuthService interface {
 }
 
 type authService struct {
-	authRepo repositories.AuthRepository
+	authRepo    repositories.AuthRepository
+	clientRepo  repositories.ClientRepository
+	invoiceRepo repositories.InvoiceRepository
 }
 
-func NewAuthService(authRepo repositories.AuthRepository) AuthService {
-	return &authService{authRepo: authRepo}
+func NewAuthService(
+	authRepo repositories.AuthRepository,
+	clientRepo repositories.ClientRepository,
+	invoiceRepo repositories.InvoiceRepository,
+) AuthService {
+	return &authService{
+		authRepo:    authRepo,
+		clientRepo:  clientRepo,
+		invoiceRepo: invoiceRepo,
+	}
 }
 
 func (s *authService) SignUp(req dto.SignUpRequest) (models.User, error) {
@@ -36,11 +46,53 @@ func (s *authService) SignUp(req dto.SignUpRequest) (models.User, error) {
 		return models.User{}, errors.ErrUserAlreadyExists
 	}
 
+	deletedUser, err := s.authRepo.GetUserByEmailIncludingDeleted(req.Email)
+	if err != nil {
+		return models.User{}, err
+	}
+
 	hashedPassword, err := utils.HashPassword(req.Password)
 	if err != nil {
 		return models.User{}, err
 	}
 
+	// If a soft-deleted user exists, restore and update their data
+	if deletedUser != nil && deletedUser.DeletedAt.Valid {
+		updatedUserData := &models.User{
+			Name:              req.Name,
+			Password:          string(hashedPassword),
+			Address:           req.Address,
+			Phone:             req.Phone,
+			BankName:          req.BankName,
+			BankAccountName:   req.BankAccountName,
+			BankAccountNumber: req.BankAccountNumber,
+		}
+
+		if err := s.authRepo.RestoreAndUpdateUser(deletedUser.ID, updatedUserData); err != nil {
+			return models.User{}, err
+		}
+
+		if err := s.clientRepo.RestoreAllByUserID(deletedUser.ID); err != nil {
+			return models.User{}, err
+		}
+
+		if err := s.invoiceRepo.RestoreAllByUserID(deletedUser.ID); err != nil {
+			return models.User{}, err
+		}
+
+		restoredUser, err := s.authRepo.GetUserByEmail(req.Email)
+		if err != nil {
+			return models.User{}, err
+		}
+
+		if restoredUser == nil {
+			return models.User{}, errors.ErrUserNotFound
+		}
+
+		return *restoredUser, nil
+	}
+
+	// Create a new user if no soft-deleted user exists
 	user := &models.User{
 		Name:              req.Name,
 		Email:             req.Email,
@@ -69,7 +121,19 @@ func (s *authService) SignIn(email, password string) (models.User, error) {
 	if err != nil {
 		return models.User{}, err
 	}
+
+	// If no active user found, check if user exists but is soft-deleted
 	if user == nil {
+		deletedUser, err := s.authRepo.GetUserByEmailIncludingDeleted(email)
+		if err != nil {
+			return models.User{}, err
+		}
+
+		if deletedUser != nil && deletedUser.DeletedAt.Valid {
+			return models.User{}, errors.ErrAccountDeactivated
+		}
+
+		// No user found at all (active or deleted)
 		return models.User{}, errors.ErrLoginFailed
 	}
 
@@ -115,5 +179,21 @@ func (s *authService) UpdateUserProfile(req dto.UpdateUserProfileRequest) error 
 }
 
 func (s *authService) DeactivateUser(id uint) error {
+	user, err := s.authRepo.GetUserByID(id)
+	if err != nil {
+		return err
+	}
+	if user == nil {
+		return errors.ErrUserNotFound
+	}
+
+	if err := s.clientRepo.SoftDeleteAllByUserID(id); err != nil {
+		return err
+	}
+
+	if err := s.invoiceRepo.SoftDeleteAllByUserID(id); err != nil {
+		return err
+	}
+
 	return s.authRepo.DeleteUser(id)
 }

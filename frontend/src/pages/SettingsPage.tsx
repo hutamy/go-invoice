@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { 
   User as UserIcon, 
   Building, 
@@ -8,7 +8,10 @@ import {
   Eye, 
   EyeOff,
   FileText,
-  Lock
+  Lock,
+  AlertTriangle,
+  UserX,
+  Shield
 } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -43,11 +46,13 @@ type BankingFormData = z.infer<typeof bankingSchema>;
 type PasswordFormData = z.infer<typeof passwordSchema>;
 
 const SettingsPage: React.FC = () => {
-  const { user, updateUserProfile, updateUserBanking, changeUserPassword } = useAuth();
-  const [activeTab, setActiveTab] = useState<'profile' | 'banking' | 'password'>('profile');
+  const { user, updateUserProfile, updateUserBanking, changeUserPassword, deactivateAccount } = useAuth();
+  const navigate = useNavigate();
+  const [activeTab, setActiveTab] = useState<'profile' | 'banking' | 'password' | 'account'>('profile');
   const [showCurrentPassword, setShowCurrentPassword] = useState(false);
   const [showNewPassword, setShowNewPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [showDeactivateConfirm, setShowDeactivateConfirm] = useState(false);
 
   const profileForm = useForm<ProfileFormData>({
     resolver: zodResolver(profileSchema),
@@ -116,6 +121,16 @@ const SettingsPage: React.FC = () => {
       passwordForm.reset();
     } catch {
       toast.error('Failed to change password');
+    }
+  };
+
+  const handleDeactivateAccount = async () => {
+    try {
+      await deactivateAccount();
+      toast.success('Account deactivated successfully. You have been logged out.');
+      navigate('/');
+    } catch {
+      toast.error('Failed to deactivate account');
     }
   };
 
@@ -197,6 +212,17 @@ const SettingsPage: React.FC = () => {
             >
               <Lock className="h-5 w-5 inline mr-2" />
               Password
+            </button>
+            <button
+              onClick={() => setActiveTab('account')}
+              className={`py-2 px-1 border-b-2 font-medium text-sm ${
+                activeTab === 'account'
+                  ? 'border-blue-500 text-blue-600'
+                  : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
+              }`}
+            >
+              <Shield className="h-5 w-5 inline mr-2" />
+              Account
             </button>
           </nav>
         </div>
@@ -491,6 +517,102 @@ const SettingsPage: React.FC = () => {
                 </button>
               </div>
             </form>
+          </div>
+        )}
+
+        {/* Account Tab */}
+        {activeTab === 'account' && (
+          <div className="bg-white border border-gray-200 rounded-lg">
+            <div className="px-6 py-4 border-b border-gray-200">
+              <h3 className="text-lg font-semibold text-gray-900">Account Management</h3>
+              <p className="text-sm text-gray-600">Manage your account settings and data.</p>
+            </div>
+            <div className="p-6">
+              <div className="space-y-6">
+                {/* Account Deactivation Section */}
+                <div className="bg-red-50 border border-red-200 rounded-lg p-6">
+                  <div className="flex">
+                    <div className="flex-shrink-0">
+                      <AlertTriangle className="h-6 w-6 text-red-400" />
+                    </div>
+                    <div className="ml-3 flex-1">
+                      <h3 className="text-sm font-medium text-red-800">
+                        Deactivate Account
+                      </h3>
+                      <div className="mt-2 text-sm text-red-700">
+                        <p>
+                          Deactivating your account will temporarily disable your access to the platform. 
+                          Your data (invoices, clients, etc.) will be preserved and can be restored by 
+                          registering again with the same email address.
+                        </p>
+                        <p className="mt-2 font-medium">
+                          To restore your account later: Simply go to the registration page and sign up again using the same email address.
+                        </p>
+                      </div>
+                      <div className="mt-4">
+                        <div className="flex space-x-3">
+                          {!showDeactivateConfirm ? (
+                            <button
+                              type="button"
+                              onClick={() => setShowDeactivateConfirm(true)}
+                              className="inline-flex items-center px-3 py-2 border border-red-300 text-sm font-medium rounded-lg text-red-700 bg-red-50 hover:bg-red-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                            >
+                              <UserX className="h-4 w-4 mr-2" />
+                              Deactivate Account
+                            </button>
+                          ) : (
+                            <div className="space-y-3">
+                              <p className="text-sm font-medium text-red-800">
+                                Are you sure you want to deactivate your account?
+                              </p>
+                              <div className="flex space-x-3">
+                                <button
+                                  type="button"
+                                  onClick={handleDeactivateAccount}
+                                  className="inline-flex items-center px-3 py-2 border border-red-600 text-sm font-medium rounded-lg text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                                >
+                                  Yes, Deactivate
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={() => setShowDeactivateConfirm(false)}
+                                  className="inline-flex items-center px-3 py-2 border border-gray-300 text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+                                >
+                                  Cancel
+                                </button>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Account Information */}
+                <div className="bg-blue-50 border border-blue-200 rounded-lg p-6">
+                  <div className="flex">
+                    <div className="flex-shrink-0">
+                      <Shield className="h-6 w-6 text-blue-400" />
+                    </div>
+                    <div className="ml-3">
+                      <h3 className="text-sm font-medium text-blue-800">
+                        Account Security
+                      </h3>
+                      <div className="mt-2 text-sm text-blue-700">
+                        <ul className="list-disc list-inside space-y-1">
+                          <li>Your account data is securely encrypted</li>
+                          <li>All invoice and client data is preserved during deactivation</li>
+                          <li>You can restore your account by registering again with the same email</li>
+                          <li>Deactivation does not permanently delete your data</li>
+                          <li>Registration with the same email automatically restores all your data</li>
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         )}
       </div>

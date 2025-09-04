@@ -35,9 +35,18 @@ const LoginPage: React.FC = () => {
       navigate("/dashboard");
       toast.success("Login successful!");
     } catch (error: unknown) {
-      const errorMessage =
-        error instanceof Error ? error.message : "Invalid credentials";
-      toast.error(errorMessage);
+      if (error instanceof Error && error.message === 'ACCOUNT_DEACTIVATED') {
+        toast.error(
+          "Your account has been deactivated. You can restore it by registering again with the same email.",
+          {
+            autoClose: 8000, // Show longer to allow reading
+          }
+        );
+      } else {
+        const errorMessage =
+          error instanceof Error ? error.message : "Invalid credentials";
+        toast.error(errorMessage);
+      }
     } finally {
       setIsLoading(false);
     }

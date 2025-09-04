@@ -5,6 +5,7 @@ import e "errors"
 var (
 	ErrUserAlreadyExists   = e.New("email already exists")
 	ErrLoginFailed         = e.New("invalid email and password")
+	ErrAccountDeactivated  = e.New("account has been deactivated")
 	ErrBadRequest          = e.New("please check your input")
 	ErrFailedGenerateToken = e.New("failed to generate token")
 	ErrUserNotFound        = e.New("user not found")

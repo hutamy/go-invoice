@@ -14,18 +14,18 @@ import (
 
 func InitRoutes(e *echo.Echo, db *gorm.DB) {
 	authRepo := repositories.NewAuthRepository(db)
-	authService := services.NewAuthService(authRepo)
+	clientRepo := repositories.NewClientRepository(db)
+	invoiceRepo := repositories.NewInvoiceRepository(db)
+
+	authService := services.NewAuthService(authRepo, clientRepo, invoiceRepo)
 	authController := controllers.NewAuthController(authService)
 
-	clientRepo := repositories.NewClientRepository(db)
 	clientService := services.NewClientService(clientRepo)
 	clientController := controllers.NewClientController(clientService)
 
-	invoiceRepo := repositories.NewInvoiceRepository(db)
 	invoiceService := services.NewInvoiceService(invoiceRepo, clientRepo, authRepo)
 	invoiceController := controllers.NewInvoiceController(invoiceService)
 
-	// Routes for Health Check and Welcome Message
 	e.GET("/", func(c echo.Context) error {
 		return utils.Response(c, 200, "Welcome to Invoice Generator API", nil)
 	})
@@ -34,11 +34,9 @@ func InitRoutes(e *echo.Echo, db *gorm.DB) {
 	})
 	e.GET("/swagger/*", echoSwagger.WrapHandler)
 
-	// These routes are grouped under the "/v1" path
 	v1 := e.Group("/v1")
 	public := v1.Group("/public")
 
-	// Public Routes
 	authRoutes := public.Group("/auth")
 	authRoutes.POST("/sign-up", authController.SignUp)
 	authRoutes.POST("/sign-in", authController.SignIn)

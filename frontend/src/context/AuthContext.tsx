@@ -22,6 +22,7 @@ interface AuthContextType {
   updateUserProfile: (data: { name: string; email: string; address: string; phone: string }) => Promise<void>;
   updateUserBanking: (data: { bank_name: string; bank_account_name: string; bank_account_number: string }) => Promise<void>;
   changeUserPassword: (data: { old_password: string; new_password: string }) => Promise<void>;
+  deactivateAccount: () => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -61,12 +62,28 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   }, []);
 
   const login = async (email: string, password: string) => {
-    const tokens = await apiService.login({ email, password });
-    localStorage.setItem('access_token', tokens.access_token);
-    localStorage.setItem('refresh_token', tokens.refresh_token);
-    
-    const userData = await apiService.getCurrentUser();
-    setUser(userData);
+    try {
+      const tokens = await apiService.login({ email, password });
+      localStorage.setItem('access_token', tokens.access_token);
+      localStorage.setItem('refresh_token', tokens.refresh_token);
+      
+      const userData = await apiService.getCurrentUser();
+      setUser(userData);
+    } catch (error: unknown) {
+      // Handle account deactivated error specifically
+      if (error && typeof error === 'object' && 'response' in error) {
+        const axiosError = error as { response?: { status: number; data: { data?: { can_restore?: boolean } } } };
+        if (axiosError.response?.status === 403) {
+          const errorData = axiosError.response.data;
+          if (errorData.data?.can_restore) {
+            // This is a deactivated account error
+            throw new Error('ACCOUNT_DEACTIVATED');
+          }
+        }
+      }
+      // Re-throw other errors
+      throw error;
+    }
   };
 
   const register = async (data: {
@@ -109,6 +126,12 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     // Password change doesn't affect user data, so no need to refetch
   };
 
+  const deactivateAccount = async () => {
+    await apiService.deactivateUserAccount();
+    // After deactivation, logout the user
+    logout();
+  };
+
   const value = {
     user,
     isAuthenticated,
@@ -119,6 +142,7 @@ const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     updateUserProfile,
     updateUserBanking,
     changeUserPassword,
+    deactivateAccount,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

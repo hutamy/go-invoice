@@ -76,11 +76,3 @@ docker compose -f backend/docker-compose-local.yaml up --build
 
 - Vite app, React components, Tailwind CSS
 - Auth context, protected routes, API integration
-
-## Contributing
-
-Pull requests are welcome! For major changes, please open an issue first to discuss what you would like to change.
-
-## License
-
-MIT

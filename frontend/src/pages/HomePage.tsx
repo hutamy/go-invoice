@@ -293,35 +293,6 @@ const HomePage: React.FC = () => {
           </div>
         </div>
       </div>
-
-      {/* CTA Section */}
-      <div className="bg-white py-12 sm:py-16">
-        <div className="max-w-4xl mx-auto text-center px-4 sm:px-6 lg:px-8">
-          <div className="bg-blue-600 rounded-2xl sm:rounded-3xl p-8 sm:p-12 text-white">
-            <h2 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-4">
-              Ready for More Features?
-            </h2>
-            <p className="text-lg sm:text-xl text-blue-100 mb-6 sm:mb-8 max-w-2xl mx-auto">
-              Create a free account to save clients, manage invoices, send
-              emails automatically, and access advanced features.
-            </p>
-            <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <a
-                href="/register"
-                className="inline-flex items-center justify-center px-6 sm:px-8 py-3 sm:py-4 bg-white text-blue-600 font-semibold rounded-xl hover:bg-gray-50 transition-colors"
-              >
-                Get Started Free
-              </a>
-              <a
-                href="/login"
-                className="inline-flex items-center justify-center px-6 sm:px-8 py-3 sm:py-4 border-2 border-white/30 text-white font-semibold rounded-xl hover:bg-white/10 transition-colors"
-              >
-                Sign In
-              </a>
-            </div>
-          </div>
-        </div>
-      </div>
     </div>
   );
 };
