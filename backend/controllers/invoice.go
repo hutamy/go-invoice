@@ -216,12 +216,13 @@ func (c *InvoiceController) UpdateInvoice(ctx echo.Context) error {
 // @Description  Generates and downloads the PDF for a given invoice ID
 // @Tags         invoices
 // @Produce      application/pdf
+// @Security     BearerAuth
 // @Param        id   path      int  true  "Invoice ID"
 // @Success      200  {file}    file
 // @Failure      400  {object}  utils.GenericResponse
 // @Failure      404  {object}  utils.GenericResponse
 // @Failure      500  {object}  utils.GenericResponse
-// @Router       /v1/protectted/invoices/{id}/pdf [post]
+// @Router       /v1/protected/invoices/{id}/pdf [post]
 func (c *InvoiceController) DownloadInvoicePDF(ctx echo.Context) error {
 	id, err := strconv.Atoi(ctx.Param("id"))
 	if err != nil {
@@ -270,7 +271,7 @@ func (c *InvoiceController) GeneratePublicInvoice(ctx echo.Context) error {
 }
 
 // @Summary      Delete an invoice
-// @Description  Deletes an invoice by its ID
+// @Description  Soft deletes an invoice by its ID (can be restored)
 // @Tags         invoices
 // @Accept       json
 // @Produce      json
@@ -305,13 +306,13 @@ func (c *InvoiceController) DeleteInvoice(ctx echo.Context) error {
 // @Accept       json
 // @Produce      json
 // @Security     BearerAuth
-// @Param        id     path      int     true  "Invoice ID"
-// @Param        status body      string  true  "New status for the invoice"
+// @Param        id     path      int                              true  "Invoice ID"
+// @Param        status body      dto.UpdateInvoiceStatusRequest  true  "New status for the invoice"
 // @Success      200    {object}  utils.GenericResponse
 // @Failure      400    {object}  utils.GenericResponse
 // @Failure      404    {object}  utils.GenericResponse
 // @Failure      500    {object}  utils.GenericResponse
-// @Router       /v1/protected/invoices/{id}/status [put]
+// @Router       /v1/protected/invoices/{id}/status [patch]
 
 func (c *InvoiceController) UpdateInvoiceStatus(ctx echo.Context) error {
 	idParam := ctx.Param("id")

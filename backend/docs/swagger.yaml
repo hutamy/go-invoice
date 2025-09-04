@@ -1,5 +1,17 @@
 basePath: /
 definitions:
+  dto.ChangePasswordRequest:
+    properties:
+      new_password:
+        minLength: 6
+        type: string
+      old_password:
+        minLength: 6
+        type: string
+    required:
+    - new_password
+    - old_password
+    type: object
   dto.CreateClientRequest:
     properties:
       address:
@@ -43,10 +55,6 @@ definitions:
       tax_rate:
         type: number
     required:
-    - client_address
-    - client_email
-    - client_name
-    - client_phone
     - due_date
     - invoice_number
     - issue_date
@@ -184,7 +192,6 @@ definitions:
         minLength: 6
         type: string
       phone:
-        description: Validate phone format (E.164)
         type: string
     required:
     - address
@@ -240,10 +247,8 @@ definitions:
       tax_rate:
         type: number
     type: object
-  dto.UpdateUserRequest:
+  dto.UpdateUserBankingRequest:
     properties:
-      address:
-        type: string
       bank_account_name:
         type: string
       bank_account_number:
@@ -251,13 +256,17 @@ definitions:
         type: string
       bank_name:
         type: string
+    type: object
+  dto.UpdateUserProfileRequest:
+    properties:
+      address:
+        type: string
       email:
         description: Validate email format
         type: string
       name:
         type: string
       phone:
-        description: Validate phone format (E.164)
         type: string
     type: object
   utils.GenericResponse:
@@ -275,14 +284,76 @@ info:
   title: Smart Invoice Generator API
   version: "1.0"
 paths:
-  /v1/protected/clients:
-    get:
-      description: Retrieves all clients for the authenticated user
+  /v1/protected/auth/refresh-token:
+    post:
+      consumes:
+      - application/json
+      description: Refresh access token using a valid refresh token
+      parameters:
+      - description: Refresh Token Request
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/dto.RefreshTokenRequest'
       produces:
       - application/json
       responses:
         "200":
           description: OK
+          schema:
+            $ref: '#/definitions/utils.GenericResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.GenericResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/utils.GenericResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils.GenericResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.GenericResponse'
+      security:
+      - BearerAuth: []
+      summary: Refresh Token
+      tags:
+      - auth
+  /v1/protected/clients:
+    get:
+      description: 'Retrieves all clients for the authenticated user with pagination
+        (default: page=1, page_size=10)'
+      parameters:
+      - description: 'Page number (default: 1)'
+        in: query
+        name: page
+        type: integer
+      - description: 'Page size (default: 10, max: 100)'
+        in: query
+        name: page_size
+        type: integer
+      - description: Search term for filtering clients
+        in: query
+        name: search
+        type: string
+      - description: Return all clients without pagination (use with caution)
+        in: query
+        name: all
+        type: boolean
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.GenericResponse'
+        "400":
+          description: Bad Request
           schema:
             $ref: '#/definitions/utils.GenericResponse'
         "500":
@@ -327,7 +398,8 @@ paths:
       - clients
   /v1/protected/clients/{id}:
     delete:
-      description: Deletes a client by its ID for the authenticated user
+      description: Soft deletes a client by its ID for the authenticated user (can
+        be restored)
       parameters:
       - description: Client ID
         in: path
@@ -430,12 +502,38 @@ paths:
     get:
       consumes:
       - application/json
-      description: Retrieves all invoices for the authenticated user
+      description: 'Retrieves all invoices for the authenticated user with pagination
+        (default: page=1, page_size=10)'
+      parameters:
+      - description: 'Page number (default: 1)'
+        in: query
+        name: page
+        type: integer
+      - description: 'Page size (default: 10, max: 100)'
+        in: query
+        name: page_size
+        type: integer
+      - description: Search term for filtering invoices
+        in: query
+        name: search
+        type: string
+      - description: Filter by status (draft, open, paid, past_due)
+        in: query
+        name: status
+        type: string
+      - description: Return all invoices without pagination (use with caution)
+        in: query
+        name: all
+        type: boolean
       produces:
       - application/json
       responses:
         "200":
           description: OK
+          schema:
+            $ref: '#/definitions/utils.GenericResponse'
+        "400":
+          description: Bad Request
           schema:
             $ref: '#/definitions/utils.GenericResponse'
         "500":
@@ -482,7 +580,7 @@ paths:
     delete:
       consumes:
       - application/json
-      description: Deletes an invoice by its ID
+      description: Soft deletes an invoice by its ID (can be restored)
       parameters:
       - description: Invoice ID
         in: path
@@ -587,6 +685,39 @@ paths:
       summary: Update an invoice
       tags:
       - invoices
+  /v1/protected/invoices/{id}/pdf:
+    post:
+      description: Generates and downloads the PDF for a given invoice ID
+      parameters:
+      - description: Invoice ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/pdf
+      responses:
+        "200":
+          description: OK
+          schema:
+            type: file
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.GenericResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils.GenericResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.GenericResponse'
+      security:
+      - BearerAuth: []
+      summary: Download invoice PDF
+      tags:
+      - invoices
   /v1/protected/invoices/summary:
     get:
       consumes:
@@ -635,17 +766,18 @@ paths:
       summary: Get Current User
       tags:
       - auth
+  /v1/protected/me/banking:
     put:
       consumes:
       - application/json
-      description: Update user details
+      description: Update user banking details
       parameters:
-      - description: Update User Request
+      - description: Update User Banking Request
         in: body
         name: body
         required: true
         schema:
-          $ref: '#/definitions/dto.UpdateUserRequest'
+          $ref: '#/definitions/dto.UpdateUserBankingRequest'
       produces:
       - application/json
       responses:
@@ -671,52 +803,21 @@ paths:
             $ref: '#/definitions/utils.GenericResponse'
       security:
       - BearerAuth: []
-      summary: Update User
+      summary: Update User Banking
       tags:
       - auth
-  /v1/protectted/invoices/{id}/pdf:
-    post:
-      description: Generates and downloads the PDF for a given invoice ID
-      parameters:
-      - description: Invoice ID
-        in: path
-        name: id
-        required: true
-        type: integer
-      produces:
-      - application/pdf
-      responses:
-        "200":
-          description: OK
-          schema:
-            type: file
-        "400":
-          description: Bad Request
-          schema:
-            $ref: '#/definitions/utils.GenericResponse'
-        "404":
-          description: Not Found
-          schema:
-            $ref: '#/definitions/utils.GenericResponse'
-        "500":
-          description: Internal Server Error
-          schema:
-            $ref: '#/definitions/utils.GenericResponse'
-      summary: Download invoice PDF
-      tags:
-      - invoices
-  /v1/public/auth/refresh-token:
+  /v1/protected/me/change-password:
     post:
       consumes:
       - application/json
-      description: Refresh access token using a valid refresh token
+      description: Change user password
       parameters:
-      - description: Refresh Token Request
+      - description: Change Password Request
         in: body
         name: body
         required: true
         schema:
-          $ref: '#/definitions/dto.RefreshTokenRequest'
+          $ref: '#/definitions/dto.ChangePasswordRequest'
       produces:
       - application/json
       responses:
@@ -732,11 +833,82 @@ paths:
           description: Unauthorized
           schema:
             $ref: '#/definitions/utils.GenericResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils.GenericResponse'
         "500":
           description: Internal Server Error
           schema:
             $ref: '#/definitions/utils.GenericResponse'
-      summary: Refresh Token
+      security:
+      - BearerAuth: []
+      summary: Change Password
+      tags:
+      - auth
+  /v1/protected/me/deactivate:
+    post:
+      consumes:
+      - application/json
+      description: Deactivate user account
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.GenericResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/utils.GenericResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.GenericResponse'
+      security:
+      - BearerAuth: []
+      summary: Deactivate User
+      tags:
+      - auth
+  /v1/protected/me/profile:
+    put:
+      consumes:
+      - application/json
+      description: Update user profile details
+      parameters:
+      - description: Update User Profile Request
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/dto.UpdateUserProfileRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/utils.GenericResponse'
+        "400":
+          description: Bad Request
+          schema:
+            $ref: '#/definitions/utils.GenericResponse'
+        "401":
+          description: Unauthorized
+          schema:
+            $ref: '#/definitions/utils.GenericResponse'
+        "404":
+          description: Not Found
+          schema:
+            $ref: '#/definitions/utils.GenericResponse'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/utils.GenericResponse'
+      security:
+      - BearerAuth: []
+      summary: Update User Profile
       tags:
       - auth
   /v1/public/auth/sign-in:
@@ -764,6 +936,10 @@ paths:
             $ref: '#/definitions/utils.GenericResponse'
         "401":
           description: Unauthorized
+          schema:
+            $ref: '#/definitions/utils.GenericResponse'
+        "403":
+          description: Account deactivated - can be restored by registering again
           schema:
             $ref: '#/definitions/utils.GenericResponse'
         "500":

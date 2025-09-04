@@ -15,6 +15,69 @@ const docTemplate = `{
     "host": "{{.Host}}",
     "basePath": "{{.BasePath}}",
     "paths": {
+        "/v1/protected/auth/refresh-token": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Refresh access token using a valid refresh token",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Refresh Token",
+                "parameters": [
+                    {
+                        "description": "Refresh Token Request",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.RefreshTokenRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/utils.GenericResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/utils.GenericResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/utils.GenericResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/utils.GenericResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/utils.GenericResponse"
+                        }
+                    }
+                }
+            }
+        },
         "/v1/protected/clients": {
             "get": {
                 "security": [
@@ -22,7 +85,7 @@ const docTemplate = `{
                         "BearerAuth": []
                     }
                 ],
-                "description": "Retrieves all clients for the authenticated user",
+                "description": "Retrieves all clients for the authenticated user with pagination (default: page=1, page_size=10)",
                 "produces": [
                     "application/json"
                 ],
@@ -30,9 +93,41 @@ const docTemplate = `{
                     "clients"
                 ],
                 "summary": "Get all clients",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Page number (default: 1)",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Page size (default: 10, max: 100)",
+                        "name": "page_size",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Search term for filtering clients",
+                        "name": "search",
+                        "in": "query"
+                    },
+                    {
+                        "type": "boolean",
+                        "description": "Return all clients without pagination (use with caution)",
+                        "name": "all",
+                        "in": "query"
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/utils.GenericResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
                         "schema": {
                             "$ref": "#/definitions/utils.GenericResponse"
                         }
@@ -208,7 +303,7 @@ const docTemplate = `{
                         "BearerAuth": []
                     }
                 ],
-                "description": "Deletes a client by its ID for the authenticated user",
+                "description": "Soft deletes a client by its ID for the authenticated user (can be restored)",
                 "produces": [
                     "application/json"
                 ],
@@ -260,7 +355,7 @@ const docTemplate = `{
                         "BearerAuth": []
                     }
                 ],
-                "description": "Retrieves all invoices for the authenticated user",
+                "description": "Retrieves all invoices for the authenticated user with pagination (default: page=1, page_size=10)",
                 "consumes": [
                     "application/json"
                 ],
@@ -271,9 +366,47 @@ const docTemplate = `{
                     "invoices"
                 ],
                 "summary": "List invoices by user",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Page number (default: 1)",
+                        "name": "page",
+                        "in": "query"
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Page size (default: 10, max: 100)",
+                        "name": "page_size",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Search term for filtering invoices",
+                        "name": "search",
+                        "in": "query"
+                    },
+                    {
+                        "type": "string",
+                        "description": "Filter by status (draft, open, paid, past_due)",
+                        "name": "status",
+                        "in": "query"
+                    },
+                    {
+                        "type": "boolean",
+                        "description": "Return all invoices without pagination (use with caution)",
+                        "name": "all",
+                        "in": "query"
+                    }
+                ],
                 "responses": {
                     "200": {
                         "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/utils.GenericResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
                         "schema": {
                             "$ref": "#/definitions/utils.GenericResponse"
                         }
@@ -492,7 +625,7 @@ const docTemplate = `{
                         "BearerAuth": []
                     }
                 ],
-                "description": "Deletes an invoice by its ID",
+                "description": "Soft deletes an invoice by its ID (can be restored)",
                 "consumes": [
                     "application/json"
                 ],
@@ -517,6 +650,58 @@ const docTemplate = `{
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/utils.GenericResponse"
+                        }
+                    },
+                    "400": {
+                        "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/utils.GenericResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
+                        "schema": {
+                            "$ref": "#/definitions/utils.GenericResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/utils.GenericResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/protected/invoices/{id}/pdf": {
+            "post": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Generates and downloads the PDF for a given invoice ID",
+                "produces": [
+                    "application/pdf"
+                ],
+                "tags": [
+                    "invoices"
+                ],
+                "summary": "Download invoice PDF",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Invoice ID",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "type": "file"
                         }
                     },
                     "400": {
@@ -581,14 +766,16 @@ const docTemplate = `{
                         }
                     }
                 }
-            },
+            }
+        },
+        "/v1/protected/me/banking": {
             "put": {
                 "security": [
                     {
                         "BearerAuth": []
                     }
                 ],
-                "description": "Update user details",
+                "description": "Update user banking details",
                 "consumes": [
                     "application/json"
                 ],
@@ -598,15 +785,15 @@ const docTemplate = `{
                 "tags": [
                     "auth"
                 ],
-                "summary": "Update User",
+                "summary": "Update User Banking",
                 "parameters": [
                     {
-                        "description": "Update User Request",
+                        "description": "Update User Banking Request",
                         "name": "body",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/dto.UpdateUserRequest"
+                            "$ref": "#/definitions/dto.UpdateUserBankingRequest"
                         }
                     }
                 ],
@@ -644,34 +831,50 @@ const docTemplate = `{
                 }
             }
         },
-        "/v1/protectted/invoices/{id}/pdf": {
+        "/v1/protected/me/change-password": {
             "post": {
-                "description": "Generates and downloads the PDF for a given invoice ID",
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Change user password",
+                "consumes": [
+                    "application/json"
+                ],
                 "produces": [
-                    "application/pdf"
+                    "application/json"
                 ],
                 "tags": [
-                    "invoices"
+                    "auth"
                 ],
-                "summary": "Download invoice PDF",
+                "summary": "Change Password",
                 "parameters": [
                     {
-                        "type": "integer",
-                        "description": "Invoice ID",
-                        "name": "id",
-                        "in": "path",
-                        "required": true
+                        "description": "Change Password Request",
+                        "name": "body",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/dto.ChangePasswordRequest"
+                        }
                     }
                 ],
                 "responses": {
                     "200": {
                         "description": "OK",
                         "schema": {
-                            "type": "file"
+                            "$ref": "#/definitions/utils.GenericResponse"
                         }
                     },
                     "400": {
                         "description": "Bad Request",
+                        "schema": {
+                            "$ref": "#/definitions/utils.GenericResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
                         "schema": {
                             "$ref": "#/definitions/utils.GenericResponse"
                         }
@@ -691,9 +894,14 @@ const docTemplate = `{
                 }
             }
         },
-        "/v1/public/auth/refresh-token": {
+        "/v1/protected/me/deactivate": {
             "post": {
-                "description": "Refresh access token using a valid refresh token",
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Deactivate user account",
                 "consumes": [
                     "application/json"
                 ],
@@ -703,15 +911,55 @@ const docTemplate = `{
                 "tags": [
                     "auth"
                 ],
-                "summary": "Refresh Token",
+                "summary": "Deactivate User",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/utils.GenericResponse"
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/utils.GenericResponse"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/utils.GenericResponse"
+                        }
+                    }
+                }
+            }
+        },
+        "/v1/protected/me/profile": {
+            "put": {
+                "security": [
+                    {
+                        "BearerAuth": []
+                    }
+                ],
+                "description": "Update user profile details",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "auth"
+                ],
+                "summary": "Update User Profile",
                 "parameters": [
                     {
-                        "description": "Refresh Token Request",
+                        "description": "Update User Profile Request",
                         "name": "body",
                         "in": "body",
                         "required": true,
                         "schema": {
-                            "$ref": "#/definitions/dto.RefreshTokenRequest"
+                            "$ref": "#/definitions/dto.UpdateUserProfileRequest"
                         }
                     }
                 ],
@@ -730,6 +978,12 @@ const docTemplate = `{
                     },
                     "401": {
                         "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/utils.GenericResponse"
+                        }
+                    },
+                    "404": {
+                        "description": "Not Found",
                         "schema": {
                             "$ref": "#/definitions/utils.GenericResponse"
                         }
@@ -782,6 +1036,12 @@ const docTemplate = `{
                     },
                     "401": {
                         "description": "Unauthorized",
+                        "schema": {
+                            "$ref": "#/definitions/utils.GenericResponse"
+                        }
+                    },
+                    "403": {
+                        "description": "Account deactivated - can be restored by registering again",
                         "schema": {
                             "$ref": "#/definitions/utils.GenericResponse"
                         }
@@ -898,6 +1158,23 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "dto.ChangePasswordRequest": {
+            "type": "object",
+            "required": [
+                "new_password",
+                "old_password"
+            ],
+            "properties": {
+                "new_password": {
+                    "type": "string",
+                    "minLength": 6
+                },
+                "old_password": {
+                    "type": "string",
+                    "minLength": 6
+                }
+            }
+        },
         "dto.CreateClientRequest": {
             "type": "object",
             "required": [
@@ -924,10 +1201,6 @@ const docTemplate = `{
         "dto.CreateInvoiceRequest": {
             "type": "object",
             "required": [
-                "client_address",
-                "client_email",
-                "client_name",
-                "client_phone",
                 "due_date",
                 "invoice_number",
                 "issue_date",
@@ -1173,7 +1446,6 @@ const docTemplate = `{
                     "minLength": 6
                 },
                 "phone": {
-                    "description": "Validate phone format (E.164)",
                     "type": "string"
                 }
             }
@@ -1245,12 +1517,9 @@ const docTemplate = `{
                 }
             }
         },
-        "dto.UpdateUserRequest": {
+        "dto.UpdateUserBankingRequest": {
             "type": "object",
             "properties": {
-                "address": {
-                    "type": "string"
-                },
                 "bank_account_name": {
                     "type": "string"
                 },
@@ -1259,6 +1528,14 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "bank_name": {
+                    "type": "string"
+                }
+            }
+        },
+        "dto.UpdateUserProfileRequest": {
+            "type": "object",
+            "properties": {
+                "address": {
                     "type": "string"
                 },
                 "email": {
@@ -1269,7 +1546,6 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "phone": {
-                    "description": "Validate phone format (E.164)",
                     "type": "string"
                 }
             }

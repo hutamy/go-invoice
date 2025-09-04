@@ -74,6 +74,7 @@ func (c *AuthController) SignUp(ctx echo.Context) error {
 // @Success      200   {object}  utils.GenericResponse
 // @Failure      400   {object}  utils.GenericResponse
 // @Failure      401   {object}  utils.GenericResponse
+// @Failure      403   {object}  utils.GenericResponse "Account deactivated - can be restored by registering again"
 // @Failure      500   {object}  utils.GenericResponse
 // @Router       /v1/public/auth/sign-in [post]
 func (c *AuthController) SignIn(ctx echo.Context) error {
@@ -159,12 +160,14 @@ func (c *AuthController) Me(ctx echo.Context) error {
 // @Tags         auth
 // @Accept       json
 // @Produce      json
+// @Security     BearerAuth
 // @Param        body  body      dto.RefreshTokenRequest  true  "Refresh Token Request"
 // @Success      200   {object}  utils.GenericResponse
 // @Failure      400   {object}  utils.GenericResponse
 // @Failure      401   {object}  utils.GenericResponse
+// @Failure      404   {object}  utils.GenericResponse
 // @Failure      500   {object}  utils.GenericResponse
-// @Router       /v1/public/auth/refresh-token [post]
+// @Router       /v1/protected/auth/refresh-token [post]
 func (c *AuthController) RefreshToken(ctx echo.Context) error {
 	req := new(dto.RefreshTokenRequest)
 	if err := ctx.Bind(req); err != nil {

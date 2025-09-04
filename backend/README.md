@@ -80,14 +80,13 @@ Visit: `http://localhost:8080/swagger/index.html`
 ```bash
 curl --location 'http://localhost:8080/v1/public/auth/sign-up' \
 --header 'Content-Type: application/json' \
---header 'X-API-Key: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJleHAiOjE3NDk3MzI5MzcsImlhdCI6MTc0OTQ3MzczNywidXNlcl9pZCI6Mn0.YOw9hjXh_Llj11bWqOMnAkwSWb2TdH23ppsSX7g3aPo' \
 --data-raw '{
     "name": "Jane Doe",
     "email": "jane@example.com",
     "password": "yourpassword",
-    "address": "some street",
-    "phone_number": "1234567890",
-    "bank_name": "bank name",
+    "address": "123 Main Street",
+    "phone": "1234567890",
+    "bank_name": "Bank Name",
     "bank_account_name": "Jane Doe",
     "bank_account_number": "1234567890"
 }'
@@ -100,24 +99,71 @@ curl --location 'http://localhost:8080/v1/public/auth/sign-in' \
 --header 'Content-Type: application/json' \
 --data-raw '{
     "email": "jane@example.com",
-    "password": "yourpassword",
+    "password": "yourpassword"
 }'
 ```
 
-### Me
+### Get Current User Profile
 
 ```bash
 curl --location 'http://localhost:8080/v1/protected/me' \
---header 'Authorization: Bearer <token>'
+--header 'Authorization: Bearer <access_token>'
+```
+
+### Update User Profile
+
+```bash
+curl --location --request PUT 'http://localhost:8080/v1/protected/me/profile' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer <access_token>' \
+--data-raw '{
+    "name": "Jane Smith",
+    "email": "jane.smith@example.com",
+    "address": "456 New Street",
+    "phone": "0987654321"
+}'
+```
+
+### Update User Banking Information
+
+```bash
+curl --location --request PUT 'http://localhost:8080/v1/protected/me/banking' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer <access_token>' \
+--data-raw '{
+    "bank_name": "New Bank Name",
+    "bank_account_name": "Jane Smith",
+    "bank_account_number": "9876543210"
+}'
+```
+
+### Change Password
+
+```bash
+curl --location 'http://localhost:8080/v1/protected/me/change-password' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer <access_token>' \
+--data-raw '{
+    "old_password": "oldpassword",
+    "new_password": "newpassword"
+}'
+```
+
+### Deactivate Account (Soft Delete)
+
+```bash
+curl --location 'http://localhost:8080/v1/protected/me/deactivate' \
+--header 'Authorization: Bearer <access_token>'
 ```
 
 ### Refresh Token
 
 ```bash
 curl --location 'http://localhost:8080/v1/protected/auth/refresh-token' \
---header 'Authorization: Bearer <token>'
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer <access_token>' \
 --data-raw '{
-    "refresh_token": <token>
+    "refresh_token": "<refresh_token>"
 }'
 ```
 
@@ -126,12 +172,12 @@ curl --location 'http://localhost:8080/v1/protected/auth/refresh-token' \
 ```bash
 curl --location 'http://localhost:8080/v1/protected/clients' \
 --header 'Content-Type: application/json' \
---header 'Authorization: Bearer <token>' \
+--header 'Authorization: Bearer <access_token>' \
 --data-raw '{
-  "name": "Client Name",
-  "email": "client@example.com",
-  "phone": "1234567890",
-  "address": "some street"
+    "name": "Client Name",
+    "email": "client@example.com",
+    "phone": "1234567890",
+    "address": "Client Address"
 }'
 ```
 
@@ -139,14 +185,14 @@ curl --location 'http://localhost:8080/v1/protected/clients' \
 
 ```bash
 curl --location 'http://localhost:8080/v1/protected/clients' \
---header 'Authorization: Bearer <token>' \
+--header 'Authorization: Bearer <access_token>'
 ```
 
 ### Get Client By ID
 
 ```bash
 curl --location 'http://localhost:8080/v1/protected/clients/1' \
---header 'Authorization: Bearer <token>' \
+--header 'Authorization: Bearer <access_token>'
 ```
 
 ### Update Client
@@ -154,20 +200,27 @@ curl --location 'http://localhost:8080/v1/protected/clients/1' \
 ```bash
 curl --location --request PUT 'http://localhost:8080/v1/protected/clients/1' \
 --header 'Content-Type: application/json' \
---header 'Authorization: Bearer <token>' \
+--header 'Authorization: Bearer <access_token>' \
 --data-raw '{
-  "name": "Client Name",
-  "email": "client@example.com",
-  "phone": "1234567890",
-  "address": "some street"
+    "name": "Updated Client Name",
+    "email": "updated.client@example.com",
+    "phone": "0987654321",
+    "address": "Updated Client Address"
 }'
 ```
 
-### Delete Client
+### Delete Client (Soft Delete)
 
 ```bash
 curl --location --request DELETE 'http://localhost:8080/v1/protected/clients/1' \
---header 'Authorization: Bearer <token>'
+--header 'Authorization: Bearer <access_token>'
+```
+
+### Get Invoice Summary (Dashboard Stats)
+
+```bash
+curl --location 'http://localhost:8080/v1/protected/invoices/summary' \
+--header 'Authorization: Bearer <access_token>'
 ```
 
 ### Create Invoice
@@ -175,23 +228,45 @@ curl --location --request DELETE 'http://localhost:8080/v1/protected/clients/1' 
 ```bash
 curl --location 'http://localhost:8080/v1/protected/invoices' \
 --header 'Content-Type: application/json' \
---header 'Authorization: Bearer <token>' \
+--header 'Authorization: Bearer <access_token>' \
 --data '{
     "client_id": 1,
-    "client_name": "Client",
-    "client_email": "client@mail.com",
-    "client_phone": "+1234567890",
-    "client_address": "some street",
-    "invoice_number": "INV 30/VI/2025",
+    "invoice_number": "INV-001",
     "due_date": "2025-06-30",
     "issue_date": "2025-05-30",
-    "notes": "Make payment befor 30 days",
+    "notes": "Payment due within 30 days",
     "tax_rate": 10,
     "items": [
         {
-            "description": "Item Description",
+            "description": "Web Development Services",
             "quantity": 1,
-            "unit_price": 100
+            "unit_price": 1000
+        }
+    ]
+}'
+```
+
+### Create Invoice with Manual Client Info
+
+```bash
+curl --location 'http://localhost:8080/v1/protected/invoices' \
+--header 'Content-Type: application/json' \
+--header 'Authorization: Bearer <access_token>' \
+--data '{
+    "client_name": "Manual Client",
+    "client_email": "manual@example.com",
+    "client_phone": "+1234567890",
+    "client_address": "123 Client Street",
+    "invoice_number": "INV-002",
+    "due_date": "2025-06-30",
+    "issue_date": "2025-05-30",
+    "notes": "Payment due within 30 days",
+    "tax_rate": 10,
+    "items": [
+        {
+            "description": "Consulting Services",
+            "quantity": 8,
+            "unit_price": 150
         }
     ]
 }'
@@ -201,14 +276,14 @@ curl --location 'http://localhost:8080/v1/protected/invoices' \
 
 ```bash
 curl --location 'http://localhost:8080/v1/protected/invoices' \
---header 'Authorization: Bearer <token>' \
+--header 'Authorization: Bearer <access_token>'
 ```
 
 ### Get Invoice By ID
 
 ```bash
 curl --location 'http://localhost:8080/v1/protected/invoices/1' \
---header 'Authorization: Bearer <token>' \
+--header 'Authorization: Bearer <access_token>'
 ```
 
 ### Update Invoice
@@ -216,20 +291,21 @@ curl --location 'http://localhost:8080/v1/protected/invoices/1' \
 ```bash
 curl --location --request PUT 'http://localhost:8080/v1/protected/invoices/1' \
 --header 'Content-Type: application/json' \
---header 'Authorization: Bearer <token>' \
+--header 'Authorization: Bearer <access_token>' \
 --data '{
     "client_id": 1,
-    "invoice_number": "INV 30/VI/2025",
-    "due_date": "2025-06-30",
-    "notes": "Make payment befor 30 days",
-    "tax_rate": 10,
+    "invoice_number": "INV-001-UPDATED",
+    "due_date": "2025-07-15",
+    "issue_date": "2025-05-30",
+    "notes": "Updated payment terms",
+    "tax_rate": 8.5,
     "status": "sent",
     "items": [
         {
             "id": 1,
-            "description": "Item Description",
+            "description": "Updated Web Development Services",
             "quantity": 1,
-            "unit_price": 100
+            "unit_price": 1200
         }
     ]
 }'
@@ -240,58 +316,60 @@ curl --location --request PUT 'http://localhost:8080/v1/protected/invoices/1' \
 ```bash
 curl --location --request PATCH 'http://localhost:8080/v1/protected/invoices/1/status' \
 --header 'Content-Type: application/json' \
---header 'Authorization: Bearer <token>' \
+--header 'Authorization: Bearer <access_token>' \
 --data '{
-    "status": "sent"
+    "status": "paid"
 }'
 ```
 
-### Delete Invoice
+### Delete Invoice (Soft Delete)
 
 ```bash
 curl --location --request DELETE 'http://localhost:8080/v1/protected/invoices/1' \
---header 'Authorization: Bearer <token>'
+--header 'Authorization: Bearer <access_token>'
 ```
 
-### Generate PDF
+### Download Invoice PDF
 
 ```bash
 curl --location --request POST 'http://localhost:8080/v1/protected/invoices/1/pdf' \
---header 'Authorization: Bearer <token>'
+--header 'Authorization: Bearer <access_token>' \
+--output invoice.pdf
 ```
 
-### Generate Public PDF
+### Generate Public PDF (No Authentication Required)
 
 ```bash
 curl --location 'http://localhost:8080/v1/public/invoices/generate-pdf' \
 --header 'Content-Type: application/json' \
+--output public-invoice.pdf \
 --data-raw '{
-    "invoice_number": "INV 30/VI/2025",s
+    "invoice_number": "PUB-INV-001",
     "due_date": "2025-06-30",
-    "notes": "Make payment befor 30 days",
     "issue_date": "2025-06-01",
+    "notes": "Payment due within 30 days",
+    "tax_rate": 10,
     "sender": {
         "name": "Jane Doe",
         "email": "jane@example.com",
-        "address": "some street",
+        "address": "123 Business Street",
         "phone_number": "1234567890",
-        "bank_name": "bank name",
+        "bank_name": "Business Bank",
         "bank_account_name": "Jane Doe",
         "bank_account_number": "1234567890"
     },
     "recipient": {
         "name": "Client Name",
         "email": "client@example.com",
-        "phone": "1234567890",
-        "address": "some street"
+        "phone": "0987654321",
+        "address": "456 Client Avenue"
     },
     "items": [
         {
-          "description": "Item Description",
-          "quantity": 1,
-          "unit_price": 100
+            "description": "Freelance Consulting",
+            "quantity": 10,
+            "unit_price": 100
         }
-    ],
-    "tax_rate": 10
+    ]
 }'
 ```

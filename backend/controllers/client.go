@@ -147,7 +147,7 @@ func (c *ClientController) UpdateClient(ctx echo.Context) error {
 }
 
 // @Summary      Delete client
-// @Description  Deletes a client by its ID for the authenticated user
+// @Description  Soft deletes a client by its ID for the authenticated user (can be restored)
 // @Tags         clients
 // @Produce      json
 // @Security     BearerAuth
