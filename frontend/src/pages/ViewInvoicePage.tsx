@@ -20,6 +20,11 @@ const ViewInvoicePage: React.FC = () => {
   const [downloading, setDownloading] = useState(false);
   const [sending, setSending] = useState(false);
 
+  const handleBackClick = () => {
+    // Go back to the previous page in history
+    navigate(-1);
+  };
+
   const loadInvoice = useCallback(async (invoiceId: number) => {
     try {
       setLoading(true);
@@ -125,13 +130,13 @@ const ViewInvoicePage: React.FC = () => {
               The invoice you're looking for doesn't exist.
             </p>
             <div className="mt-6">
-              <Link
-                to="/invoices"
+              <button
+                onClick={handleBackClick}
                 className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-lg text-white bg-blue-600 hover:bg-blue-700"
               >
                 <ArrowLeft className="h-4 w-4 mr-2" />
                 Back to Invoices
-              </Link>
+              </button>
             </div>
           </div>
         </div>
@@ -184,13 +189,13 @@ const ViewInvoicePage: React.FC = () => {
         <div className="mb-8">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
-              <Link
-                to="/invoices"
+              <button
+                onClick={handleBackClick}
                 className="inline-flex items-center text-sm text-gray-600 hover:text-gray-900"
               >
                 <ArrowLeft className="h-4 w-4 mr-1" />
                 Back to Invoices
-              </Link>
+              </button>
             </div>
             <div className="flex items-center space-x-3">
               <Link

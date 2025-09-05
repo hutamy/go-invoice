@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Fragment } from "react";
 import { Link } from "react-router-dom";
 import {
   FileText,
@@ -11,7 +11,9 @@ import {
   Calendar,
   User,
   Filter,
+  ChevronDown,
 } from "lucide-react";
+import { Listbox, Transition } from '@headlessui/react';
 import { toast } from "react-toastify";
 import { apiService } from "../utils/api.ts";
 import type { Invoice } from "../types/index.ts";
@@ -23,6 +25,7 @@ const InvoicesPage: React.FC = () => {
   const [invoices, setInvoices] = useState<Invoice[]>([]);
   const [loading, setLoading] = useState(true);
   const [downloadingIds, setDownloadingIds] = useState<Set<number>>(new Set());
+  const [updatingStatusIds, setUpdatingStatusIds] = useState<Set<number>>(new Set());
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<
     "all" | "draft" | "sent" | "paid" | "overdue"
@@ -117,6 +120,26 @@ const InvoicesPage: React.FC = () => {
       toast.error("Failed to download invoice");
     } finally {
       setDownloadingIds(prev => {
+        const newSet = new Set(prev);
+        newSet.delete(invoice.id);
+        return newSet;
+      });
+    }
+  };
+
+  const handleUpdateStatus = async (invoice: Invoice, newStatus: string) => {
+    if (newStatus === invoice.status) return; // No change needed
+    
+    try {
+      setUpdatingStatusIds(prev => new Set(prev).add(invoice.id));
+      await apiService.updateInvoiceStatus(invoice.id, newStatus);
+      toast.success(`Invoice status updated to ${newStatus}`);
+      // Reload invoices to reflect the change
+      await loadInvoices();
+    } catch {
+      toast.error("Failed to update invoice status");
+    } finally {
+      setUpdatingStatusIds(prev => {
         const newSet = new Set(prev);
         newSet.delete(invoice.id);
         return newSet;
@@ -224,8 +247,8 @@ const InvoicesPage: React.FC = () => {
             )}
           </div>
         ) : (
-          <div className="bg-white/70 backdrop-blur-sm border border-primary-200/50 rounded-3xl overflow-hidden shadow-xl">
-            <div className="overflow-x-auto">
+          <div className="bg-white/70 backdrop-blur-sm border border-primary-200/50 rounded-3xl shadow-xl" style={{ overflow: 'visible' }}>
+            <div className="overflow-x-auto" style={{ overflow: 'visible' }}>
               <table className="min-w-full divide-y divide-primary-200/50">
                 <thead className="bg-gradient-to-r from-primary-50 to-sky-50/30">
                   <tr>
@@ -284,18 +307,77 @@ const InvoicesPage: React.FC = () => {
                         </div>
                       </td>
                       <td className="px-8 py-5 whitespace-nowrap">
-                        <span
-                          className={`inline-flex items-center px-3 py-2 text-xs font-bold rounded-full border ${
-                            invoice.status === 'paid'
-                              ? 'bg-emerald-100 text-emerald-800 border-emerald-200'
-                              : invoice.status === 'sent'
-                              ? 'bg-sky-100 text-sky-800 border-sky-200'
-                              : 'bg-primary-100 text-primary-800 border-primary-200'
-                          }`}
-                        >
-                          {invoice.status.charAt(0).toUpperCase() +
-                            invoice.status.slice(1)}
-                        </span>
+                        <div className="relative">
+                          <Listbox 
+                            value={invoice.status}
+                            onChange={(value) => handleUpdateStatus(invoice, value)}
+                            disabled={updatingStatusIds.has(invoice.id)}
+                          >
+                            <div className="relative">
+                              <Listbox.Button 
+                                className={`inline-flex items-center px-3 py-2 text-xs font-bold rounded-full border cursor-pointer transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed w-20 justify-between ${
+                                  invoice.status === 'paid'
+                                    ? 'bg-emerald-100 text-emerald-800 border-emerald-200 hover:bg-emerald-200'
+                                    : invoice.status === 'sent'
+                                    ? 'bg-sky-100 text-sky-800 border-sky-200 hover:bg-sky-200'
+                                    : 'bg-primary-100 text-primary-800 border-primary-200 hover:bg-primary-200'
+                                }`}
+                                disabled={updatingStatusIds.has(invoice.id)}
+                              >
+                                <span>
+                                  {invoice.status.charAt(0).toUpperCase() + invoice.status.slice(1)}
+                                </span>
+                                <ChevronDown className="h-3 w-3 text-current transition-transform duration-200 ui-open:rotate-180" />
+                              </Listbox.Button>
+
+                              <Transition
+                                as={Fragment}
+                                leave="transition ease-in duration-100"
+                                leaveFrom="opacity-100"
+                                leaveTo="opacity-0"
+                              >
+                                <Listbox.Options className="absolute z-[9999] w-24 mt-1 bg-white/95 backdrop-blur-sm border border-primary-200 rounded-xl shadow-2xl overflow-hidden right-0">
+                                  <Listbox.Option
+                                    value="draft"
+                                    className={({ active, selected }) =>
+                                      `relative cursor-pointer select-none py-2 px-3 transition-colors text-xs font-bold first:rounded-t-xl ${
+                                        active ? 'bg-primary-50/80' : ''
+                                      } ${
+                                        selected ? 'bg-primary-100/60 text-primary-800' : 'text-primary-700'
+                                      }`
+                                    }
+                                  >
+                                    Draft
+                                  </Listbox.Option>
+                                  <Listbox.Option
+                                    value="sent"
+                                    className={({ active, selected }) =>
+                                      `relative cursor-pointer select-none py-2 px-3 transition-colors text-xs font-bold ${
+                                        active ? 'bg-sky-50/80' : ''
+                                      } ${
+                                        selected ? 'bg-sky-100/60 text-sky-800' : 'text-sky-700'
+                                      }`
+                                    }
+                                  >
+                                    Sent
+                                  </Listbox.Option>
+                                  <Listbox.Option
+                                    value="paid"
+                                    className={({ active, selected }) =>
+                                      `relative cursor-pointer select-none py-2 px-3 transition-colors text-xs font-bold last:rounded-b-xl ${
+                                        active ? 'bg-emerald-50/80' : ''
+                                      } ${
+                                        selected ? 'bg-emerald-100/60 text-emerald-800' : 'text-emerald-700'
+                                      }`
+                                    }
+                                  >
+                                    Paid
+                                  </Listbox.Option>
+                                </Listbox.Options>
+                              </Transition>
+                            </div>
+                          </Listbox>
+                        </div>
                       </td>
                       <td className="px-8 py-5 whitespace-nowrap">
                         <div className="flex items-center">
