@@ -53,25 +53,25 @@ const LoginPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gradient-to-br from-white via-primary-50/50 to-sky-50/40 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full">
-        <div className="bg-white rounded-3xl shadow-2xl p-10 border border-gray-100/50 backdrop-blur-sm">
+        <div className="bg-white/70 backdrop-blur-sm rounded-3xl shadow-xl p-10 border border-primary-200/50">
           {/* Header */}
           <div className="text-center mb-10">
-            <div className="mx-auto h-12 w-12 flex items-center justify-center rounded-2xl bg-blue-500/10 border border-blue-200/50">
-              <LogIn className="h-6 w-6 text-blue-600" />
+            <div className="mx-auto h-16 w-16 flex items-center justify-center rounded-2xl bg-gradient-to-br from-sky-100 to-blue-100 border border-sky-200/50">
+              <LogIn className="h-8 w-8 text-sky-600" />
             </div>
-            <h2 className="mt-8 text-2xl font-light text-gray-900 tracking-tight">
+            <h2 className="mt-8 text-3xl font-bold text-primary-900 tracking-tight">
               Welcome Back
             </h2>
-            <p className="mt-3 text-sm text-gray-500 font-light">
+            <p className="mt-3 text-lg text-primary-600 font-light">
               Sign in to continue to your dashboard
             </p>
-            <p className="mt-6 text-sm text-gray-400">
+            <p className="mt-6 text-sm text-primary-500">
               Don't have an account?{" "}
               <Link
                 to="/register"
-                className="font-medium text-blue-600 hover:text-blue-700 transition-colors duration-300"
+                className="font-semibold text-sky-600 hover:text-blue-700 transition-colors duration-300"
               >
                 Create one here
               </Link>
@@ -83,7 +83,7 @@ const LoginPage: React.FC = () => {
               <div>
                 <label
                   htmlFor="email"
-                  className="block text-sm font-medium text-gray-700 mb-3"
+                  className="block text-sm font-semibold text-primary-700 mb-3"
                 >
                   Email Address
                 </label>
@@ -91,7 +91,7 @@ const LoginPage: React.FC = () => {
                   {...register("email")}
                   type="email"
                   autoComplete="email"
-                  className="w-full px-4 py-4 bg-gray-50/50 border border-gray-200/60 rounded-2xl focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500/50 transition-all duration-300 placeholder-gray-400 text-gray-900"
+                  className="w-full px-4 py-4 bg-primary-50/50 border border-primary-200/60 rounded-full focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500/50 transition-all duration-300 placeholder-primary-400 text-primary-900"
                   placeholder="Enter your email address"
                 />
                 {errors.email && (
@@ -104,7 +104,7 @@ const LoginPage: React.FC = () => {
               <div>
                 <label
                   htmlFor="password"
-                  className="block text-sm font-medium text-gray-700 mb-3"
+                  className="block text-sm font-semibold text-primary-700 mb-3"
                 >
                   Password
                 </label>
@@ -113,12 +113,12 @@ const LoginPage: React.FC = () => {
                     {...register("password")}
                     type={showPassword ? "text" : "password"}
                     autoComplete="current-password"
-                    className="w-full px-4 py-4 pr-12 bg-gray-50/50 border border-gray-200/60 rounded-2xl focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500/50 transition-all duration-300 placeholder-gray-400 text-gray-900"
+                    className="w-full px-4 py-4 pr-12 bg-primary-50/50 border border-primary-200/60 rounded-full focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500/50 transition-all duration-300 placeholder-primary-400 text-primary-900"
                     placeholder="Enter your password"
                   />
                   <button
                     type="button"
-                    className="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-gray-600 transition-colors duration-300"
+                    className="absolute inset-y-0 right-0 pr-4 flex items-center text-primary-400 hover:text-primary-600 transition-colors duration-300"
                     onClick={() => setShowPassword(!showPassword)}
                   >
                     {showPassword ? (
@@ -140,7 +140,7 @@ const LoginPage: React.FC = () => {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-4 px-6 rounded-2xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-blue-600/25 hover:shadow-xl hover:shadow-blue-600/30 flex justify-center items-center"
+                className="w-full bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white font-semibold py-4 px-6 rounded-full transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed shadow-xl shadow-sky-500/25 hover:shadow-2xl hover:shadow-sky-500/30 flex justify-center items-center"
               >
                 {isLoading ? (
                   <>
@@ -158,7 +158,7 @@ const LoginPage: React.FC = () => {
               <div className="text-center">
                 <Link
                   to="/"
-                  className="text-sm text-gray-400 hover:text-blue-600 transition-colors duration-300 font-light"
+                  className="text-sm text-primary-500 hover:text-sky-600 transition-colors duration-300 font-medium"
                 >
                   ← Back to Home
                 </Link>

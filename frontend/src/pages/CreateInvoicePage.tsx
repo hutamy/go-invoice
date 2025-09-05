@@ -143,32 +143,32 @@ const CreateInvoicePage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white">
+    <div className="min-h-screen bg-gradient-to-br from-white via-primary-50/50 to-sky-50/40">
       {loading ? (
         <div className="flex items-center justify-center h-64">
-          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600"></div>
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-sky-500"></div>
         </div>
       ) : (
         <>
           {/* Navigation */}
-          <nav className="bg-white border-b border-gray-100">
+          <nav className="bg-white/80 backdrop-blur-sm border-b border-primary-200/50 shadow-sm">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
             <Link to="/" className="flex items-center space-x-2">
-              <FileText className="h-8 w-8 text-blue-600" />
-              <span className="text-xl font-bold text-gray-900">GoInvoice</span>
+              <FileText className="h-8 w-8 text-sky-600" />
+              <span className="text-xl font-bold text-primary-900">GoInvoice</span>
             </Link>
             <div className="flex items-center space-x-6">
-              <Link to="/dashboard" className="text-gray-600 hover:text-gray-900 transition-colors">
+              <Link to="/dashboard" className="text-primary-600 hover:text-primary-900 transition-colors font-medium">
                 Dashboard
               </Link>
-              <Link to="/invoices" className="text-gray-600 hover:text-gray-900 transition-colors">
+              <Link to="/invoices" className="text-primary-600 hover:text-primary-900 transition-colors font-medium">
                 Invoices
               </Link>
-              <Link to="/clients" className="text-gray-600 hover:text-gray-900 transition-colors">
+              <Link to="/clients" className="text-primary-600 hover:text-primary-900 transition-colors font-medium">
                 Clients
               </Link>
-              <Link to="/settings" className="text-gray-600 hover:text-gray-900 transition-colors">
+              <Link to="/settings" className="text-primary-600 hover:text-primary-900 transition-colors font-medium">
                 Settings
               </Link>
             </div>
@@ -176,14 +176,14 @@ const CreateInvoicePage: React.FC = () => {
         </div>
       </nav>
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Header */}
-        <div className="mb-8">
+        <div className="mb-12">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
               <Link
                 to="/invoices"
-                className="inline-flex items-center text-sm text-gray-500 hover:text-gray-700"
+                className="inline-flex items-center text-sm text-primary-500 hover:text-primary-700 font-medium transition-colors"
               >
                 <ArrowLeft className="h-4 w-4 mr-1" />
                 Back to Invoices
@@ -193,33 +193,35 @@ const CreateInvoicePage: React.FC = () => {
               <button
                 onClick={handleSaveAsDraft}
                 disabled={isSaving || !isFormValid()}
-                className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="inline-flex items-center px-8 py-3 text-sm font-semibold rounded-full shadow-lg text-white bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-sky-500 disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 hover:shadow-xl hover:-translate-y-0.5"
               >
-                <Save className="h-4 w-4 mr-2" />
+                <Save className="h-5 w-5 mr-2" />
                 {isSaving ? 'Saving...' : isEditMode ? 'Update Invoice' : 'Save Invoice'}
               </button>
             </div>
           </div>
-          <div className="mt-4">
-            <h1 className="text-4xl font-bold text-gray-900 mb-2">
+          <div className="mt-6">
+            <h1 className="text-5xl font-bold text-primary-900 mb-4 tracking-tight">
               {isEditMode ? 'Edit Invoice' : 'Create Invoice'}
             </h1>
-            <p className="text-lg text-gray-600">
+            <p className="text-xl text-primary-600 font-light">
               Fill in the details below and see the live preview on the right
             </p>
           </div>
         </div>
 
         {/* Content - Side by Side Layout */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16">
           {/* Form Section - Left Side */}
           <div>
-            <div className="bg-white border border-gray-200 rounded-lg">
-              <div className="px-6 py-4 border-b border-gray-200">
-                <h2 className="text-lg font-semibold text-gray-900">Invoice Details</h2>
-                <p className="text-sm text-gray-600">Enter the information for your invoice</p>
+            <div className="bg-white/70 backdrop-blur-sm rounded-3xl shadow-xl border border-primary-200/50 overflow-hidden">
+              <div className="bg-gradient-to-r from-primary-900 via-primary-800 to-blue-900 px-10 py-8">
+                <h2 className="text-2xl font-bold text-white flex items-center">
+                  <FileText className="h-7 w-7 mr-4" />
+                  Invoice Details
+                </h2>
               </div>
-              <div className="p-6">
+              <div className="p-10">
                 <InvoiceForm 
                   data={invoiceData}
                   onChange={handleFormChange}
@@ -231,14 +233,23 @@ const CreateInvoicePage: React.FC = () => {
 
           {/* Preview Section - Right Side */}
           <div>
-            <div className="bg-white border border-gray-200 rounded-lg">
-              <div className="px-6 py-4 border-b border-gray-200">
-                <h2 className="text-lg font-semibold text-gray-900">Live Preview</h2>
-                <p className="text-sm text-gray-600">See how your invoice will look</p>
+            <div className="bg-white/70 backdrop-blur-sm rounded-3xl shadow-xl border border-primary-200/50 overflow-hidden">
+              <div className="bg-gradient-to-r from-accent-600 via-sky-500 to-blue-600 px-10 py-8">
+                <div className="flex items-center justify-between">
+                  <h2 className="text-2xl font-bold text-white flex items-center">
+                    <FileText className="h-7 w-7 mr-4" />
+                    Live Preview
+                  </h2>
+                  <span className="bg-white/20 text-white text-sm px-4 py-2 rounded-full font-semibold">
+                    Real-time
+                  </span>
+                </div>
               </div>
-              <div className="p-6">
-                <div className="transform scale-75 origin-top-left overflow-hidden" style={{ width: '133%' }}>
-                  <InvoicePreview data={invoiceData} />
+              <div className="p-10">
+                <div className="bg-gradient-to-br from-primary-50/80 to-sky-50/60 rounded-2xl p-8 border border-primary-200/40">
+                  <div className="transform scale-75 origin-top-left overflow-hidden" style={{ width: '133%' }}>
+                    <InvoicePreview data={invoiceData} />
+                  </div>
                 </div>
               </div>
             </div>

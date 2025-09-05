@@ -5,6 +5,7 @@ import { useAuth } from '../context/AuthContext.tsx';
 import { apiService } from '../utils/api.ts';
 import type { Invoice, Client, InvoiceSummary } from '../types/index.ts';
 import { formatDate } from '../utils/helper.ts';
+import Navbar from '../components/Navbar.tsx';
 
 const DashboardPage: React.FC = () => {
   const { user } = useAuth();
@@ -48,204 +49,183 @@ const DashboardPage: React.FC = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-white">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600"></div>
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-white via-primary-50/50 to-sky-50/40">
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-sky-500"></div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-white">
-      {/* Navigation */}
-      <nav className="bg-white border-b border-gray-100">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-4">
-            <Link to="/" className="flex items-center space-x-2">
-              <FileText className="h-8 w-8 text-blue-600" />
-              <span className="text-xl font-bold text-gray-900">GoInvoice</span>
-            </Link>
-            <div className="flex items-center space-x-6">
-              <Link to="/invoices" className="text-gray-600 hover:text-gray-900 transition-colors">
-                Invoices
-              </Link>
-              <Link to="/clients" className="text-gray-600 hover:text-gray-900 transition-colors">
-                Clients
-              </Link>
-              <Link to="/settings" className="text-gray-600 hover:text-gray-900 transition-colors">
-                Settings
-              </Link>
-            </div>
-          </div>
-        </div>
-      </nav>
+    <div className="min-h-screen bg-gradient-to-br from-white via-primary-50/50 to-sky-50/40">
+      <Navbar />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Header */}
-        <div className="mb-12">
-          <h1 className="text-4xl font-bold text-gray-900 mb-2">
+        <div className="mb-16">
+          <h1 className="text-5xl font-bold text-primary-900 mb-4 tracking-tight">
             Welcome back, {user?.name}
           </h1>
-          <p className="text-lg text-gray-600">
+          <p className="text-xl text-primary-600 font-light">
             Here's an overview of your business activity
           </p>
         </div>
 
         {/* Stats Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-          <div className="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-16">
+          <div className="bg-white/70 backdrop-blur-sm border border-primary-200/50 rounded-2xl p-8 hover:shadow-2xl hover:shadow-sky-500/10 transition-all duration-300 hover:border-sky-300/50">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">Total Invoices</p>
-                <p className="text-2xl font-bold text-gray-900">{stats.totalInvoices}</p>
+                <p className="text-sm font-semibold text-primary-600 mb-2">Total Invoices</p>
+                <p className="text-3xl font-bold text-primary-900">{stats.totalInvoices}</p>
               </div>
-              <div className="bg-blue-50 p-3 rounded-lg">
-                <FileText className="h-6 w-6 text-blue-600" />
+              <div className="bg-gradient-to-br from-sky-100 to-blue-100 p-4 rounded-2xl border border-sky-200/50">
+                <FileText className="h-7 w-7 text-sky-600" />
               </div>
             </div>
           </div>
 
-          <div className="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow">
+          <div className="bg-white/70 backdrop-blur-sm border border-primary-200/50 rounded-2xl p-8 hover:shadow-2xl hover:shadow-emerald-500/10 transition-all duration-300 hover:border-emerald-300/50">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">Total Revenue</p>
-                <p className="text-2xl font-bold text-gray-900">IDR {stats.totalAmount.toLocaleString()}</p>
+                <p className="text-sm font-semibold text-primary-600 mb-2">Total Revenue</p>
+                <p className="text-3xl font-bold text-primary-900">IDR {stats.totalAmount.toLocaleString()}</p>
               </div>
-              <div className="bg-green-50 p-3 rounded-lg">
-                <DollarSign className="h-6 w-6 text-green-600" />
+              <div className="bg-gradient-to-br from-emerald-100 to-green-100 p-4 rounded-2xl border border-emerald-200/50">
+                <DollarSign className="h-7 w-7 text-emerald-600" />
               </div>
             </div>
           </div>
 
-          <div className="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow">
+          <div className="bg-white/70 backdrop-blur-sm border border-primary-200/50 rounded-2xl p-8 hover:shadow-2xl hover:shadow-purple-500/10 transition-all duration-300 hover:border-purple-300/50">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">Paid Amount</p>
-                <p className="text-2xl font-bold text-gray-900">IDR {stats.paidAmount.toLocaleString()}</p>
+                <p className="text-sm font-semibold text-primary-600 mb-2">Paid Amount</p>
+                <p className="text-3xl font-bold text-primary-900">IDR {stats.paidAmount.toLocaleString()}</p>
               </div>
-              <div className="bg-purple-50 p-3 rounded-lg">
-                <TrendingUp className="h-6 w-6 text-purple-600" />
+              <div className="bg-gradient-to-br from-purple-100 to-violet-100 p-4 rounded-2xl border border-purple-200/50">
+                <TrendingUp className="h-7 w-7 text-purple-600" />
               </div>
             </div>
           </div>
 
-          <div className="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow">
+          <div className="bg-white/70 backdrop-blur-sm border border-primary-200/50 rounded-2xl p-8 hover:shadow-2xl hover:shadow-orange-500/10 transition-all duration-300 hover:border-orange-300/50">
             <div className="flex items-center justify-between">
               <div>
-                <p className="text-sm font-medium text-gray-600">Total Clients</p>
-                <p className="text-2xl font-bold text-gray-900">{stats.totalClients}</p>
+                <p className="text-sm font-semibold text-primary-600 mb-2">Total Clients</p>
+                <p className="text-3xl font-bold text-primary-900">{stats.totalClients}</p>
               </div>
-              <div className="bg-orange-50 p-3 rounded-lg">
-                <Users className="h-6 w-6 text-orange-600" />
+              <div className="bg-gradient-to-br from-orange-100 to-amber-100 p-4 rounded-2xl border border-orange-200/50">
+                <Users className="h-7 w-7 text-orange-600" />
               </div>
             </div>
           </div>
         </div>
 
         {/* Quick Actions */}
-        <div className="mb-12">
-          <h2 className="text-2xl font-bold text-gray-900 mb-6">Quick Actions</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="mb-16">
+          <h2 className="text-3xl font-bold text-primary-900 mb-8 tracking-tight">Quick Actions</h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
             <Link
               to="/invoices/create"
-              className="group bg-white border border-gray-200 rounded-lg p-6 hover:shadow-md transition-all duration-200 hover:border-blue-200"
+              className="group bg-white/70 backdrop-blur-sm border border-primary-200/50 rounded-2xl p-8 hover:shadow-2xl hover:shadow-sky-500/10 transition-all duration-300 hover:border-sky-300/50"
             >
-              <div className="bg-blue-50 rounded-lg p-3 w-12 h-12 mb-4 group-hover:bg-blue-100 transition-colors">
-                <Plus className="h-6 w-6 text-blue-600" />
+              <div className="bg-gradient-to-br from-sky-100 to-blue-100 rounded-2xl p-4 w-16 h-16 mb-6 group-hover:from-sky-200 group-hover:to-blue-200 transition-colors border border-sky-200/50">
+                <Plus className="h-8 w-8 text-sky-600" />
               </div>
-              <h3 className="font-semibold text-gray-900 mb-2">Create Invoice</h3>
-              <p className="text-sm text-gray-600">Generate a new invoice for your clients</p>
+              <h3 className="font-bold text-primary-900 mb-3 text-lg">Create Invoice</h3>
+              <p className="text-primary-600 font-light leading-relaxed">Generate a new invoice for your clients</p>
             </Link>
             
             <Link
               to="/clients"
-              className="group bg-white border border-gray-200 rounded-lg p-6 hover:shadow-md transition-all duration-200 hover:border-purple-200"
+              className="group bg-white/70 backdrop-blur-sm border border-primary-200/50 rounded-2xl p-8 hover:shadow-2xl hover:shadow-purple-500/10 transition-all duration-300 hover:border-purple-300/50"
             >
-              <div className="bg-purple-50 rounded-lg p-3 w-12 h-12 mb-4 group-hover:bg-purple-100 transition-colors">
-                <Users className="h-6 w-6 text-purple-600" />
+              <div className="bg-gradient-to-br from-purple-100 to-violet-100 rounded-2xl p-4 w-16 h-16 mb-6 group-hover:from-purple-200 group-hover:to-violet-200 transition-colors border border-purple-200/50">
+                <Users className="h-8 w-8 text-purple-600" />
               </div>
-              <h3 className="font-semibold text-gray-900 mb-2">Manage Clients</h3>
-              <p className="text-sm text-gray-600">Add or edit client information</p>
+              <h3 className="font-bold text-primary-900 mb-3 text-lg">Manage Clients</h3>
+              <p className="text-primary-600 font-light leading-relaxed">Add or edit client information</p>
             </Link>
             
             <Link
               to="/invoices"
-              className="group bg-white border border-gray-200 rounded-lg p-6 hover:shadow-md transition-all duration-200 hover:border-green-200"
+              className="group bg-white/70 backdrop-blur-sm border border-primary-200/50 rounded-2xl p-8 hover:shadow-2xl hover:shadow-emerald-500/10 transition-all duration-300 hover:border-emerald-300/50"
             >
-              <div className="bg-green-50 rounded-lg p-3 w-12 h-12 mb-4 group-hover:bg-green-100 transition-colors">
-                <FileText className="h-6 w-6 text-green-600" />
+              <div className="bg-gradient-to-br from-emerald-100 to-green-100 rounded-2xl p-4 w-16 h-16 mb-6 group-hover:from-emerald-200 group-hover:to-green-200 transition-colors border border-emerald-200/50">
+                <FileText className="h-8 w-8 text-emerald-600" />
               </div>
-              <h3 className="font-semibold text-gray-900 mb-2">View Invoices</h3>
-              <p className="text-sm text-gray-600">Browse and manage all invoices</p>
+              <h3 className="font-bold text-primary-900 mb-3 text-lg">View Invoices</h3>
+              <p className="text-primary-600 font-light leading-relaxed">Browse and manage all invoices</p>
             </Link>
           </div>
         </div>
 
         {/* Recent Invoices */}
         {recentInvoices.length > 0 && (
-          <div className="mb-12">
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-2xl font-bold text-gray-900">Recent Invoices</h2>
+          <div className="mb-16">
+            <div className="flex justify-between items-center mb-8">
+              <h2 className="text-3xl font-bold text-primary-900 tracking-tight">Recent Invoices</h2>
               <Link 
                 to="/invoices" 
-                className="text-blue-600 hover:text-blue-700 font-medium"
+                className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white font-semibold rounded-full transition-all duration-300 shadow-xl shadow-sky-500/25 hover:shadow-2xl hover:shadow-sky-500/30"
               >
                 View all
               </Link>
             </div>
-            <div className="bg-white border border-gray-200 rounded-lg overflow-hidden">
+            <div className="bg-white/70 backdrop-blur-sm border border-primary-200/50 rounded-3xl overflow-hidden shadow-xl">
               <div className="overflow-x-auto">
-                <table className="min-w-full divide-y divide-gray-200">
-                  <thead className="bg-gray-50">
+                <table className="min-w-full divide-y divide-primary-200/50">
+                  <thead className="bg-gradient-to-r from-primary-50 to-sky-50/30">
                     <tr>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th className="px-8 py-5 text-left text-xs font-bold text-primary-700 uppercase tracking-wider">
                         Invoice
                       </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th className="px-8 py-5 text-left text-xs font-bold text-primary-700 uppercase tracking-wider">
                         Client
                       </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th className="px-8 py-5 text-left text-xs font-bold text-primary-700 uppercase tracking-wider">
                         Amount
                       </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th className="px-8 py-5 text-left text-xs font-bold text-primary-700 uppercase tracking-wider">
                         Status
                       </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th className="px-8 py-5 text-left text-xs font-bold text-primary-700 uppercase tracking-wider">
                         Issue Date
                       </th>
-                      <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                      <th className="px-8 py-5 text-left text-xs font-bold text-primary-700 uppercase tracking-wider">
                         Due Date
                       </th>
                     </tr>
                   </thead>
-                  <tbody className="bg-white divide-y divide-gray-200">
+                  <tbody className="bg-white/50 backdrop-blur-sm divide-y divide-primary-200/30">
                     {recentInvoices.map((invoice) => (
-                      <tr key={invoice.id} className="hover:bg-gray-50">
-                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                      <tr key={invoice.id} className="hover:bg-sky-50/50 transition-colors duration-200">
+                        <td className="px-8 py-5 whitespace-nowrap text-sm font-semibold text-primary-900">
                           {invoice.invoice_number}
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        <td className="px-8 py-5 whitespace-nowrap text-sm text-primary-800 font-medium">
                           {invoice.client_name}
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        <td className="px-8 py-5 whitespace-nowrap text-sm text-primary-900 font-semibold">
                           IDR {(invoice.total || 0).toLocaleString()}
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap">
+                        <td className="px-8 py-5 whitespace-nowrap">
                           <span
-                            className={`inline-flex px-2 py-1 text-xs font-semibold rounded-full ${
+                            className={`inline-flex px-3 py-2 text-xs font-bold rounded-full ${
                               invoice.status === 'paid'
-                                ? 'bg-green-100 text-green-800'
+                                ? 'bg-emerald-100 text-emerald-800 border border-emerald-200'
                                 : invoice.status === 'sent'
-                                ? 'bg-blue-100 text-blue-800'
-                                : 'bg-gray-100 text-gray-800'
+                                ? 'bg-sky-100 text-sky-800 border border-sky-200'
+                                : 'bg-primary-100 text-primary-800 border border-primary-200'
                             }`}
                           >
                             {invoice.status.charAt(0).toUpperCase() + invoice.status.slice(1)}
                           </span>
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        <td className="px-8 py-5 whitespace-nowrap text-sm text-primary-700 font-medium">
                           {invoice.issue_date ? formatDate(invoice.issue_date) : ''}
                         </td>
-                        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                        <td className="px-8 py-5 whitespace-nowrap text-sm text-primary-700 font-medium">
                           {invoice.due_date ? formatDate(invoice.due_date) : ''}
                         </td>
                       </tr>
@@ -259,16 +239,18 @@ const DashboardPage: React.FC = () => {
 
         {/* Empty State */}
         {recentInvoices.length === 0 && (
-          <div className="text-center py-12">
-            <FileText className="mx-auto h-12 w-12 text-gray-400" />
-            <h3 className="mt-2 text-sm font-medium text-gray-900">No invoices yet</h3>
-            <p className="mt-1 text-sm text-gray-500">Get started by creating your first invoice.</p>
-            <div className="mt-6">
+          <div className="text-center py-20 bg-white/70 backdrop-blur-sm rounded-3xl border border-primary-200/50">
+            <div className="bg-gradient-to-br from-sky-100 to-blue-100 rounded-2xl p-6 w-20 h-20 mx-auto mb-8 border border-sky-200/50">
+              <FileText className="h-8 w-8 text-sky-600 mx-auto mt-2" />
+            </div>
+            <h3 className="text-xl font-bold text-primary-900 mb-3">No invoices yet</h3>
+            <p className="text-lg text-primary-600 font-light mb-8">Get started by creating your first invoice.</p>
+            <div>
               <Link
                 to="/invoices/create"
-                className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white font-semibold rounded-full transition-all duration-300 shadow-xl shadow-sky-500/25 hover:shadow-2xl hover:shadow-sky-500/30"
               >
-                <Plus className="-ml-1 mr-2 h-5 w-5" />
+                <Plus className="-ml-1 mr-3 h-5 w-5" />
                 Create Invoice
               </Link>
             </div>

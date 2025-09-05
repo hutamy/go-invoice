@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import { 
   Users, 
   Plus, 
@@ -10,7 +9,6 @@ import {
   Phone, 
   MapPin,
   X,
-  FileText
 } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -18,6 +16,7 @@ import { z } from 'zod';
 import { toast } from 'react-toastify';
 import { apiService } from '../utils/api.ts';
 import type { Client } from '../types/index.ts';
+import Navbar from '../components/Navbar.tsx';
 
 const clientSchema = z.object({
   name: z.string().min(1, 'Name is required'),
@@ -127,80 +126,36 @@ const ClientsPage: React.FC = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-white">
-        <nav className="bg-white border-b border-gray-100">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex justify-between items-center py-4">
-              <Link to="/" className="flex items-center space-x-2">
-                <FileText className="h-8 w-8 text-blue-600" />
-                <span className="text-xl font-bold text-gray-900">GoInvoice</span>
-              </Link>
-              <div className="flex items-center space-x-6">
-                <Link to="/dashboard" className="text-gray-600 hover:text-gray-900 transition-colors">
-                  Dashboard
-                </Link>
-                <Link to="/invoices" className="text-gray-600 hover:text-gray-900 transition-colors">
-                  Invoices
-                </Link>
-                <span className="text-gray-900 font-medium">Clients</span>
-                <Link to="/settings" className="text-gray-600 hover:text-gray-900 transition-colors">
-                  Settings
-                </Link>
-              </div>
-            </div>
-          </div>
-        </nav>
-
+      <div className="min-h-screen bg-gradient-to-br from-white via-primary-50/50 to-sky-50/40">
+        <Navbar />
         <div className="flex items-center justify-center h-64">
-          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600"></div>
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-sky-500"></div>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-white">
-      {/* Navigation */}
-      <nav className="bg-white border-b border-gray-100">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center py-4">
-            <Link to="/" className="flex items-center space-x-2">
-              <FileText className="h-8 w-8 text-blue-600" />
-              <span className="text-xl font-bold text-gray-900">GoInvoice</span>
-            </Link>
-            <div className="flex items-center space-x-6">
-              <Link to="/dashboard" className="text-gray-600 hover:text-gray-900 transition-colors">
-                Dashboard
-              </Link>
-              <Link to="/invoices" className="text-gray-600 hover:text-gray-900 transition-colors">
-                Invoices
-              </Link>
-              <span className="text-gray-900 font-medium">Clients</span>
-              <Link to="/settings" className="text-gray-600 hover:text-gray-900 transition-colors">
-                Settings
-              </Link>
-            </div>
-          </div>
-        </div>
-      </nav>
+    <div className="min-h-screen bg-gradient-to-br from-white via-primary-50/50 to-sky-50/40">
+      <Navbar />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 mb-2">Clients</h1>
-          <p className="text-lg text-gray-600">Manage your client relationships</p>
+        <div className="mb-12">
+          <h1 className="text-5xl font-bold text-primary-900 mb-4 tracking-tight">Clients</h1>
+          <p className="text-xl text-primary-600 font-light">Manage your client relationships</p>
         </div>
 
         {/* Actions Bar */}
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-6 mb-10">
           {/* Search */}
           <div className="relative flex-1 max-w-md">
-            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-              <Search className="h-5 w-5 text-gray-400" />
+            <div className="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
+              <Search className="h-5 w-5 text-primary-400" />
             </div>
             <input
               type="text"
-              className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="block w-full pl-12 pr-4 py-4 bg-white/70 backdrop-blur-sm border border-primary-200/60 rounded-full focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500/50 transition-all duration-300 placeholder-primary-400 text-primary-900"
               placeholder="Search clients..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
@@ -210,33 +165,35 @@ const ClientsPage: React.FC = () => {
           {/* Add Client Button */}
           <button
             onClick={openCreateModal}
-            className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+            className="inline-flex items-center px-6 py-4 bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white font-semibold rounded-full transition-all duration-300 shadow-xl shadow-sky-500/25 hover:shadow-2xl hover:shadow-sky-500/30"
           >
-            <Plus className="h-4 w-4 mr-2" />
+            <Plus className="h-5 w-5 mr-3" />
             Add Client
           </button>
         </div>
 
         {/* Clients Grid */}
         {filteredClients.length === 0 ? (
-          <div className="text-center py-12">
-            <Users className="mx-auto h-12 w-12 text-gray-400" />
-            <h3 className="mt-2 text-sm font-medium text-gray-900">
+          <div className="text-center py-20 bg-white/70 backdrop-blur-sm rounded-3xl border border-primary-200/50">
+            <div className="bg-gradient-to-br from-purple-100 to-violet-100 rounded-2xl p-6 w-20 h-20 mx-auto mb-8 border border-purple-200/50">
+              <Users className="h-8 w-8 text-purple-600 mx-auto mt-2" />
+            </div>
+            <h3 className="text-xl font-bold text-primary-900 mb-3">
               {searchTerm ? 'No clients found' : 'No clients yet'}
             </h3>
-            <p className="mt-1 text-sm text-gray-500">
+            <p className="text-lg text-primary-600 font-light mb-8">
               {searchTerm 
                 ? 'Try adjusting your search criteria.' 
                 : 'Get started by adding your first client.'
               }
             </p>
             {!searchTerm && (
-              <div className="mt-6">
+              <div>
                 <button
                   onClick={openCreateModal}
-                  className="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-lg text-white bg-blue-600 hover:bg-blue-700"
+                  className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white font-semibold rounded-full transition-all duration-300 shadow-xl shadow-sky-500/25 hover:shadow-2xl hover:shadow-sky-500/30"
                 >
-                  <Plus className="h-4 w-4 mr-2" />
+                  <Plus className="h-5 w-5 mr-3" />
                   Add Client
                 </button>
               </div>
@@ -309,88 +266,88 @@ const ClientsPage: React.FC = () => {
       {/* Client Modal */}
       {isModalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-lg shadow-xl max-w-md w-full">
-            <div className="flex items-center justify-between p-6 border-b border-gray-200">
-              <h3 className="text-lg font-semibold text-gray-900">
+          <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-2xl max-w-md w-full border border-white/20">
+            <div className="flex items-center justify-between p-8 border-b border-primary-200/30">
+              <h3 className="text-xl font-bold text-primary-900">
                 {editingClient ? 'Edit Client' : 'Add New Client'}
               </h3>
               <button
                 onClick={closeModal}
-                className="text-gray-400 hover:text-gray-600"
+                className="text-primary-400 hover:text-primary-600 transition-colors"
               >
                 <X className="h-6 w-6" />
               </button>
             </div>
 
-            <form onSubmit={handleSubmit(onSubmit)} className="p-6">
-              <div className="space-y-4">
+            <form onSubmit={handleSubmit(onSubmit)} className="p-8">
+              <div className="space-y-6">
                 <div>
-                  <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">
+                  <label htmlFor="name" className="block text-sm font-semibold text-primary-700 mb-3">
                     Name *
                   </label>
                   <input
                     type="text"
                     {...register('name')}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="w-full px-4 py-3 bg-white/80 border border-primary-200 rounded-full focus:ring-2 focus:ring-sky-500/40 focus:border-sky-500 transition-all duration-200 placeholder-primary-400 text-primary-900 shadow-sm"
                     placeholder="Client name"
                   />
                   {errors.name && (
-                    <p className="mt-1 text-sm text-red-600">{errors.name.message}</p>
+                    <p className="mt-2 text-sm text-red-600 font-medium">{errors.name.message}</p>
                   )}
                 </div>
 
                 <div>
-                  <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
+                  <label htmlFor="email" className="block text-sm font-semibold text-primary-700 mb-3">
                     Email
                   </label>
                   <input
                     type="email"
                     {...register('email')}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="w-full px-4 py-3 bg-white/80 border border-primary-200 rounded-full focus:ring-2 focus:ring-sky-500/40 focus:border-sky-500 transition-all duration-200 placeholder-primary-400 text-primary-900 shadow-sm"
                     placeholder="client@example.com"
                   />
                   {errors.email && (
-                    <p className="mt-1 text-sm text-red-600">{errors.email.message}</p>
+                    <p className="mt-2 text-sm text-red-600 font-medium">{errors.email.message}</p>
                   )}
                 </div>
 
                 <div>
-                  <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-1">
+                  <label htmlFor="phone" className="block text-sm font-semibold text-primary-700 mb-3">
                     Phone
                   </label>
                   <input
                     type="tel"
                     {...register('phone')}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="w-full px-4 py-3 bg-white/80 border border-primary-200 rounded-full focus:ring-2 focus:ring-sky-500/40 focus:border-sky-500 transition-all duration-200 placeholder-primary-400 text-primary-900 shadow-sm"
                     placeholder="+1 (555) 123-4567"
                   />
                 </div>
 
                 <div>
-                  <label htmlFor="address" className="block text-sm font-medium text-gray-700 mb-1">
+                  <label htmlFor="address" className="block text-sm font-semibold text-primary-700 mb-3">
                     Address
                   </label>
                   <textarea
                     {...register('address')}
                     rows={3}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                    className="w-full px-4 py-3 bg-white/80 border border-primary-200 rounded-2xl focus:ring-2 focus:ring-sky-500/40 focus:border-sky-500 transition-all duration-200 placeholder-primary-400 text-primary-900 shadow-sm resize-none"
                     placeholder="123 Main St, City, State 12345"
                   />
                 </div>
               </div>
 
-              <div className="flex items-center justify-end space-x-3 mt-6">
+              <div className="flex items-center justify-end space-x-4 mt-8">
                 <button
                   type="button"
                   onClick={closeModal}
-                  className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50"
+                  className="px-6 py-3 text-sm font-semibold text-primary-700 bg-white/80 border border-primary-300 rounded-full hover:bg-primary-50 transition-all duration-300"
                 >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={isSubmitting}
-                  className="px-4 py-2 text-sm font-medium text-white bg-blue-600 border border-transparent rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="px-8 py-3 text-sm font-semibold text-white bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 rounded-full disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-300 hover:shadow-xl hover:-translate-y-0.5"
                 >
                   {isSubmitting ? 'Saving...' : editingClient ? 'Update' : 'Create'}
                 </button>
@@ -403,25 +360,25 @@ const ClientsPage: React.FC = () => {
       {/* Delete Confirmation Modal */}
       {deleteConfirm && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-lg shadow-xl max-w-md w-full">
-            <div className="p-6">
-              <h3 className="text-lg font-semibold text-gray-900 mb-4">
+          <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-2xl max-w-md w-full border border-white/20">
+            <div className="p-8">
+              <h3 className="text-xl font-bold text-primary-900 mb-4">
                 Delete Client
               </h3>
-              <p className="text-gray-600 mb-6">
-                Are you sure you want to delete <strong>{deleteConfirm.name}</strong>? 
+              <p className="text-primary-600 mb-8 leading-relaxed">
+                Are you sure you want to delete <strong className="text-primary-900">{deleteConfirm.name}</strong>? 
                 This action cannot be undone.
               </p>
-              <div className="flex items-center justify-end space-x-3">
+              <div className="flex items-center justify-end space-x-4">
                 <button
                   onClick={() => setDeleteConfirm(null)}
-                  className="px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-lg hover:bg-gray-50"
+                  className="px-6 py-3 text-sm font-semibold text-primary-700 bg-white/80 border border-primary-300 rounded-full hover:bg-primary-50 transition-all duration-300"
                 >
                   Cancel
                 </button>
                 <button
                   onClick={() => handleDelete(deleteConfirm)}
-                  className="px-4 py-2 text-sm font-medium text-white bg-red-600 border border-transparent rounded-lg hover:bg-red-700"
+                  className="px-6 py-3 text-sm font-semibold text-white bg-red-600 hover:bg-red-700 rounded-full transition-all duration-300 hover:shadow-xl hover:-translate-y-0.5"
                 >
                   Delete
                 </button>

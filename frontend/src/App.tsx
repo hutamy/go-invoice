@@ -23,8 +23,8 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
   
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary-600"></div>
+      <div className="min-h-screen flex items-center justify-center bg-white">
+        <div className="animate-spin rounded-full h-12 w-12 border-2 border-primary-200 border-t-primary-900"></div>
       </div>
     );
   }
@@ -36,7 +36,7 @@ const AppContent: React.FC = () => {
   const { isAuthenticated } = useAuth();
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-white">
       <main>
         <Routes>
           <Route path="/" element={<HomePage />} />

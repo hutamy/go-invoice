@@ -16,57 +16,60 @@ const Navbar: React.FC = () => {
   };
 
   return (
-    <nav className="bg-white border-b border-gray-200">
+    <nav className="bg-white/90 backdrop-blur-lg border-b border-primary-200/60 sticky top-0 z-50">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
+        <div className="flex justify-between items-center h-20">
           {/* Logo */}
           <div className="flex items-center">
-            <Link to="/" className="flex items-center">
-              <FileText className="h-8 w-8 text-blue-600" />
-              <span className="ml-2 text-xl font-bold text-gray-900">
+            <Link to="/" className="flex items-center group">
+              <div className="relative">
+                <FileText className="h-9 w-9 text-primary-900 group-hover:text-sky-600 transition-colors duration-300" />
+                <div className="absolute -inset-3 bg-sky-100 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"></div>
+              </div>
+              <span className="ml-4 text-2xl font-bold text-primary-900 tracking-tight">
                 GoInvoice
               </span>
             </Link>
           </div>
 
           {/* Desktop Navigation Links */}
-          <div className="hidden md:flex items-center space-x-8">
+          <div className="hidden md:flex items-center space-x-2">
             {isAuthenticated ? (
               <>
                 <Link
                   to="/dashboard"
-                  className="text-gray-700 hover:text-blue-600 transition-colors"
+                  className="px-4 py-2.5 text-sm font-medium text-primary-700 hover:text-primary-900 hover:bg-primary-100 rounded-full transition-all"
                 >
                   Dashboard
                 </Link>
                 <Link
                   to="/invoices"
-                  className="text-gray-700 hover:text-blue-600 transition-colors"
+                  className="px-4 py-2.5 text-sm font-medium text-primary-700 hover:text-primary-900 hover:bg-primary-100 rounded-full transition-all"
                 >
                   Invoices
                 </Link>
                 <Link
                   to="/clients"
-                  className="text-gray-700 hover:text-blue-600 transition-colors"
+                  className="px-4 py-2.5 text-sm font-medium text-primary-700 hover:text-primary-900 hover:bg-primary-100 rounded-full transition-all"
                 >
                   Clients
                 </Link>
                 <Link
                   to="/settings"
-                  className="text-gray-700 hover:text-blue-600 transition-colors"
+                  className="px-4 py-2.5 text-sm font-medium text-primary-700 hover:text-primary-900 hover:bg-primary-100 rounded-full transition-all"
                 >
                   Settings
                 </Link>
-                <div className="flex items-center space-x-4">
-                  <span className="text-sm text-gray-600">
-                    Welcome,{" "}
-                    <span className="font-medium text-gray-900">
+                <div className="flex items-center space-x-4 ml-8 pl-8 border-l border-primary-200">
+                  <div className="text-sm text-primary-600">
+                    <span className="font-semibold text-primary-900">
                       {user?.name}
                     </span>
-                  </span>
+                  </div>
                   <button
                     onClick={handleLogout}
-                    className="text-gray-700 hover:text-red-600 transition-colors"
+                    className="p-2.5 text-primary-600 hover:text-primary-900 hover:bg-primary-100 rounded-full transition-all"
+                    title="Logout"
                   >
                     <LogOut className="h-5 w-5" />
                   </button>
@@ -76,13 +79,13 @@ const Navbar: React.FC = () => {
               <>
                 <Link
                   to="/login"
-                  className="text-gray-700 hover:text-blue-600 transition-colors"
+                  className="px-4 py-2.5 text-sm font-medium text-primary-700 hover:text-primary-900 hover:bg-primary-100 rounded-full transition-all"
                 >
                   Login
                 </Link>
                 <Link
                   to="/register"
-                  className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+                  className="ml-4 px-6 py-2.5 text-sm font-semibold bg-gradient-to-r from-sky-500 to-blue-600 text-white rounded-full hover:from-sky-600 hover:to-blue-700 transition-all shadow-lg hover:shadow-xl hover:shadow-sky-500/25"
                 >
                   Register
                 </Link>
@@ -90,11 +93,10 @@ const Navbar: React.FC = () => {
             )}
           </div>
 
-          {/* Mobile menu button */}
           <div className="md:hidden">
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="text-gray-700 hover:text-blue-600 focus:outline-none focus:text-blue-600"
+              className="p-2 text-primary-700 hover:text-primary-900 hover:bg-primary-100 rounded-full transition-all"
             >
               {isMobileMenuOpen ? (
                 <X className="h-6 w-6" />
@@ -107,48 +109,47 @@ const Navbar: React.FC = () => {
 
         {/* Mobile menu */}
         {isMobileMenuOpen && (
-          <div className="md:hidden">
-            <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white border-t border-gray-200">
+          <div className="md:hidden animate-slide-up">
+            <div className="px-2 pt-2 pb-4 space-y-1 bg-white/95 backdrop-blur-sm border-t border-primary-200/50">
               {isAuthenticated ? (
                 <>
                   <Link
                     to="/dashboard"
-                    className="block px-3 py-2 text-gray-700 hover:text-blue-600 transition-colors"
+                    className="block px-3 py-2 text-sm font-medium text-primary-700 hover:text-primary-900 hover:bg-primary-100 rounded-full transition-all"
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
                     Dashboard
                   </Link>
                   <Link
                     to="/invoices"
-                    className="block px-3 py-2 text-gray-700 hover:text-blue-600 transition-colors"
+                    className="block px-3 py-2 text-sm font-medium text-primary-700 hover:text-primary-900 hover:bg-primary-100 rounded-full transition-all"
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
                     Invoices
                   </Link>
                   <Link
                     to="/clients"
-                    className="block px-3 py-2 text-gray-700 hover:text-blue-600 transition-colors"
+                    className="block px-3 py-2 text-sm font-medium text-primary-700 hover:text-primary-900 hover:bg-primary-100 rounded-full transition-all"
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
                     Clients
                   </Link>
                   <Link
                     to="/settings"
-                    className="block px-3 py-2 text-gray-700 hover:text-blue-600 transition-colors"
+                    className="block px-3 py-2 text-sm font-medium text-primary-700 hover:text-primary-900 hover:bg-primary-100 rounded-full transition-all"
                     onClick={() => setIsMobileMenuOpen(false)}
                   >
                     Settings
                   </Link>
-                  <div className="border-t border-gray-200 pt-3 mt-3">
-                    <div className="px-3 py-2 text-sm text-gray-600">
-                      Welcome,{" "}
-                      <span className="font-medium text-gray-900">
+                  <div className="border-t border-primary-200 pt-3 mt-3">
+                    <div className="px-3 py-2 text-sm text-primary-600">
+                      <span className="font-medium text-primary-900">
                         {user?.name}
                       </span>
                     </div>
                     <button
                       onClick={handleLogout}
-                      className="block w-full text-left px-3 py-2 text-gray-700 hover:text-red-600 transition-colors"
+                      className="block w-full text-left px-3 py-2 text-sm font-medium text-primary-700 hover:text-primary-900 hover:bg-primary-100 rounded-full transition-all"
                     >
                       Logout
                     </button>
@@ -156,33 +157,15 @@ const Navbar: React.FC = () => {
                 </>
               ) : (
                 <>
-                  <a
-                    href="#features"
-                    className="block px-3 py-2 text-gray-700 hover:text-blue-600 transition-colors"
-                  >
-                    Features
-                  </a>
-                  <a
-                    href="#pricing"
-                    className="block px-3 py-2 text-gray-700 hover:text-blue-600 transition-colors"
-                  >
-                    Pricing
-                  </a>
-                  <a
-                    href="#about"
-                    className="block px-3 py-2 text-gray-700 hover:text-blue-600 transition-colors"
-                  >
-                    About
-                  </a>
                   <Link
                     to="/login"
-                    className="block px-3 py-2 text-gray-700 hover:text-blue-600 transition-colors"
+                    className="block px-3 py-2 text-sm font-medium text-primary-700 hover:text-primary-900 hover:bg-primary-100 rounded-full transition-all"
                   >
                     Login
                   </Link>
                   <Link
                     to="/register"
-                    className="block mx-3 mt-3 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors text-center"
+                    className="block mx-3 mt-3 bg-gradient-to-r from-sky-500 to-blue-600 text-white px-4 py-2 rounded-full hover:from-sky-600 hover:to-blue-700 transition-all text-center font-medium text-sm"
                   >
                     Register
                   </Link>

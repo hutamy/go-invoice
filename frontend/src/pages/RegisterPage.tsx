@@ -55,25 +55,25 @@ const RegisterPage: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full">
-        <div className="bg-white rounded-3xl shadow-2xl p-10 border border-gray-100/50 backdrop-blur-sm">
+    <div className="min-h-screen bg-gradient-to-br from-white via-primary-50/50 to-sky-50/40 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-2xl w-full">
+        <div className="bg-white/70 backdrop-blur-sm rounded-3xl shadow-xl p-10 border border-primary-200/50">
           {/* Header */}
           <div className="text-center mb-10">
-            <div className="mx-auto h-12 w-12 flex items-center justify-center rounded-2xl bg-blue-500/10 border border-blue-200/50">
-              <UserPlus className="h-6 w-6 text-blue-600" />
+            <div className="mx-auto h-16 w-16 flex items-center justify-center rounded-2xl bg-gradient-to-br from-sky-100 to-blue-100 border border-sky-200/50">
+              <UserPlus className="h-8 w-8 text-sky-600" />
             </div>
-            <h2 className="mt-8 text-2xl font-light text-gray-900 tracking-tight">
-              Join Us Today
+            <h2 className="mt-8 text-3xl font-bold text-primary-900 tracking-tight">
+              Create Your Account
             </h2>
-            <p className="mt-3 text-sm text-gray-500 font-light">
-              Create your account to get started
+            <p className="mt-3 text-lg text-primary-600 font-light">
+              Join thousands of professionals creating beautiful invoices
             </p>
-            <p className="mt-6 text-sm text-gray-400">
-              Already have an account?{' '}
+            <p className="mt-6 text-sm text-primary-500">
+              Already have an account?{" "}
               <Link
                 to="/login"
-                className="font-medium text-blue-600 hover:text-blue-700 transition-colors duration-300"
+                className="font-semibold text-sky-600 hover:text-blue-700 transition-colors duration-300"
               >
                 Sign in here
               </Link>
@@ -83,43 +83,43 @@ const RegisterPage: React.FC = () => {
           <form className="space-y-8" onSubmit={handleSubmit(onSubmit)}>
             <div className="space-y-6">
               <div>
-                <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-3">
+                <label htmlFor="name" className="block text-sm font-semibold text-primary-700 mb-3">
                   Full Name <span className="text-red-400">*</span>
                 </label>
                 <input
                   {...register('name')}
                   type="text"
                   autoComplete="name"
-                  className="w-full px-4 py-4 bg-gray-50/50 border border-gray-200/60 rounded-2xl focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500/50 transition-all duration-300 placeholder-gray-400 text-gray-900"
+                  className="w-full px-4 py-4 bg-primary-50/50 border border-primary-200/60 rounded-full focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500/50 transition-all duration-300 placeholder-primary-400 text-primary-900"
                   placeholder="Enter your full name"
                 />
                 {errors.name && (
                   <p className="mt-3 text-sm text-red-500 flex items-center font-light">
-                    {errors.name.message}
+                    {errors.name?.message}
                   </p>
                 )}
               </div>
 
               <div>
-                <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-3">
+                <label htmlFor="email" className="block text-sm font-semibold text-primary-700 mb-3">
                   Email Address <span className="text-red-400">*</span>
                 </label>
                 <input
                   {...register('email')}
                   type="email"
                   autoComplete="email"
-                  className="w-full px-4 py-4 bg-gray-50/50 border border-gray-200/60 rounded-2xl focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500/50 transition-all duration-300 placeholder-gray-400 text-gray-900"
+                  className="w-full px-4 py-4 bg-primary-50/50 border border-primary-200/60 rounded-full focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500/50 transition-all duration-300 placeholder-primary-400 text-primary-900"
                   placeholder="Enter your email address"
                 />
                 {errors.email && (
                   <p className="mt-3 text-sm text-red-500 flex items-center font-light">
-                    {errors.email.message}
+                    {errors.email?.message}
                   </p>
                 )}
               </div>
 
               <div>
-                <label htmlFor="password" className="block text-sm font-medium text-gray-700 mb-3">
+                <label htmlFor="password" className="block text-sm font-semibold text-primary-700 mb-3">
                   Password <span className="text-red-400">*</span>
                 </label>
                 <div className="relative">
@@ -127,12 +127,12 @@ const RegisterPage: React.FC = () => {
                     {...register('password')}
                     type={showPassword ? 'text' : 'password'}
                     autoComplete="new-password"
-                    className="w-full px-4 py-4 pr-12 bg-gray-50/50 border border-gray-200/60 rounded-2xl focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500/50 transition-all duration-300 placeholder-gray-400 text-gray-900"
+                    className="w-full px-4 py-4 pr-12 bg-primary-50/50 border border-primary-200/60 rounded-full focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500/50 transition-all duration-300 placeholder-primary-400 text-primary-900"
                     placeholder="Create a secure password"
                   />
                   <button
                     type="button"
-                    className="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-gray-600 transition-colors duration-300"
+                    className="absolute inset-y-0 right-0 pr-4 flex items-center text-primary-400 hover:text-primary-600 transition-colors duration-300"
                     onClick={() => setShowPassword(!showPassword)}
                   >
                     {showPassword ? (
@@ -144,13 +144,13 @@ const RegisterPage: React.FC = () => {
                 </div>
                 {errors.password && (
                   <p className="mt-3 text-sm text-red-500 flex items-center font-light">
-                    {errors.password.message}
+                    {errors.password?.message}
                   </p>
                 )}
               </div>
 
               <div>
-                <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700 mb-3">
+                <label htmlFor="confirmPassword" className="block text-sm font-semibold text-primary-700 mb-3">
                   Confirm Password <span className="text-red-400">*</span>
                 </label>
                 <div className="relative">
@@ -158,12 +158,12 @@ const RegisterPage: React.FC = () => {
                     {...register('confirmPassword')}
                     type={showConfirmPassword ? 'text' : 'password'}
                     autoComplete="new-password"
-                    className="w-full px-4 py-4 pr-12 bg-gray-50/50 border border-gray-200/60 rounded-2xl focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500/50 transition-all duration-300 placeholder-gray-400 text-gray-900"
+                    className="w-full px-4 py-4 pr-12 bg-primary-50/50 border border-primary-200/60 rounded-full focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500/50 transition-all duration-300 placeholder-primary-400 text-primary-900"
                     placeholder="Confirm your password"
                   />
                   <button
                     type="button"
-                    className="absolute inset-y-0 right-0 pr-4 flex items-center text-gray-400 hover:text-gray-600 transition-colors duration-300"
+                    className="absolute inset-y-0 right-0 pr-4 flex items-center text-primary-400 hover:text-primary-600 transition-colors duration-300"
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
                   >
                     {showConfirmPassword ? (
@@ -175,96 +175,95 @@ const RegisterPage: React.FC = () => {
                 </div>
                 {errors.confirmPassword && (
                   <p className="mt-3 text-sm text-red-500 flex items-center font-light">
-                    {errors.confirmPassword.message}
+                    {errors.confirmPassword?.message}
                   </p>
                 )}
               </div>
 
               {/* Additional Profile Information */}
-              <div className="pt-6 border-t border-gray-200/50">
-                <h3 className="text-sm font-medium text-gray-700 mb-4">Business Information</h3>
+              <div className="pt-6 border-t border-primary-200/50">
+                <h3 className="text-lg font-semibold text-primary-700 mb-6">Business Information</h3>
                 
                 <div className="space-y-6">
                   <div>
-                    <label htmlFor="address" className="block text-sm font-medium text-gray-700 mb-1">
-                      Address <span className="text-red-500">*</span>
+                    <label htmlFor="address" className="block text-sm font-semibold text-primary-700 mb-3">
+                      Address <span className="text-red-400">*</span>
                     </label>
                     <input
-                      id="address"
-                      type="text"
-                      placeholder="Your business address"
-                      className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                       {...register('address')}
+                      type="text"
+                      className="w-full px-4 py-4 bg-primary-50/50 border border-primary-200/60 rounded-full focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500/50 transition-all duration-300 placeholder-primary-400 text-primary-900"
+                      placeholder="Enter your business address"
                     />
                     {errors.address && (
-                      <p className="mt-1 text-sm text-red-600">
-                        {errors.address.message}
+                      <p className="mt-3 text-sm text-red-500 flex items-center font-light">
+                        {errors.address?.message}
                       </p>
                     )}
                   </div>                  <div>
-                    <label htmlFor="phone" className="block text-sm font-medium text-gray-700 mb-3">
+                    <label htmlFor="phone" className="block text-sm font-semibold text-primary-700 mb-3">
                       Phone Number <span className="text-red-400">*</span>
                     </label>
                     <input
                       {...register('phone')}
                       type="tel"
-                      className="w-full px-4 py-4 bg-gray-50/50 border border-gray-200/60 rounded-2xl focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500/50 transition-all duration-300 placeholder-gray-400 text-gray-900"
+                      className="w-full px-4 py-4 bg-primary-50/50 border border-primary-200/60 rounded-full focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500/50 transition-all duration-300 placeholder-primary-400 text-primary-900"
                       placeholder="Enter your phone number"
                     />
                     {errors.phone && (
                       <p className="mt-3 text-sm text-red-500 flex items-center font-light">
-                        {errors.phone.message}
+                        {errors.phone?.message}
                       </p>
                     )}
                   </div>
 
                   <div>
-                    <label htmlFor="bank_name" className="block text-sm font-medium text-gray-700 mb-3">
+                    <label htmlFor="bank_name" className="block text-sm font-semibold text-primary-700 mb-3">
                       Bank Name <span className="text-red-400">*</span>
                     </label>
                     <input
                       {...register('bank_name')}
                       type="text"
-                      className="w-full px-4 py-4 bg-gray-50/50 border border-gray-200/60 rounded-2xl focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500/50 transition-all duration-300 placeholder-gray-400 text-gray-900"
+                      className="w-full px-4 py-4 bg-primary-50/50 border border-primary-200/60 rounded-full focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500/50 transition-all duration-300 placeholder-primary-400 text-primary-900"
                       placeholder="Enter your bank name"
                     />
                     {errors.bank_name && (
                       <p className="mt-3 text-sm text-red-500 flex items-center font-light">
-                        {errors.bank_name.message}
+                        {errors.bank_name?.message}
                       </p>
                     )}
                   </div>
 
                   <div>
-                    <label htmlFor="bank_account_name" className="block text-sm font-medium text-gray-700 mb-3">
+                    <label htmlFor="bank_account_name" className="block text-sm font-semibold text-primary-700 mb-3">
                       Bank Account Name <span className="text-red-400">*</span>
                     </label>
                     <input
                       {...register('bank_account_name')}
                       type="text"
-                      className="w-full px-4 py-4 bg-gray-50/50 border border-gray-200/60 rounded-2xl focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500/50 transition-all duration-300 placeholder-gray-400 text-gray-900"
+                      className="w-full px-4 py-4 bg-primary-50/50 border border-primary-200/60 rounded-full focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500/50 transition-all duration-300 placeholder-primary-400 text-primary-900"
                       placeholder="Enter account holder name"
                     />
                     {errors.bank_account_name && (
                       <p className="mt-3 text-sm text-red-500 flex items-center font-light">
-                        {errors.bank_account_name.message}
+                        {errors.bank_account_name?.message}
                       </p>
                     )}
                   </div>
 
                   <div>
-                    <label htmlFor="bank_account_number" className="block text-sm font-medium text-gray-700 mb-3">
+                    <label htmlFor="bank_account_number" className="block text-sm font-semibold text-primary-700 mb-3">
                       Bank Account Number <span className="text-red-400">*</span>
                     </label>
                     <input
                       {...register('bank_account_number')}
                       type="text"
-                      className="w-full px-4 py-4 bg-gray-50/50 border border-gray-200/60 rounded-2xl focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500/50 transition-all duration-300 placeholder-gray-400 text-gray-900"
+                      className="w-full px-4 py-4 bg-primary-50/50 border border-primary-200/60 rounded-full focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500/50 transition-all duration-300 placeholder-primary-400 text-primary-900"
                       placeholder="Enter your account number"
                     />
                     {errors.bank_account_number && (
                       <p className="mt-3 text-sm text-red-500 flex items-center font-light">
-                        {errors.bank_account_number.message}
+                        {errors.bank_account_number?.message}
                       </p>
                     )}
                   </div>
@@ -276,7 +275,7 @@ const RegisterPage: React.FC = () => {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-4 px-6 rounded-2xl transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg shadow-blue-600/25 hover:shadow-xl hover:shadow-blue-600/30 flex justify-center items-center"
+                className="w-full bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white font-semibold py-4 px-6 rounded-full transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed shadow-xl shadow-sky-500/25 hover:shadow-2xl hover:shadow-sky-500/30 flex justify-center items-center"
               >
                 {isLoading ? (
                   <>
@@ -294,7 +293,7 @@ const RegisterPage: React.FC = () => {
               <div className="text-center">
                 <Link
                   to="/"
-                  className="text-sm text-gray-400 hover:text-blue-600 transition-colors duration-300 font-light"
+                  className="text-sm text-primary-500 hover:text-sky-600 transition-colors duration-300 font-medium"
                 >
                   ← Back to Home
                 </Link>

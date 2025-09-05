@@ -1,5 +1,8 @@
-import React, { useState, useEffect, useCallback } from "react";
-import { Plus, Trash2, User, ChevronDown, ChevronUp } from "lucide-react";
+import React, { useState, useEffect, useCallback, Fragment } from "react";
+import { Plus, Trash2, User, ChevronDown, ChevronUp, Calendar } from "lucide-react";
+import { Listbox, Transition } from '@headlessui/react';
+import DatePicker from 'react-datepicker';
+import "react-datepicker/dist/react-datepicker.css";
 import { useAuth } from "../context/AuthContext.tsx";
 import { apiService } from "../utils/api.ts";
 import type { InvoiceFormData, InvoiceItem, Client } from "../types/index.ts";
@@ -52,8 +55,8 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({
     }
   }, [isAuthenticated, showClientSelection, loadClients]);
 
-  const handleClientSelect = (clientId: string) => {
-    if (clientId === "") {
+  const handleClientSelect = (clientId: string | null) => {
+    if (!clientId) {
       setSelectedClientId(null);
       onChange({
         ...data,
@@ -168,7 +171,7 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({
         {expandedSections.invoiceDetails && (
           <div className="grid grid-cols-1 gap-6 mb-6 transition-all duration-300 ease-in-out">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-3">
+              <label className="block text-sm font-semibold text-primary-700 mb-3">
                 Invoice Number <span className="text-red-400">*</span>
               </label>
               <input
@@ -177,36 +180,52 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({
                 onChange={(e) =>
                   handleInputChange("invoice_number", e.target.value)
                 }
-                className="w-full px-4 py-4 bg-white border border-gray-200/60 rounded-2xl focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500/50 transition-all duration-300 placeholder-gray-400"
+                className="w-full px-4 py-3 bg-white/80 border border-primary-200 rounded-full focus:ring-2 focus:ring-sky-500/40 focus:border-sky-500 transition-all duration-200 placeholder-primary-400 text-primary-900 shadow-sm"
                 placeholder="INV-2025-001"
                 required
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-3">
+              <label className="block text-sm font-semibold text-primary-700 mb-3">
                 Issue Date <span className="text-red-400">*</span>
               </label>
-              <input
-                type="date"
-                value={data.issue_date}
-                onChange={(e) =>
-                  handleInputChange("issue_date", e.target.value)
-                }
-                className="w-full px-4 py-4 bg-white border border-gray-200/60 rounded-2xl focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500/50 transition-all duration-300"
-                required
-              />
+              <div className="relative">
+                <DatePicker
+                  selected={data.issue_date ? new Date(data.issue_date) : null}
+                  onChange={(date) => {
+                    const formattedDate = date ? date.toISOString().split('T')[0] : '';
+                    handleInputChange("issue_date", formattedDate);
+                  }}
+                  dateFormat="dd/MM/yyyy"
+                  placeholderText="Select issue date"
+                  className="w-full px-4 py-3 pl-12 bg-white/80 border border-primary-200 rounded-full focus:ring-2 focus:ring-sky-500/40 focus:border-sky-500 transition-all duration-200 text-primary-900 shadow-sm"
+                  wrapperClassName="w-full"
+                  calendarClassName="shadow-xl border-0 rounded-2xl"
+                  required
+                />
+                <Calendar className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-primary-400 pointer-events-none z-10" />
+              </div>
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-3">
+              <label className="block text-sm font-semibold text-primary-700 mb-3">
                 Due Date <span className="text-red-400">*</span>
               </label>
-              <input
-                type="date"
-                value={data.due_date}
-                onChange={(e) => handleInputChange("due_date", e.target.value)}
-                className="w-full px-4 py-4 bg-white border border-gray-200/60 rounded-2xl focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500/50 transition-all duration-300"
-                required
-              />
+              <div className="relative">
+                <DatePicker
+                  selected={data.due_date ? new Date(data.due_date) : null}
+                  onChange={(date) => {
+                    const formattedDate = date ? date.toISOString().split('T')[0] : '';
+                    handleInputChange("due_date", formattedDate);
+                  }}
+                  dateFormat="dd/MM/yyyy"
+                  placeholderText="Select due date"
+                  className="w-full px-4 py-3 pl-12 bg-white/80 border border-primary-200 rounded-full focus:ring-2 focus:ring-sky-500/40 focus:border-sky-500 transition-all duration-200 text-primary-900 shadow-sm"
+                  wrapperClassName="w-full"
+                  calendarClassName="shadow-xl border-0 rounded-2xl"
+                  required
+                />
+                <Calendar className="absolute left-4 top-1/2 transform -translate-y-1/2 h-5 w-5 text-primary-400 pointer-events-none z-10" />
+              </div>
             </div>
           </div>
         )}
@@ -274,7 +293,7 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({
             ) : (
               <div className="grid grid-cols-1 gap-6">
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-3">
+                  <label className="block text-sm font-semibold text-primary-700 mb-3">
                     Name <span className="text-red-400">*</span>
                   </label>
                   <input
@@ -283,13 +302,13 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({
                     onChange={(e) =>
                       handleInputChange("sender_name", e.target.value)
                     }
-                    className="w-full px-4 py-4 bg-white border border-gray-200/60 rounded-2xl focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500/50 transition-all duration-300 placeholder-gray-400"
+                    className="w-full px-4 py-3 bg-white/80 border border-primary-200 rounded-full focus:ring-2 focus:ring-sky-500/40 focus:border-sky-500 transition-all duration-200 placeholder-primary-400 text-primary-900 shadow-sm"
                     placeholder="Your Name"
                     required
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-3">
+                  <label className="block text-sm font-semibold text-primary-700 mb-3">
                     Email <span className="text-red-400">*</span>
                   </label>
                   <input
@@ -298,13 +317,13 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({
                     onChange={(e) =>
                       handleInputChange("sender_email", e.target.value)
                     }
-                    className="w-full px-4 py-4 bg-white border border-gray-200/60 rounded-2xl focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500/50 transition-all duration-300 placeholder-gray-400"
+                    className="w-full px-4 py-3 bg-white/80 border border-primary-200 rounded-full focus:ring-2 focus:ring-sky-500/40 focus:border-sky-500 transition-all duration-200 placeholder-primary-400 text-primary-900 shadow-sm"
                     placeholder="contact@yourcompany.com"
                     required
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-3">
+                  <label className="block text-sm font-semibold text-primary-700 mb-3">
                     Phone
                   </label>
                   <input
@@ -313,12 +332,12 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({
                     onChange={(e) =>
                       handleInputChange("sender_phone", e.target.value)
                     }
-                    className="w-full px-4 py-4 bg-white border border-gray-200/60 rounded-2xl focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500/50 transition-all duration-300 placeholder-gray-400"
+                    className="w-full px-4 py-3 bg-white/80 border border-primary-200 rounded-full focus:ring-2 focus:ring-sky-500/40 focus:border-sky-500 transition-all duration-200 placeholder-primary-400 text-primary-900 shadow-sm"
                     placeholder="+1 234 567 890"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-3">
+                  <label className="block text-sm font-semibold text-primary-700 mb-3">
                     Address
                   </label>
                   <textarea
@@ -326,13 +345,13 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({
                     onChange={(e) =>
                       handleInputChange("sender_address", e.target.value)
                     }
-                    className="w-full px-4 py-4 bg-white border border-gray-200/60 rounded-2xl focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500/50 transition-all duration-300 placeholder-gray-400"
+                    className="w-full px-4 py-3 bg-white/80 border border-primary-200 rounded-2xl focus:ring-2 focus:ring-sky-500/40 focus:border-sky-500 transition-all duration-200 placeholder-primary-400 text-primary-900 shadow-sm resize-none"
                     rows={3}
                     placeholder="123 Your Street, Your City, Country"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-3">
+                  <label className="block text-sm font-semibold text-primary-700 mb-3">
                     Bank Name
                   </label>
                   <input
@@ -341,12 +360,12 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({
                     onChange={(e) =>
                       handleInputChange("sender_bank_name", e.target.value)
                     }
-                    className="w-full px-4 py-4 bg-white border border-gray-200/60 rounded-2xl focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500/50 transition-all duration-300 placeholder-gray-400"
+                    className="w-full px-4 py-3 bg-white/80 border border-primary-200 rounded-full focus:ring-2 focus:ring-sky-500/40 focus:border-sky-500 transition-all duration-200 placeholder-primary-400 text-primary-900 shadow-sm"
                     placeholder="National Bank"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-3">
+                  <label className="block text-sm font-semibold text-primary-700 mb-3">
                     Account Name
                   </label>
                   <input
@@ -358,12 +377,12 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({
                         e.target.value
                       )
                     }
-                    className="w-full px-4 py-4 bg-white border border-gray-200/60 rounded-2xl focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500/50 transition-all duration-300 placeholder-gray-400"
+                    className="w-full px-4 py-3 bg-white/80 border border-primary-200 rounded-full focus:ring-2 focus:ring-sky-500/40 focus:border-sky-500 transition-all duration-200 placeholder-primary-400 text-primary-900 shadow-sm"
                     placeholder="Your Company Ltd"
                   />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-3">
+                  <label className="block text-sm font-semibold text-primary-700 mb-3">
                     Account Number
                   </label>
                   <input
@@ -375,7 +394,7 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({
                         e.target.value
                       )
                     }
-                    className="w-full px-4 py-4 bg-white border border-gray-200/60 rounded-2xl focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500/50 transition-all duration-300 placeholder-gray-400"
+                    className="w-full px-4 py-3 bg-white/80 border border-primary-200 rounded-full focus:ring-2 focus:ring-sky-500/40 focus:border-sky-500 transition-all duration-200 placeholder-primary-400 text-primary-900 shadow-sm"
                     placeholder="1234567890"
                   />
                 </div>
@@ -402,18 +421,64 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({
             )}
           </h3>
           {expandedSections.clientSelection && (
-            <select
-              value={selectedClientId || ""}
-              onChange={(e) => handleClientSelect(e.target.value)}
-              className="w-full px-4 py-4 bg-white border border-gray-200/60 rounded-2xl focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500/50 transition-all duration-300"
-            >
-              <option value="">Enter client details manually</option>
-              {clients.map((client) => (
-                <option key={client.id} value={client.id}>
-                  {client.name}
-                </option>
-              ))}
-            </select>
+            <div className="relative">
+              <Listbox 
+                value={selectedClientId?.toString() || ""}
+                onChange={(value) => handleClientSelect(value || null)}
+              >
+                <div className="relative">
+                  <Listbox.Button className="w-full px-4 py-3 bg-white/80 border border-primary-200 rounded-full focus:ring-2 focus:ring-sky-500/40 focus:border-sky-500 transition-all duration-200 text-primary-900 shadow-sm text-left flex items-center justify-between">
+                    <span className={selectedClientId ? "text-primary-900" : "text-primary-400"}>
+                      {selectedClientId 
+                        ? clients.find(c => c.id === selectedClientId)?.name || "Enter client details manually"
+                        : "Enter client details manually"
+                      }
+                    </span>
+                    <ChevronDown className="h-5 w-5 text-primary-400 transition-transform duration-200 ui-open:rotate-180" />
+                  </Listbox.Button>
+
+                  <Transition
+                    as={Fragment}
+                    leave="transition ease-in duration-100"
+                    leaveFrom="opacity-100"
+                    leaveTo="opacity-0"
+                  >
+                    <Listbox.Options className="absolute z-50 w-full mt-2 bg-white/95 backdrop-blur-sm border border-primary-200 rounded-2xl shadow-xl max-h-60 overflow-y-auto">
+                      <Listbox.Option
+                        value=""
+                        className={({ active }) =>
+                          `relative cursor-pointer select-none py-3 px-4 transition-colors first:rounded-t-2xl border-b border-primary-100/50 ${
+                            active ? 'bg-sky-50/80 text-sky-900' : 'text-primary-600'
+                          }`
+                        }
+                      >
+                        Enter client details manually
+                      </Listbox.Option>
+                      {clients.map((client) => (
+                        <Listbox.Option
+                          key={client.id}
+                          value={client.id.toString()}
+                          className={({ active, selected }) =>
+                            `relative cursor-pointer select-none py-3 px-4 transition-colors border-b border-primary-100/50 last:border-b-0 last:rounded-b-2xl ${
+                              active ? 'bg-sky-50/80' : ''
+                            } ${
+                              selected ? 'bg-sky-100/60 text-sky-800 font-medium' : 'text-primary-700'
+                            }`
+                          }
+                        >
+                          <div>
+                            {client.name}
+                            {client.email && (
+                              <div className="text-sm text-primary-500 mt-1">{client.email}</div>
+                            )}
+                          </div>
+                        </Listbox.Option>
+                      ))}
+                    </Listbox.Options>
+                  </Transition>
+                </div>
+              </Listbox>
+            </div>
           )}
         </div>
       )}
@@ -449,7 +514,7 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({
               </div>
             )}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-3">
+              <label className="block text-sm font-semibold text-primary-700 mb-3">
                 Name <span className="text-red-400">*</span>
               </label>
               <input
@@ -459,17 +524,17 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({
                   handleInputChange("client_name", e.target.value)
                 }
                 disabled={selectedClientId !== null}
-                className={`w-full px-4 py-4 border border-gray-200/60 rounded-2xl focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500/50 transition-all duration-300 placeholder-gray-400 ${
+                className={`w-full px-4 py-3 border border-primary-200 rounded-full focus:ring-2 focus:ring-sky-500/40 focus:border-sky-500 transition-all duration-200 placeholder-primary-400 text-primary-900 shadow-sm ${
                   selectedClientId !== null 
                     ? 'bg-gray-100 text-gray-500 cursor-not-allowed' 
-                    : 'bg-white'
+                    : 'bg-white/80'
                 }`}
                 placeholder="Client Name"
                 required
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-3">
+              <label className="block text-sm font-semibold text-primary-700 mb-3">
                 Email
               </label>
               <input
@@ -479,16 +544,16 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({
                   handleInputChange("client_email", e.target.value)
                 }
                 disabled={selectedClientId !== null}
-                className={`w-full px-4 py-4 border border-gray-200/60 rounded-2xl focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500/50 transition-all duration-300 placeholder-gray-400 ${
+                className={`w-full px-4 py-3 border border-primary-200 rounded-full focus:ring-2 focus:ring-sky-500/40 focus:border-sky-500 transition-all duration-200 placeholder-primary-400 text-primary-900 shadow-sm ${
                   selectedClientId !== null 
                     ? 'bg-gray-100 text-gray-500 cursor-not-allowed' 
-                    : 'bg-white'
+                    : 'bg-white/80'
                 }`}
                 placeholder="client@example.com"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-3">
+              <label className="block text-sm font-semibold text-primary-700 mb-3">
                 Phone
               </label>
               <input
@@ -498,16 +563,16 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({
                   handleInputChange("client_phone", e.target.value)
                 }
                 disabled={selectedClientId !== null}
-                className={`w-full px-4 py-4 border border-gray-200/60 rounded-2xl focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500/50 transition-all duration-300 placeholder-gray-400 ${
+                className={`w-full px-4 py-3 border border-primary-200 rounded-full focus:ring-2 focus:ring-sky-500/40 focus:border-sky-500 transition-all duration-200 placeholder-primary-400 text-primary-900 shadow-sm ${
                   selectedClientId !== null 
                     ? 'bg-gray-100 text-gray-500 cursor-not-allowed' 
-                    : 'bg-white'
+                    : 'bg-white/80'
                 }`}
                 placeholder="+1 234 567 890"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-3">
+              <label className="block text-sm font-semibold text-primary-700 mb-3">
                 Address
               </label>
               <textarea
@@ -516,10 +581,10 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({
                   handleInputChange("client_address", e.target.value)
                 }
                 disabled={selectedClientId !== null}
-                className={`w-full px-4 py-4 border border-gray-200/60 rounded-2xl focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500/50 transition-all duration-300 placeholder-gray-400 ${
+                className={`w-full px-4 py-3 border border-primary-200 rounded-2xl focus:ring-2 focus:ring-sky-500/40 focus:border-sky-500 transition-all duration-200 placeholder-primary-400 text-primary-900 shadow-sm resize-none ${
                   selectedClientId !== null 
                     ? 'bg-gray-100 text-gray-500 cursor-not-allowed' 
-                    : 'bg-white'
+                    : 'bg-white/80'
                 }`}
                 rows={3}
                 placeholder="123 Client Street, Client City, Country"
@@ -555,7 +620,7 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({
                 >
                   <div className="grid grid-cols-1 gap-6 items-end">
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-3">
+                      <label className="block text-sm font-semibold text-primary-700 mb-3">
                         Description <span className="text-red-400">*</span>
                       </label>
                       <input
@@ -564,13 +629,13 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({
                         onChange={(e) =>
                           handleItemChange(index, "description", e.target.value)
                         }
-                        className="w-full px-4 py-4 bg-gray-50/50 border border-gray-200/60 rounded-2xl focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500/50 transition-all duration-300 placeholder-gray-400"
+                        className="w-full px-4 py-3 bg-white/80 border border-primary-200 rounded-full focus:ring-2 focus:ring-sky-500/40 focus:border-sky-500 transition-all duration-200 placeholder-primary-400 text-primary-900 shadow-sm"
                         placeholder="Item description"
                         required
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-3">
+                      <label className="block text-sm font-semibold text-primary-700 mb-3">
                         Quantity <span className="text-red-400">*</span>
                       </label>
                       <input
@@ -585,12 +650,12 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({
                             parseFloat(e.target.value) || 0
                           )
                         }
-                        className="w-full px-4 py-4 bg-gray-50/50 border border-gray-200/60 rounded-2xl focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500/50 transition-all duration-300"
+                        className="w-full px-4 py-3 bg-white/80 border border-primary-200 rounded-full focus:ring-2 focus:ring-sky-500/40 focus:border-sky-500 transition-all duration-200 text-primary-900 shadow-sm"
                         required
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-3">
+                      <label className="block text-sm font-semibold text-primary-700 mb-3">
                         Unit Price <span className="text-red-400">*</span>
                       </label>
                       <input
@@ -605,19 +670,19 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({
                             parseFloat(e.target.value) || 0
                           )
                         }
-                        className="w-full px-4 py-4 bg-gray-50/50 border border-gray-200/60 rounded-2xl focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500/50 transition-all duration-300"
+                        className="w-full px-4 py-3 bg-white/80 border border-primary-200 rounded-full focus:ring-2 focus:ring-sky-500/40 focus:border-sky-500 transition-all duration-200 text-primary-900 shadow-sm"
                         required
                       />
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-3">
+                      <label className="block text-sm font-semibold text-primary-700 mb-3">
                         Total
                       </label>
                       <input
                         type="text"
                         value={`IDR ${item.total.toFixed(2)}`}
                         readOnly
-                        className="w-full px-4 py-4 bg-gray-100/60 border border-gray-200/60 rounded-2xl text-gray-700 font-medium"
+                        className="w-full px-4 py-3 bg-gray-100/60 border border-primary-200 rounded-full text-primary-700 font-medium shadow-sm"
                       />
                     </div>
                     <div>
@@ -637,7 +702,7 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({
             <button
               type="button"
               onClick={addItem}
-              className="mt-8 bg-blue-600 hover:bg-blue-700 text-white font-medium px-8 py-4 rounded-2xl transition-all duration-300 inline-flex items-center shadow-lg shadow-blue-600/25 hover:shadow-xl hover:shadow-blue-600/30"
+              className="mt-8 bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white font-semibold px-8 py-3 rounded-full transition-all duration-300 inline-flex items-center shadow-xl shadow-sky-500/25 hover:shadow-2xl hover:shadow-sky-500/30 hover:-translate-y-0.5"
             >
               <Plus className="h-5 w-5 mr-3" />
               Add Item
@@ -665,7 +730,7 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({
         {expandedSections.taxAndNotes && (
           <div className="grid grid-cols-1 gap-8">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-3">
+              <label className="block text-sm font-semibold text-primary-700 mb-3">
                 Tax Rate (%)
               </label>
               <input
@@ -677,18 +742,18 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({
                 onChange={(e) =>
                   handleInputChange("tax_rate", parseFloat(e.target.value) || 0)
                 }
-                className="w-full px-4 py-4 bg-white border border-gray-200/60 rounded-2xl focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500/50 transition-all duration-300 placeholder-gray-400"
+                className="w-full px-4 py-3 bg-white/80 border border-primary-200 rounded-full focus:ring-2 focus:ring-sky-500/40 focus:border-sky-500 transition-all duration-200 placeholder-primary-400 text-primary-900 shadow-sm"
                 placeholder="0.00"
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-3">
+              <label className="block text-sm font-semibold text-primary-700 mb-3">
                 Additional Notes
               </label>
               <textarea
                 value={data.notes || ""}
                 onChange={(e) => handleInputChange("notes", e.target.value)}
-                className="w-full px-4 py-4 bg-white border border-gray-200/60 rounded-2xl focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500/50 transition-all duration-300 placeholder-gray-400"
+                className="w-full px-4 py-3 bg-white/80 border border-primary-200 rounded-2xl focus:ring-2 focus:ring-sky-500/40 focus:border-sky-500 transition-all duration-200 placeholder-primary-400 text-primary-900 shadow-sm resize-none"
                 rows={3}
                 placeholder="Payment terms, thank you note, etc..."
               />
