@@ -190,9 +190,19 @@ class ApiService {
   }
 
   // Client methods
-  async getClients(): Promise<Client[]> {
-    const response: AxiosResponse<ApiResponse<{ data: Client[]; pagination: { page: number; page_size: number; total_items: number; total_pages: number } }>> = await this.api.get('/v1/protected/clients');
-    return response.data.data!.data;
+  async getClients(params?: { page?: number; page_size?: number; search?: string }): Promise<{ data: Client[]; pagination: { page: number; page_size: number; total_items: number; total_pages: number } }> {
+    const queryParams = new URLSearchParams();
+    if (params?.page) queryParams.append('page', params.page.toString());
+    if (params?.page_size) queryParams.append('page_size', params.page_size.toString());
+    if (params?.search) queryParams.append('search', params.search);
+    
+    const response: AxiosResponse<ApiResponse<{ data: Client[]; pagination: { page: number; page_size: number; total_items: number; total_pages: number } }>> = await this.api.get(`/v1/protected/clients?${queryParams.toString()}`);
+    return response.data.data!;
+  }
+
+  async getAllClients(): Promise<Client[]> {
+    const response: AxiosResponse<ApiResponse<Client[]>> = await this.api.get('/v1/protected/clients?all=true');
+    return response.data.data!;
   }
 
   async getClient(id: number): Promise<Client> {
@@ -215,9 +225,20 @@ class ApiService {
   }
 
   // Invoice methods
-  async getInvoices(): Promise<Invoice[]> {
-    const response: AxiosResponse<ApiResponse<{ data: Invoice[]; pagination: { page: number; page_size: number; total_items: number; total_pages: number } }>> = await this.api.get('/v1/protected/invoices');
-    return response.data.data!.data;
+  async getInvoices(params?: { page?: number; page_size?: number; search?: string; status?: string }): Promise<{ data: Invoice[]; pagination: { page: number; page_size: number; total_items: number; total_pages: number } }> {
+    const queryParams = new URLSearchParams();
+    if (params?.page) queryParams.append('page', params.page.toString());
+    if (params?.page_size) queryParams.append('page_size', params.page_size.toString());
+    if (params?.search) queryParams.append('search', params.search);
+    if (params?.status) queryParams.append('status', params.status);
+    
+    const response: AxiosResponse<ApiResponse<{ data: Invoice[]; pagination: { page: number; page_size: number; total_items: number; total_pages: number } }>> = await this.api.get(`/v1/protected/invoices?${queryParams.toString()}`);
+    return response.data.data!;
+  }
+
+  async getAllInvoices(): Promise<Invoice[]> {
+    const response: AxiosResponse<ApiResponse<Invoice[]>> = await this.api.get('/v1/protected/invoices?all=true');
+    return response.data.data!;
   }
 
   async getInvoice(id: number): Promise<Invoice> {

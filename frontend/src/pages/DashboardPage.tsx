@@ -21,8 +21,8 @@ const DashboardPage: React.FC = () => {
   const loadDashboardData = async () => {
     try {
       const [invoicesData, clientsData, summaryData] = await Promise.all([
-        apiService.getInvoices(),
-        apiService.getClients(),
+        apiService.getAllInvoices(), // Get all invoices for dashboard stats
+        apiService.getAllClients(),  // Get all clients for dashboard stats
         apiService.getInvoiceSummary(),
       ]);
       setInvoices(invoicesData);

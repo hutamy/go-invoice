@@ -44,7 +44,7 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({
 
   const loadClients = useCallback(async () => {
     if (isAuthenticated && showClientSelection) {
-      const clientsData = await apiService.getClients();
+      const clientsData = await apiService.getAllClients();
       setClients(clientsData);
     }
   }, [isAuthenticated, showClientSelection]);

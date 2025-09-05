@@ -17,6 +17,8 @@ import { toast } from 'react-toastify';
 import { apiService } from '../utils/api.ts';
 import type { Client } from '../types/index.ts';
 import Navbar from '../components/Navbar.tsx';
+import Pagination from '../components/Pagination.tsx';
+import { formatDate } from '../utils/helper.ts';
 
 const clientSchema = z.object({
   name: z.string().min(1, 'Name is required'),
@@ -35,6 +37,12 @@ const ClientsPage: React.FC = () => {
   const [editingClient, setEditingClient] = useState<Client | null>(null);
   const [deleteConfirm, setDeleteConfirm] = useState<Client | null>(null);
 
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalItems, setTotalItems] = useState(0);
+  const [pageSize, setPageSize] = useState(10);
+
   const {
     register,
     handleSubmit,
@@ -44,27 +52,46 @@ const ClientsPage: React.FC = () => {
     resolver: zodResolver(clientSchema),
   });
 
-  useEffect(() => {
-    loadClients();
-  }, []);
-
-  const loadClients = async () => {
+  const loadClients = React.useCallback(async () => {
     try {
       setIsLoading(true);
-      const clientsData = await apiService.getClients();
-      setClients(clientsData);
+      const params = {
+        page: currentPage,
+        page_size: pageSize,
+        ...(searchTerm && { search: searchTerm }),
+      };
+      
+      const result = await apiService.getClients(params);
+      setClients(result.data);
+      setTotalPages(result.pagination.total_pages);
+      setTotalItems(result.pagination.total_items);
+      setPageSize(result.pagination.page_size);
     } catch {
       toast.error('Failed to load clients');
     } finally {
       setIsLoading(false);
     }
+  }, [currentPage, pageSize, searchTerm]);
+
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      loadClients();
+    }, 300); // Debounce search
+
+    return () => clearTimeout(timeoutId);
+  }, [loadClients]);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
   };
 
-  const filteredClients = clients.filter(client =>
-    client.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    client.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    client.phone?.includes(searchTerm)
-  );
+  const handleSearchChange = (value: string) => {
+    setSearchTerm(value);
+    setCurrentPage(1); // Reset to first page when searching
+  };
+
+  // No need for client-side filtering since we're filtering on backend
+  const filteredClients = clients;
 
   const openCreateModal = () => {
     setEditingClient(null);
@@ -117,8 +144,9 @@ const ClientsPage: React.FC = () => {
     try {
       await apiService.deleteClient(client.id);
       toast.success('Client deleted successfully');
-      await loadClients();
       setDeleteConfirm(null);
+      // Reload current page
+      await loadClients();
     } catch {
       toast.error('Failed to delete client');
     }
@@ -158,7 +186,7 @@ const ClientsPage: React.FC = () => {
               className="block w-full pl-12 pr-4 py-4 bg-white/70 backdrop-blur-sm border border-primary-200/60 rounded-full focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500/50 transition-all duration-300 placeholder-primary-400 text-primary-900"
               placeholder="Search clients..."
               value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
+              onChange={(e) => handleSearchChange(e.target.value)}
             />
           </div>
 
@@ -235,7 +263,7 @@ const ClientsPage: React.FC = () => {
                     
                     {client.created_at && (
                       <p className="text-xs text-gray-500">
-                        Added {new Date(client.created_at).toLocaleDateString()}
+                        Added {formatDate(client.created_at)}
                       </p>
                     )}
                   </div>
@@ -259,6 +287,20 @@ const ClientsPage: React.FC = () => {
                 </div>
               </div>
             ))}
+          </div>
+        )}
+
+        {/* Pagination */}
+        {filteredClients.length > 0 && (
+          <div className="mt-8">
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              totalItems={totalItems}
+              pageSize={pageSize}
+              onPageChange={handlePageChange}
+              loading={isLoading}
+            />
           </div>
         )}
       </div>

@@ -17,6 +17,7 @@ import { apiService } from "../utils/api.ts";
 import type { Invoice } from "../types/index.ts";
 import { formatDate } from "../utils/helper.ts";
 import Navbar from "../components/Navbar.tsx";
+import Pagination from "../components/Pagination.tsx";
 
 const InvoicesPage: React.FC = () => {
   const [invoices, setInvoices] = useState<Invoice[]>([]);
@@ -34,28 +35,63 @@ const InvoicesPage: React.FC = () => {
     invoice: null,
   });
 
-  useEffect(() => {
-    loadInvoices();
-  }, []);
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalItems, setTotalItems] = useState(0);
+  const [pageSize, setPageSize] = useState(10);
 
-  const loadInvoices = async () => {
+  const loadInvoices = React.useCallback(async () => {
     try {
       setLoading(true);
-      const data = await apiService.getInvoices();
-      setInvoices(data);
+      const params = {
+        page: currentPage,
+        page_size: pageSize,
+        ...(searchTerm && { search: searchTerm }),
+        ...(statusFilter !== "all" && { status: statusFilter }),
+      };
+      
+      const result = await apiService.getInvoices(params);
+      setInvoices(result.data);
+      setTotalPages(result.pagination.total_pages);
+      setTotalItems(result.pagination.total_items);
+      setPageSize(result.pagination.page_size);
     } catch {
       toast.error("Failed to load invoices");
     } finally {
       setLoading(false);
     }
+  }, [currentPage, pageSize, searchTerm, statusFilter]);
+
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      loadInvoices();
+    }, 300); // Debounce search
+
+    return () => clearTimeout(timeoutId);
+  }, [loadInvoices]);
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
+  const handleSearchChange = (value: string) => {
+    setSearchTerm(value);
+    setCurrentPage(1); // Reset to first page when searching
+  };
+
+  const handleStatusFilterChange = (status: string) => {
+    setStatusFilter(status as "all" | "draft" | "sent" | "paid" | "overdue");
+    setCurrentPage(1); // Reset to first page when filtering
   };
 
   const handleDeleteInvoice = async (invoice: Invoice) => {
     try {
       await apiService.deleteInvoice(invoice.id);
-      setInvoices(invoices.filter((i) => i.id !== invoice.id));
       setDeleteConfirm({ show: false, invoice: null });
       toast.success("Invoice deleted successfully");
+      // Reload current page
+      await loadInvoices();
     } catch {
       toast.error("Failed to delete invoice");
     }
@@ -87,15 +123,6 @@ const InvoicesPage: React.FC = () => {
       });
     }
   };
-
-  const filteredInvoices = invoices.filter((invoice) => {
-    const matchesSearch =
-      invoice.invoice_number.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      invoice.client_name?.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesStatus =
-      statusFilter === "all" || invoice.status === statusFilter;
-    return matchesSearch && matchesStatus;
-  });
 
   if (loading) {
     return (
@@ -146,7 +173,7 @@ const InvoicesPage: React.FC = () => {
                 className="block w-full pl-12 pr-4 py-4 bg-white/70 backdrop-blur-sm border border-primary-200/60 rounded-full focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500/50 transition-all duration-300 placeholder-primary-400 text-primary-900"
                 placeholder="Search invoices..."
                 value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
+                onChange={(e) => handleSearchChange(e.target.value)}
               />
             </div>
           </div>
@@ -157,16 +184,7 @@ const InvoicesPage: React.FC = () => {
               </div>
               <select
                 value={statusFilter}
-                onChange={(e) =>
-                  setStatusFilter(
-                    e.target.value as
-                      | "all"
-                      | "draft"
-                      | "sent"
-                      | "paid"
-                      | "overdue"
-                  )
-                }
+                onChange={(e) => handleStatusFilterChange(e.target.value)}
                 className="block w-full pl-12 pr-4 py-4 bg-white/70 backdrop-blur-sm border border-primary-200/60 rounded-full focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500/50 transition-all duration-300 text-primary-900 appearance-none"
               >
                 <option value="all">All Status</option>
@@ -180,7 +198,7 @@ const InvoicesPage: React.FC = () => {
         </div>
 
         {/* Invoices Grid */}
-        {filteredInvoices.length === 0 ? (
+        {invoices.length === 0 ? (
           <div className="text-center py-20 bg-white/70 backdrop-blur-sm rounded-3xl border border-primary-200/50">
             <div className="bg-gradient-to-br from-sky-100 to-blue-100 rounded-2xl p-6 w-20 h-20 mx-auto mb-8 border border-sky-200/50">
               <FileText className="h-8 w-8 text-sky-600 mx-auto mt-2" />
@@ -235,7 +253,7 @@ const InvoicesPage: React.FC = () => {
                   </tr>
                 </thead>
                 <tbody className="bg-white/50 backdrop-blur-sm divide-y divide-primary-200/30">
-                  {filteredInvoices.map((invoice) => (
+                  {invoices.map((invoice) => (
                     <tr key={invoice.id} className="hover:bg-sky-50/50 transition-colors duration-200">
                       <td className="px-8 py-5 whitespace-nowrap">
                         <div className="flex items-center">
@@ -335,6 +353,14 @@ const InvoicesPage: React.FC = () => {
                 </tbody>
               </table>
             </div>
+            <Pagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              totalItems={totalItems}
+              pageSize={pageSize}
+              onPageChange={handlePageChange}
+              loading={loading}
+            />
           </div>
         )}
       </div>
