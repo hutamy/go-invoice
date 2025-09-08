@@ -1,6 +1,6 @@
 import React from "react";
 import { Link, useNavigate } from "react-router-dom";
-import { FileText, LogOut, Menu, X } from "lucide-react";
+import { LogOut, Menu, X } from "lucide-react";
 import { useAuth } from "../context/AuthContext.tsx";
 import { useState } from "react";
 
@@ -22,10 +22,6 @@ const Navbar: React.FC = () => {
           {/* Logo */}
           <div className="flex items-center">
             <Link to="/" className="flex items-center group">
-              <div className="relative">
-                <FileText className="h-9 w-9 text-primary-900 group-hover:text-sky-600 transition-colors duration-300" />
-                <div className="absolute -inset-3 bg-sky-100 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 -z-10"></div>
-              </div>
               <span className="ml-4 text-2xl font-bold text-primary-900 tracking-tight">
                 GoInvoice
               </span>
@@ -62,7 +58,7 @@ const Navbar: React.FC = () => {
                 </Link>
                 <div className="flex items-center space-x-4 ml-8 pl-8 border-l border-primary-200">
                   <div className="text-sm text-primary-600">
-                    <span className="font-semibold text-primary-900">
+                    <span className="font-semibold text-accent-600">
                       {user?.name}
                     </span>
                   </div>
@@ -143,7 +139,7 @@ const Navbar: React.FC = () => {
                   </Link>
                   <div className="border-t border-primary-200 pt-3 mt-3">
                     <div className="px-3 py-2 text-sm text-primary-600">
-                      <span className="font-medium text-primary-900">
+                      <span className="font-medium text-accent-600">
                         {user?.name}
                       </span>
                     </div>

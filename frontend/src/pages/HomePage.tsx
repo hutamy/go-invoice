@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { FileText, Download } from "lucide-react";
+import { Download } from "lucide-react";
 import { toast } from "react-toastify";
 import InvoiceForm from "../components/InvoiceForm.tsx";
 import InvoicePreview from "../components/InvoicePreview.tsx";
@@ -118,27 +118,24 @@ const HomePage: React.FC = () => {
           <div className="relative z-10 pb-16 sm:pb-20 md:pb-24 lg:max-w-2xl lg:w-full lg:pb-32 xl:pb-40">
             <main className="mt-16 mx-auto max-w-7xl px-4 sm:mt-20 sm:px-6 md:mt-24 lg:mt-32 lg:px-8 xl:mt-40">
               <div className="sm:text-center lg:text-left">
-                <h1 className="text-5xl sm:text-6xl md:text-7xl font-bold text-primary-900 leading-[0.9] tracking-tight mb-8">
-                  Create
-                  <span className="block bg-gradient-to-r from-sky-400 via-blue-500 to-accent-600 bg-clip-text text-transparent">
-                    Beautiful Invoices
-                  </span>
-                </h1>
-                <p className="text-xl sm:text-2xl text-primary-600 mb-12 max-w-2xl leading-relaxed font-light">
-                  Professional invoice generation made simple. Create, customize, 
-                  and send invoices that get you paid faster.
-                </p>
-                <div className="flex flex-col sm:flex-row gap-4 sm:justify-center lg:justify-start">
-                  <button
-                    onClick={handleScrollToDemo}
-                    className="group relative px-8 py-4 bg-gradient-to-r from-sky-500 to-blue-600 text-white rounded-full font-semibold transition-all hover:from-sky-600 hover:to-blue-700 hover:shadow-2xl hover:shadow-sky-500/25 active:scale-[0.98] text-lg"
-                  >
-                    <span className="relative z-10">Try Demo</span>
-                  </button>
-                  <button className="px-8 py-4 border-2 border-primary-200 text-primary-700 rounded-full font-semibold hover:bg-primary-50 hover:border-primary-300 transition-all text-lg">
-                    Watch Demo
-                  </button>
+                <div className="flex flex-row items-center gap-4 mb-4">
+                  <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold text-primary-900 leading-[0.9] tracking-tight">
+                    Create
+                    <span className="bg-gradient-to-r from-accent-400 via-accent-500 to-accent-600 bg-clip-text text-transparent ml-3">
+                      Invoices
+                    </span>
+                  </h1>
                 </div>
+                <p className="text-xl sm:text-2xl text-primary-600 mb-6 max-w-2xl leading-relaxed font-light">
+                  Professional invoice generation made simple. Create invoices
+                  online and get paid faster.
+                </p>
+                <button
+                  onClick={handleScrollToDemo}
+                  className="group relative px-8 py-2 bg-gradient-to-r from-accent-500 to-accent-600 text-white rounded-full font-semibold transition-all hover:from-accent-600 hover:to-accent-700 hover:shadow-2xl hover:shadow-sky-500/25 active:scale-[0.98] text-lg"
+                >
+                  <span className="relative z-10">Try Demo</span>
+                </button>
               </div>
             </main>
           </div>
@@ -150,7 +147,7 @@ const HomePage: React.FC = () => {
             <div className="absolute inset-0 flex items-start justify-center p-6">
               {/* Mock Invoice Preview */}
               <div className="p-8 transform rotate-2 hover:rotate-0 transition-transform duration-700 ease-out">
-                <div className="bg-white rounded-3xl border border-primary-200/60 p-8 shadow-2xl shadow-sky-900/10">
+                <div className="bg-white rounded-3xl border border-primary-200/60 p-8 shadow-2xl shadow-accent-200/50">
                   <div className="transform scale-75 sm:scale-90 origin-top-left">
                     <InvoicePreview
                       data={{
@@ -198,11 +195,12 @@ const HomePage: React.FC = () => {
       <div className="py-32" id="invoice">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-20">
-            <h2 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-primary-900 mb-8 leading-tight">
+            <h2 className="text-2xl sm:text-3xl lg:text-5xl font-bold text-primary-900 mb-4 leading-tight">
               Create Your Invoice
             </h2>
-            <p className="text-xl text-primary-600 max-w-3xl mx-auto leading-relaxed font-light">
-              Fill out the form and watch your invoice come to life in real-time.
+            <p className="text-lg text-primary-600 max-w-3xl mx-auto leading-relaxed font-light">
+              Fill out the form and watch your invoice come to life in
+              real-time.
             </p>
           </div>
 
@@ -212,7 +210,6 @@ const HomePage: React.FC = () => {
               <div className="bg-white/70 backdrop-blur-sm rounded-3xl shadow-xl border border-primary-200/50 overflow-hidden">
                 <div className="bg-gradient-to-r from-primary-900 via-primary-800 to-blue-900 px-10 py-8">
                   <h2 className="text-2xl font-bold text-white flex items-center">
-                    <FileText className="h-7 w-7 mr-4" />
                     Invoice Details
                   </h2>
                 </div>
@@ -257,12 +254,8 @@ const HomePage: React.FC = () => {
                 <div className="bg-gradient-to-r from-accent-600 via-sky-500 to-blue-600 px-10 py-8">
                   <div className="flex items-center justify-between">
                     <h2 className="text-2xl font-bold text-white flex items-center">
-                      <FileText className="h-7 w-7 mr-4" />
                       Live Preview
                     </h2>
-                    <span className="bg-white/20 text-white text-sm px-4 py-2 rounded-full font-semibold">
-                      Real-time
-                    </span>
                   </div>
                 </div>
                 <div className="p-10">

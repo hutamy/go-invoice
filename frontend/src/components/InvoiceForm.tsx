@@ -156,9 +156,6 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({
           onClick={() => toggleSection("invoiceDetails")}
         >
           <div className="flex items-center">
-            <div className="bg-blue-600/10 rounded-xl p-2 mr-3">
-              <User className="h-5 w-5 text-blue-600" />
-            </div>
             Invoice Details
           </div>
           {expandedSections.invoiceDetails ? (

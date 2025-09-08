@@ -166,17 +166,6 @@ const LoginPage: React.FC = () => {
             </div>
           </form>
         </div>
-
-        {/* Bottom decoration */}
-        <div className="mt-10 text-center">
-          <div className="inline-flex items-center justify-center space-x-3 text-xs text-gray-300">
-            <span>Secure</span>
-            <div className="w-1 h-1 bg-gray-300 rounded-full"></div>
-            <span>Fast</span>
-            <div className="w-1 h-1 bg-gray-300 rounded-full"></div>
-            <span>Reliable</span>
-          </div>
-        </div>
       </div>
     </div>
   );
