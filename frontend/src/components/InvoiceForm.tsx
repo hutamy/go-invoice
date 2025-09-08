@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback, Fragment } from "react";
-import { Plus, Trash2, User, ChevronDown, ChevronUp, Calendar } from "lucide-react";
-import { Listbox, Transition } from '@headlessui/react';
-import DatePicker from 'react-datepicker';
+import { Plus, Trash2, ChevronDown, ChevronUp, Calendar } from "lucide-react";
+import { Listbox, Transition } from "@headlessui/react";
+import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { useAuth } from "../context/AuthContext.tsx";
 import { apiService } from "../utils/api.ts";
@@ -150,14 +150,12 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({
       {/* Invoice Details */}
       <div className="bg-gray-50/50 p-8 rounded-2xl border border-gray-200/50">
         <h3
-          className={`text-lg font-medium text-gray-900 flex items-center justify-between cursor-pointer hover:text-blue-600 transition-colors select-none ${
+          className={`text-lg font-medium flex items-center justify-between cursor-pointer text-accent-600 transition-colors select-none ${
             expandedSections.invoiceDetails ? "mb-8" : ""
           }`}
           onClick={() => toggleSection("invoiceDetails")}
         >
-          <div className="flex items-center">
-            Invoice Details
-          </div>
+          <div className="flex items-center">Invoice Details</div>
           {expandedSections.invoiceDetails ? (
             <ChevronUp className="h-5 w-5 text-gray-400" />
           ) : (
@@ -190,7 +188,9 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({
                 <DatePicker
                   selected={data.issue_date ? new Date(data.issue_date) : null}
                   onChange={(date) => {
-                    const formattedDate = date ? date.toISOString().split('T')[0] : '';
+                    const formattedDate = date
+                      ? date.toISOString().split("T")[0]
+                      : "";
                     handleInputChange("issue_date", formattedDate);
                   }}
                   dateFormat="dd/MM/yyyy"
@@ -211,7 +211,9 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({
                 <DatePicker
                   selected={data.due_date ? new Date(data.due_date) : null}
                   onChange={(date) => {
-                    const formattedDate = date ? date.toISOString().split('T')[0] : '';
+                    const formattedDate = date
+                      ? date.toISOString().split("T")[0]
+                      : "";
                     handleInputChange("due_date", formattedDate);
                   }}
                   dateFormat="dd/MM/yyyy"
@@ -231,17 +233,12 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({
       {/* Sender Details (Business Information) */}
       <div className="bg-blue-600/3 p-8 rounded-2xl border border-blue-200/30">
         <h3
-          className={`text-lg font-medium text-gray-900 flex items-center justify-between cursor-pointer hover:text-blue-600 transition-colors select-none ${
+          className={`text-lg font-medium flex items-center justify-between cursor-pointer text-accent-600 transition-colors select-none ${
             expandedSections.senderDetails ? "mb-6" : ""
           }`}
           onClick={() => toggleSection("senderDetails")}
         >
-          <div className="flex items-center">
-            <div className="bg-blue-600/10 rounded-xl p-2 mr-3">
-              <User className="h-5 w-5 text-blue-600" />
-            </div>
-            Sender Details
-          </div>
+          <div className="flex items-center">Sender Details</div>
           {expandedSections.senderDetails ? (
             <ChevronUp className="h-5 w-5 text-gray-400" />
           ) : (
@@ -264,9 +261,7 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({
                 {user.phone && (
                   <div className="bg-white/60 rounded-xl p-4">
                     <strong className="text-gray-700">Phone:</strong>
-                    <span className="ml-2 text-gray-900">
-                      {user.phone}
-                    </span>
+                    <span className="ml-2 text-gray-900">{user.phone}</span>
                   </div>
                 )}
                 {user.address && (
@@ -405,7 +400,7 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({
       {isAuthenticated && showClientSelection && (
         <div className="bg-gray-50/50 p-8 rounded-2xl border border-gray-200/50">
           <h3
-            className={`text-lg font-medium text-gray-700 flex items-center justify-between cursor-pointer hover:text-blue-600 transition-colors select-none ${
+            className={`text-lg font-medium flex items-center justify-between cursor-pointer text-accent-600 transition-colors select-none ${
               expandedSections.clientSelection ? "mb-4" : ""
             }`}
             onClick={() => toggleSection("clientSelection")}
@@ -419,17 +414,23 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({
           </h3>
           {expandedSections.clientSelection && (
             <div className="relative">
-              <Listbox 
+              <Listbox
                 value={selectedClientId?.toString() || ""}
                 onChange={(value) => handleClientSelect(value || null)}
               >
                 <div className="relative">
                   <Listbox.Button className="w-full px-4 py-3 bg-white/80 border border-primary-200 rounded-full focus:ring-2 focus:ring-sky-500/40 focus:border-sky-500 transition-all duration-200 text-primary-900 shadow-sm text-left flex items-center justify-between">
-                    <span className={selectedClientId ? "text-primary-900" : "text-primary-400"}>
-                      {selectedClientId 
-                        ? clients.find(c => c.id === selectedClientId)?.name || "Enter client details manually"
-                        : "Enter client details manually"
+                    <span
+                      className={
+                        selectedClientId
+                          ? "text-primary-900"
+                          : "text-primary-400"
                       }
+                    >
+                      {selectedClientId
+                        ? clients.find((c) => c.id === selectedClientId)
+                            ?.name || "Enter client details manually"
+                        : "Enter client details manually"}
                     </span>
                     <ChevronDown className="h-5 w-5 text-primary-400 transition-transform duration-200 ui-open:rotate-180" />
                   </Listbox.Button>
@@ -445,7 +446,9 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({
                         value=""
                         className={({ active }) =>
                           `relative cursor-pointer select-none py-3 px-4 transition-colors first:rounded-t-2xl border-b border-primary-100/50 ${
-                            active ? 'bg-sky-50/80 text-sky-900' : 'text-primary-600'
+                            active
+                              ? "bg-sky-50/80 text-sky-900"
+                              : "text-primary-600"
                           }`
                         }
                       >
@@ -457,16 +460,20 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({
                           value={client.id.toString()}
                           className={({ active, selected }) =>
                             `relative cursor-pointer select-none py-3 px-4 transition-colors border-b border-primary-100/50 last:border-b-0 last:rounded-b-2xl ${
-                              active ? 'bg-sky-50/80' : ''
+                              active ? "bg-sky-50/80" : ""
                             } ${
-                              selected ? 'bg-sky-100/60 text-sky-800 font-medium' : 'text-primary-700'
+                              selected
+                                ? "bg-sky-100/60 text-sky-800 font-medium"
+                                : "text-primary-700"
                             }`
                           }
                         >
                           <div>
                             {client.name}
                             {client.email && (
-                              <div className="text-sm text-primary-500 mt-1">{client.email}</div>
+                              <div className="text-sm text-primary-500 mt-1">
+                                {client.email}
+                              </div>
                             )}
                           </div>
                         </Listbox.Option>
@@ -484,17 +491,12 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({
       <div className="bg-gray-50/50 p-8 rounded-2xl border border-gray-200/50">
         <h3
           className={
-            "text-lg font-medium text-gray-900 flex items-center justify-between cursor-pointer hover:text-blue-600 transition-colors select-none " +
+            "text-lg font-medium flex items-center justify-between cursor-pointer text-accent-600 transition-colors select-none " +
             (expandedSections.recipientDetails ? "mb-8" : "")
           }
           onClick={() => toggleSection("recipientDetails")}
         >
-          <div className="flex items-center">
-            <div className="bg-blue-600/10 rounded-xl p-2 mr-3">
-              <User className="h-5 w-5 text-blue-600" />
-            </div>
-            Recipient Details
-          </div>
+          <div className="flex items-center">Recipient Details</div>
           {expandedSections.recipientDetails ? (
             <ChevronUp className="h-5 w-5 text-gray-400" />
           ) : (
@@ -506,7 +508,8 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({
             {selectedClientId && (
               <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-4">
                 <p className="text-sm text-blue-800">
-                  <strong>Client selected:</strong> Fields are read-only. To edit manually, select "Enter client details manually" above.
+                  <strong>Client selected:</strong> Fields are read-only. To
+                  edit manually, select "Enter client details manually" above.
                 </p>
               </div>
             )}
@@ -522,9 +525,9 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({
                 }
                 disabled={selectedClientId !== null}
                 className={`w-full px-4 py-3 border border-primary-200 rounded-full focus:ring-2 focus:ring-sky-500/40 focus:border-sky-500 transition-all duration-200 placeholder-primary-400 text-primary-900 shadow-sm ${
-                  selectedClientId !== null 
-                    ? 'bg-gray-100 text-gray-500 cursor-not-allowed' 
-                    : 'bg-white/80'
+                  selectedClientId !== null
+                    ? "bg-gray-100 text-gray-500 cursor-not-allowed"
+                    : "bg-white/80"
                 }`}
                 placeholder="Client Name"
                 required
@@ -542,9 +545,9 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({
                 }
                 disabled={selectedClientId !== null}
                 className={`w-full px-4 py-3 border border-primary-200 rounded-full focus:ring-2 focus:ring-sky-500/40 focus:border-sky-500 transition-all duration-200 placeholder-primary-400 text-primary-900 shadow-sm ${
-                  selectedClientId !== null 
-                    ? 'bg-gray-100 text-gray-500 cursor-not-allowed' 
-                    : 'bg-white/80'
+                  selectedClientId !== null
+                    ? "bg-gray-100 text-gray-500 cursor-not-allowed"
+                    : "bg-white/80"
                 }`}
                 placeholder="client@example.com"
               />
@@ -561,9 +564,9 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({
                 }
                 disabled={selectedClientId !== null}
                 className={`w-full px-4 py-3 border border-primary-200 rounded-full focus:ring-2 focus:ring-sky-500/40 focus:border-sky-500 transition-all duration-200 placeholder-primary-400 text-primary-900 shadow-sm ${
-                  selectedClientId !== null 
-                    ? 'bg-gray-100 text-gray-500 cursor-not-allowed' 
-                    : 'bg-white/80'
+                  selectedClientId !== null
+                    ? "bg-gray-100 text-gray-500 cursor-not-allowed"
+                    : "bg-white/80"
                 }`}
                 placeholder="+1 234 567 890"
               />
@@ -579,9 +582,9 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({
                 }
                 disabled={selectedClientId !== null}
                 className={`w-full px-4 py-3 border border-primary-200 rounded-2xl focus:ring-2 focus:ring-sky-500/40 focus:border-sky-500 transition-all duration-200 placeholder-primary-400 text-primary-900 shadow-sm resize-none ${
-                  selectedClientId !== null 
-                    ? 'bg-gray-100 text-gray-500 cursor-not-allowed' 
-                    : 'bg-white/80'
+                  selectedClientId !== null
+                    ? "bg-gray-100 text-gray-500 cursor-not-allowed"
+                    : "bg-white/80"
                 }`}
                 rows={3}
                 placeholder="123 Client Street, Client City, Country"
@@ -595,7 +598,7 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({
       <div className="bg-gray-50/50 p-8 rounded-2xl border border-gray-200/50">
         <h3
           className={
-            "text-lg font-medium text-gray-900 flex items-center justify-between cursor-pointer hover:text-blue-600 transition-colors select-none " +
+            "text-lg font-medium flex items-center justify-between cursor-pointer text-accent-600 transition-colors select-none " +
             (expandedSections.invoiceItems ? "mb-8" : "")
           }
           onClick={() => toggleSection("invoiceItems")}
@@ -687,7 +690,7 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({
                         type="button"
                         onClick={() => removeItem(index)}
                         disabled={data.items.length === 1}
-                        className="w-full h-14 flex items-center justify-center text-red-500 hover:text-red-700 hover:bg-red-50/50 rounded-2xl transition-all duration-300 disabled:text-gray-300 disabled:cursor-not-allowed"
+                        className="w-full h-14 flex items-center justify-center text-red-500 hover:text-red-700 rounded-2xl transition-all duration-300 disabled:text-gray-300 disabled:cursor-not-allowed"
                       >
                         <Trash2 className="h-5 w-5" />
                       </button>
@@ -696,14 +699,16 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({
                 </div>
               ))}
             </div>
-            <button
-              type="button"
-              onClick={addItem}
-              className="mt-8 bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white font-semibold px-8 py-3 rounded-full transition-all duration-300 inline-flex items-center shadow-xl shadow-sky-500/25 hover:shadow-2xl hover:shadow-sky-500/30 hover:-translate-y-0.5"
-            >
-              <Plus className="h-5 w-5 mr-3" />
-              Add Item
-            </button>
+            <div className="flex items-center justify-center">
+              <button
+                type="button"
+                onClick={addItem}
+                className="mt-8 bg-gradient-to-r from-accent-600 to-accent-700 hover:from-accent-700 hover:to-accent-800 text-white font-semibold px-8 py-3 rounded-full transition-all duration-300 inline-flex items-center shadow-xl shadow-sky-500/25 hover:shadow-2xl hover:shadow-sky-500/30 hover:-translate-y-0.5"
+              >
+                <Plus className="h-5 w-5 mr-3" />
+                Add Item
+              </button>
+            </div>
           </>
         )}
       </div>
@@ -712,7 +717,7 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({
       <div className="bg-gray-50/50 p-8 rounded-2xl border border-gray-200/50">
         <h3
           className={
-            "text-lg font-medium text-gray-900 flex items-center justify-between cursor-pointer hover:text-blue-600 transition-colors select-none " +
+            "text-lg font-medium flex items-center justify-between cursor-pointer text-accent-600 transition-colors select-none " +
             (expandedSections.taxAndNotes ? "mb-8" : "")
           }
           onClick={() => toggleSection("taxAndNotes")}
@@ -763,7 +768,7 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({
       <div className="bg-blue-600/3 p-8 rounded-2xl border border-blue-200/30">
         <h3
           className={
-            "text-lg font-medium text-gray-900 flex items-center justify-between cursor-pointer hover:text-blue-600 transition-colors select-none" +
+            "text-lg font-medium flex items-center justify-between cursor-pointer text-accent-600 transition-colors select-none" +
             (expandedSections.summary ? " mb-6" : "")
           }
           onClick={() => toggleSection("summary")}
@@ -793,7 +798,7 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({
             </div>
             <div className="flex justify-between items-center py-4 bg-white rounded-2xl px-6">
               <span className="text-xl font-medium text-gray-900">Total:</span>
-              <span className="text-2xl font-medium text-blue-600">
+              <span className="text-2xl font-medium text-accent-600">
                 IDR {total.toFixed(2)}
               </span>
             </div>

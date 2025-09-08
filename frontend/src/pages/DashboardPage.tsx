@@ -177,7 +177,7 @@ const DashboardPage: React.FC = () => {
               className="inline-flex items-center gap-x-4 group bg-white/70 backdrop-blur-sm border border-primary-200/50 rounded-2xl p-6 hover:shadow-2xl hover:shadow-sky-500/10 transition-all duration-300 hover:border-sky-300/50"
             >
               <div className="bg-gradient-to-br from-sky-100 to-blue-100 rounded-2xl p-2 w-12 h-12 group-hover:from-sky-200 group-hover:to-blue-200 transition-colors border border-sky-200/50">
-                <Plus className="h-8 w-8 text-sky-600" />
+                <Plus className="h-7 w-7 text-accent-600" />
               </div>
               <div>
                 <h3 className="font-bold text-primary-900 text-lg">
@@ -194,7 +194,7 @@ const DashboardPage: React.FC = () => {
               className="inline-flex items-center gap-x-4 group bg-white/70 backdrop-blur-sm border border-primary-200/50 rounded-2xl p-6 hover:shadow-2xl hover:shadow-purple-500/10 transition-all duration-300 hover:border-purple-300/50"
             >
               <div className="bg-gradient-to-br from-purple-100 to-violet-100 rounded-2xl p-2 w-12 h-12 group-hover:from-purple-200 group-hover:to-violet-200 transition-colors border border-purple-200/50">
-                <Users className="h-8 w-8 text-purple-600" />
+                <Users className="h-7 w-7 text-purple-600" />
               </div>
               <div>
                 <h3 className="font-bold text-primary-900 text-lg">
@@ -211,7 +211,7 @@ const DashboardPage: React.FC = () => {
               className="inline-flex items-center gap-x-4 group bg-white/70 backdrop-blur-sm border border-primary-200/50 rounded-2xl p-6 hover:shadow-2xl hover:shadow-emerald-500/10 transition-all duration-300 hover:border-emerald-300/50"
             >
               <div className="bg-gradient-to-br from-emerald-100 to-green-100 rounded-2xl p-2 w-12 h-12 group-hover:from-emerald-200 group-hover:to-green-200 transition-colors border border-emerald-200/50">
-                <FileText className="h-8 w-8 text-emerald-600" />
+                <FileText className="h-7 w-7 text-emerald-600" />
               </div>
               <div>
                 <h3 className="font-bold text-primary-900 text-lg">
@@ -457,7 +457,7 @@ const DashboardPage: React.FC = () => {
             <div>
               <Link
                 to="/invoices/create"
-                className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white font-semibold rounded-full transition-all duration-300 shadow-xl shadow-sky-500/25 hover:shadow-2xl hover:shadow-sky-500/30"
+                className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-accent-600 via-accent-700 to-accent-700 hover:from-accent-700 hover:via-accent-800 hover:to-accent-800 text-white font-semibold rounded-full transition-all duration-300 shadow-xl shadow-sky-500/25 hover:shadow-2xl hover:shadow-sky-500/30"
               >
                 <Plus className="-ml-1 mr-3 h-5 w-5" />
                 Create Invoice

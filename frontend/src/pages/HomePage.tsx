@@ -132,7 +132,7 @@ const HomePage: React.FC = () => {
                 </p>
                 <button
                   onClick={handleScrollToDemo}
-                  className="group relative px-8 py-2 bg-gradient-to-r from-accent-500 to-accent-600 text-white rounded-full font-semibold transition-all hover:from-accent-600 hover:to-accent-700 hover:shadow-2xl hover:shadow-sky-500/25 active:scale-[0.98] text-lg"
+                  className="group relative px-8 py-2 bg-gradient-to-r from-accent-600 to-accent-700 via-accent-700 text-white rounded-full font-semibold transition-all hover:from-accent-700 hover:to-accent-800 hover:shadow-2xl hover:shadow-sky-500/25 active:scale-[0.98] text-lg"
                 >
                   <span className="relative z-10">Try Demo</span>
                 </button>
@@ -196,7 +196,10 @@ const HomePage: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-20">
             <h2 className="text-2xl sm:text-3xl lg:text-5xl font-bold text-primary-900 mb-4 leading-tight">
-              Create Your Invoice
+              Create Your
+              <span className="bg-gradient-to-r from-accent-400 via-accent-500 to-accent-600 bg-clip-text text-transparent ml-3">
+                Invoices
+              </span>
             </h2>
             <p className="text-lg text-primary-600 max-w-3xl mx-auto leading-relaxed font-light">
               Fill out the form and watch your invoice come to life in
@@ -208,8 +211,8 @@ const HomePage: React.FC = () => {
             {/* Form Section */}
             <div className="xl:col-span-2 space-y-12">
               <div className="bg-white/70 backdrop-blur-sm rounded-3xl shadow-xl border border-primary-200/50 overflow-hidden">
-                <div className="bg-gradient-to-r from-primary-900 via-primary-800 to-blue-900 px-10 py-8">
-                  <h2 className="text-2xl font-bold text-white flex items-center">
+                <div className="bg-gray-50 px-10 py-6 border-b border-primary-200">
+                  <h2 className="text-2xl font-bold text-primary-800 flex items-center">
                     Invoice Details
                   </h2>
                 </div>
@@ -228,7 +231,7 @@ const HomePage: React.FC = () => {
                       className={`w-full inline-flex items-center justify-center px-8 py-4 text-base font-semibold rounded-full transition-all ${
                         isGenerating
                           ? "bg-primary-100 text-primary-400 cursor-not-allowed"
-                          : "bg-gradient-to-r from-sky-500 via-blue-600 to-accent-600 hover:from-sky-600 hover:via-blue-700 hover:to-accent-700 text-white shadow-xl hover:shadow-2xl hover:shadow-sky-500/25 active:scale-[0.98]"
+                          : "bg-gradient-to-r  from-accent-600 via-accent-700 to-accent-700 hover:from-accent-700 hover:via-accent-800 hover:to-accent-800 text-white shadow-xl hover:shadow-2xl hover:shadow-sky-500/25 active:scale-[0.98]"
                       }`}
                     >
                       {isGenerating ? (
@@ -251,10 +254,10 @@ const HomePage: React.FC = () => {
             {/* Preview Section */}
             <div className="xl:col-span-3 space-y-12">
               <div className="bg-white/70 backdrop-blur-sm rounded-3xl shadow-xl border border-primary-200/50 overflow-hidden">
-                <div className="bg-gradient-to-r from-accent-600 via-sky-500 to-blue-600 px-10 py-8">
+                <div className="bg-gray-50 border-b border-primary-200 px-10 py-6">
                   <div className="flex items-center justify-between">
-                    <h2 className="text-2xl font-bold text-white flex items-center">
-                      Live Preview
+                    <h2 className="text-2xl font-bold text-primary-800 flex items-center">
+                      Preview
                     </h2>
                   </div>
                 </div>
