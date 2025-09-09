@@ -11,9 +11,7 @@ A self-hosted, developer-friendly backend API for freelancers to manage clients 
 - **Invoice Management** (CRUD)
 - **PDF Invoice Generation** using HTML templates
 - **Swagger/OpenAPI Docs**
-- Secure & modular architecture (repository + service layers)
 - **Public Invoice Generator** (no login, instant PDF generation without data storage)
-- **Authenticated Mode** for saving invoices and clients
 
 ---
 
