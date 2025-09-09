@@ -43,5 +43,5 @@ func main() {
 	routes.InitRoutes(e, db)
 
 	log.Printf("Starting server on port: %d", cfg.Port)
-	e.Logger.Fatal(e.Start(fmt.Sprintf(":%d", cfg.Port)))
+	e.Logger.Fatal(e.Start(fmt.Sprintf("0.0.0.0:%d", cfg.Port)))
 }
