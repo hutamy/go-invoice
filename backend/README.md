@@ -1,23 +1,23 @@
-# 🧾 Invoice Generator for Freelancers
+# Invoice Generator for Freelancers
 
 A self-hosted, developer-friendly backend API for freelancers to manage clients and generate invoices (with PDF export). Built with **Go**, **PostgreSQL**, **Echo**, and **Swagger**.
 
 ---
 
-## 🚀 Features
+## Features
 
-- 🧑‍💼 **User Authentication** (JWT)
-- 👥 **Client Management** (CRUD)
-- 💸 **Invoice Management** (CRUD)
-- 📄 **PDF Invoice Generation** using HTML templates
-- 🧾 **Swagger/OpenAPI Docs**
-- 🛡️ Secure & modular architecture (repository + service layers)
-- 🆓 **Public Invoice Generator** (no login, instant PDF generation without data storage)
-- 🔐 **Authenticated Mode** for saving invoices and clients
+- **User Authentication** (JWT)
+- **Client Management** (CRUD)
+- **Invoice Management** (CRUD)
+- **PDF Invoice Generation** using HTML templates
+- **Swagger/OpenAPI Docs**
+- Secure & modular architecture (repository + service layers)
+- **Public Invoice Generator** (no login, instant PDF generation without data storage)
+- **Authenticated Mode** for saving invoices and clients
 
 ---
 
-## ⚙️ Setup
+## Setup
 
 ### 1. Clone the repo
 
@@ -39,7 +39,7 @@ cp .env.example .env
 docker-compose up --build
 ```
 
-## 📚 API Documentation
+## API Documentation
 
 Visit: `http://localhost:8080/swagger/index.html`
 
@@ -68,12 +68,12 @@ Visit: `http://localhost:8080/swagger/index.html`
 └── README.md
 ```
 
-## 🧭 How It Works
+## How It Works
 
 - **Public Mode**: Anyone can POST invoice data and receive a PDF (no auth required)
 - **Authenticated Mode**: Logged-in users can save clients, manage invoices, and view history
 
-## 🧪 Example Usage
+## Example Usage
 
 ### Sign Up (Register)
 

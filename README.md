@@ -1,4 +1,4 @@
-# 🧾 Go Invoice
+# Go Invoice
 
 A full-stack web application for freelancers and small businesses to generate, manage, and share invoices with ease.
 
