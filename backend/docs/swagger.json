@@ -2,7 +2,7 @@
     "swagger": "2.0",
     "info": {
         "description": "API documentation for your invoice app.",
-        "title": "Smart Invoice Generator API",
+        "title": "Go Invoice API",
         "contact": {},
         "version": "1.0"
     },

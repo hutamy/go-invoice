@@ -1,12 +1,12 @@
 package routes
 
 import (
-	"github.com/hutamy/invoice-generator-backend/controllers"
-	_ "github.com/hutamy/invoice-generator-backend/docs"
-	"github.com/hutamy/invoice-generator-backend/middleware"
-	"github.com/hutamy/invoice-generator-backend/repositories"
-	"github.com/hutamy/invoice-generator-backend/services"
-	"github.com/hutamy/invoice-generator-backend/utils"
+	"github.com/hutamy/go-invoice-backend/controllers"
+	_ "github.com/hutamy/go-invoice-backend/docs"
+	"github.com/hutamy/go-invoice-backend/middleware"
+	"github.com/hutamy/go-invoice-backend/repositories"
+	"github.com/hutamy/go-invoice-backend/services"
+	"github.com/hutamy/go-invoice-backend/utils"
 	"github.com/labstack/echo/v4"
 	echoSwagger "github.com/swaggo/echo-swagger"
 	"gorm.io/gorm"
@@ -27,10 +27,10 @@ func InitRoutes(e *echo.Echo, db *gorm.DB) {
 	invoiceController := controllers.NewInvoiceController(invoiceService)
 
 	e.GET("/", func(c echo.Context) error {
-		return utils.Response(c, 200, "Welcome to Invoice Generator API", nil)
+		return utils.Response(c, 200, "Welcome to Go Invoice API", nil)
 	})
 	e.GET("/health", func(c echo.Context) error {
-		return utils.Response(c, 200, "Invoice Generator API is running", nil)
+		return utils.Response(c, 200, "Go Invoice API is running", nil)
 	})
 	e.GET("/swagger/*", echoSwagger.WrapHandler)
 

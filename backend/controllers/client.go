@@ -4,10 +4,10 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/hutamy/invoice-generator-backend/dto"
-	"github.com/hutamy/invoice-generator-backend/services"
-	"github.com/hutamy/invoice-generator-backend/utils"
-	"github.com/hutamy/invoice-generator-backend/utils/errors"
+	"github.com/hutamy/go-invoice-backend/dto"
+	"github.com/hutamy/go-invoice-backend/services"
+	"github.com/hutamy/go-invoice-backend/utils"
+	"github.com/hutamy/go-invoice-backend/utils/errors"
 	"github.com/labstack/echo/v4"
 )
 

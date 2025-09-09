@@ -7,7 +7,7 @@ RUN go mod download
 
 COPY . .
 
-RUN go build -o invoice-generator ./cmd/main.go
+RUN go build -o go-invoice ./cmd/main.go
 
 # Run stage
 FROM alpine:3.19
@@ -16,8 +16,8 @@ WORKDIR /app
 
 RUN apk --no-cache upgrade
 
-COPY --from=builder /app/invoice-generator .
+COPY --from=builder /app/go-invoice .
 
 EXPOSE 8000
 
-CMD ["./invoice-generator"]
+CMD ["./go-invoice"]

@@ -22,8 +22,8 @@ A self-hosted, developer-friendly backend API for freelancers to manage clients 
 ### 1. Clone the repo
 
 ```bash
-git clone https://github.com/hutamy/invoice-generator-backend.git
-cd invoice-generator
+git clone https://github.com/hutamy/go-invoice-backend.git
+cd go-invoice
 ```
 
 ### 2. Set up .env

@@ -1,0 +1,13 @@
+# # Only deploy backend when backend/ changes
+# on:
+#   push:
+#     branches: [main]
+#     paths: ["backend/**"]
+# jobs:
+#   deploy:
+#     runs-on: ubuntu-latest
+#     steps:
+#       - name: Checkout code
+#       - name: Setup Google Cloud
+#       - name: Build and push Docker image
+#       - name: Deploy to Cloud Run

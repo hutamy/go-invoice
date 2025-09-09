@@ -1,4 +1,4 @@
-// @title Smart Invoice Generator API
+// @title Go Invoice API
 // @version 1.0
 // @description API documentation for your invoice app.
 // @host localhost:8080
@@ -14,8 +14,8 @@ import (
 	"log"
 
 	"github.com/go-playground/validator/v10"
-	"github.com/hutamy/invoice-generator-backend/config"
-	"github.com/hutamy/invoice-generator-backend/routes"
+	"github.com/hutamy/go-invoice-backend/config"
+	"github.com/hutamy/go-invoice-backend/routes"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
 )

@@ -64,7 +64,7 @@ src/
 │   ├── InvoiceForm.tsx # Invoice creation form
 │   └── InvoicePreview.tsx # Invoice preview component
 ├── pages/              # Page components
-│   ├── HomePage.tsx    # Public GoInvoice generator
+│   ├── HomePage.tsx    # Public Invoice generator
 │   ├── LoginPage.tsx   # User authentication
 │   ├── RegisterPage.tsx # User registration
 │   ├── DashboardPage.tsx # User dashboard
@@ -173,7 +173,7 @@ Built with Tailwind CSS featuring:
 2. **Update the API URL** in `.env` file
 3. **Run the development server**: `npm run dev`
 4. **Open your browser** to `http://localhost:5173/`
-5. **Create an account** or use the public GoInvoice generator
+5. **Create an account** or use the public invoice generator
 
 ## 🐛 Troubleshooting
 

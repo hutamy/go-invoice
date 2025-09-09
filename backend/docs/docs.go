@@ -1578,7 +1578,7 @@ var SwaggerInfo = &swag.Spec{
 	Host:             "localhost:8080",
 	BasePath:         "/",
 	Schemes:          []string{},
-	Title:            "Smart Invoice Generator API",
+	Title:            "Go Invoice API",
 	Description:      "API documentation for your invoice app.",
 	InfoInstanceName: "swagger",
 	SwaggerTemplate:  docTemplate,

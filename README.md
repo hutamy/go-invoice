@@ -1,6 +1,6 @@
-# 🧾 Invoice Generator
+# 🧾 Go Invoice
 
-An open-source, full-stack web application for freelancers and small businesses to generate, manage, and share invoices with ease.
+A full-stack web application for freelancers and small businesses to generate, manage, and share invoices with ease.
 
 ## Features
 
@@ -24,7 +24,7 @@ An open-source, full-stack web application for freelancers and small businesses 
 ## Monorepo Structure
 
 ```
-invoice-generator/
+go-invoice/
 ├── backend/   # Go API server
 └── frontend/  # Vite web app
 ```
@@ -40,8 +40,8 @@ invoice-generator/
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/hutamy/invoice-generator.git
-cd invoice-generator
+git clone https://github.com/hutamy/go-invoice.git
+cd go-invoice
 ```
 
 ### 2. Database Setup

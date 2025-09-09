@@ -1,4 +1,4 @@
-module github.com/hutamy/invoice-generator-backend
+module github.com/hutamy/go-invoice-backend
 
 go 1.23.9
 
