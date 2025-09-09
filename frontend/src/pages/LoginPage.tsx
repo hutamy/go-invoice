@@ -71,7 +71,7 @@ const LoginPage: React.FC = () => {
               Don't have an account?{" "}
               <Link
                 to="/register"
-                className="font-semibold text-sky-600 hover:text-blue-700 transition-colors duration-300"
+                className="font-semibold text-accent-600 hover:text-accent-700 transition-colors duration-300"
               >
                 Create one here
               </Link>
@@ -140,7 +140,7 @@ const LoginPage: React.FC = () => {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white font-semibold py-4 px-6 rounded-full transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed shadow-xl shadow-sky-500/25 hover:shadow-2xl hover:shadow-sky-500/30 flex justify-center items-center"
+                className="w-full bg-gradient-to-r from-accent-500 to-accent-600 hover:from-accent-600 hover:to-accent-700 text-white font-semibold py-4 px-6 rounded-full transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed shadow-xl shadow-sky-500/25 hover:shadow-2xl hover:shadow-sky-500/30 flex justify-center items-center"
               >
                 {isLoading ? (
                   <>
@@ -158,7 +158,7 @@ const LoginPage: React.FC = () => {
               <div className="text-center">
                 <Link
                   to="/"
-                  className="text-sm text-primary-500 hover:text-sky-600 transition-colors duration-300 font-medium"
+                  className="text-sm text-primary-500 hover:text-accent-600 transition-colors duration-300 font-medium"
                 >
                   ← Back to Home
                 </Link>

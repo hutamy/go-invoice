@@ -1,26 +1,28 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import { UserPlus, Eye, EyeOff } from 'lucide-react';
-import { useForm } from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { z } from 'zod';
-import { toast } from 'react-toastify';
-import { useAuth } from '../context/AuthContext.tsx';
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { UserPlus, Eye, EyeOff } from "lucide-react";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { z } from "zod";
+import { toast } from "react-toastify";
+import { useAuth } from "../context/AuthContext.tsx";
 
-const registerSchema = z.object({
-  name: z.string().min(2, 'Name must be at least 2 characters'),
-  email: z.string().email('Invalid email address'),
-  password: z.string().min(6, 'Password must be at least 6 characters'),
-  confirmPassword: z.string(),
-  address: z.string().min(1, 'Address is required'),
-  phone: z.string().min(1, 'Phone number is required'),
-  bank_name: z.string().min(1, 'Bank name is required'),
-  bank_account_name: z.string().min(1, 'Bank account name is required'),
-  bank_account_number: z.string().min(1, 'Bank account number is required'),
-}).refine(data => data.password === data.confirmPassword, {
-  message: "Passwords don't match",
-  path: ["confirmPassword"],
-});
+const registerSchema = z
+  .object({
+    name: z.string().min(2, "Name must be at least 2 characters"),
+    email: z.string().email("Invalid email address"),
+    password: z.string().min(6, "Password must be at least 6 characters"),
+    confirmPassword: z.string(),
+    address: z.string().min(1, "Address is required"),
+    phone: z.string().min(1, "Phone number is required"),
+    bank_name: z.string().min(1, "Bank name is required"),
+    bank_account_name: z.string().min(1, "Bank account name is required"),
+    bank_account_number: z.string().min(1, "Bank account number is required"),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords don't match",
+    path: ["confirmPassword"],
+  });
 
 type RegisterFormData = z.infer<typeof registerSchema>;
 
@@ -45,10 +47,10 @@ const RegisterPage: React.FC = () => {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       const { confirmPassword, ...registerData } = data;
       await registerUser(registerData);
-      toast.success('Account created successfully!');
-      navigate('/dashboard');
+      toast.success("Account created successfully!");
+      navigate("/dashboard");
     } catch {
-      toast.error('Failed to create account. Please try again.');
+      toast.error("Failed to create account. Please try again.");
     } finally {
       setIsLoading(false);
     }
@@ -73,7 +75,7 @@ const RegisterPage: React.FC = () => {
               Already have an account?{" "}
               <Link
                 to="/login"
-                className="font-semibold text-sky-600 hover:text-blue-700 transition-colors duration-300"
+                className="font-semibold text-accent-600 hover:text-accent-700 transition-colors duration-300"
               >
                 Sign in here
               </Link>
@@ -83,11 +85,14 @@ const RegisterPage: React.FC = () => {
           <form className="space-y-8" onSubmit={handleSubmit(onSubmit)}>
             <div className="space-y-6">
               <div>
-                <label htmlFor="name" className="block text-sm font-semibold text-primary-700 mb-3">
+                <label
+                  htmlFor="name"
+                  className="block text-sm font-semibold text-primary-700 mb-3"
+                >
                   Full Name <span className="text-red-400">*</span>
                 </label>
                 <input
-                  {...register('name')}
+                  {...register("name")}
                   type="text"
                   autoComplete="name"
                   className="w-full px-4 py-4 bg-primary-50/50 border border-primary-200/60 rounded-full focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500/50 transition-all duration-300 placeholder-primary-400 text-primary-900"
@@ -101,11 +106,14 @@ const RegisterPage: React.FC = () => {
               </div>
 
               <div>
-                <label htmlFor="email" className="block text-sm font-semibold text-primary-700 mb-3">
+                <label
+                  htmlFor="email"
+                  className="block text-sm font-semibold text-primary-700 mb-3"
+                >
                   Email Address <span className="text-red-400">*</span>
                 </label>
                 <input
-                  {...register('email')}
+                  {...register("email")}
                   type="email"
                   autoComplete="email"
                   className="w-full px-4 py-4 bg-primary-50/50 border border-primary-200/60 rounded-full focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500/50 transition-all duration-300 placeholder-primary-400 text-primary-900"
@@ -119,13 +127,16 @@ const RegisterPage: React.FC = () => {
               </div>
 
               <div>
-                <label htmlFor="password" className="block text-sm font-semibold text-primary-700 mb-3">
+                <label
+                  htmlFor="password"
+                  className="block text-sm font-semibold text-primary-700 mb-3"
+                >
                   Password <span className="text-red-400">*</span>
                 </label>
                 <div className="relative">
                   <input
-                    {...register('password')}
-                    type={showPassword ? 'text' : 'password'}
+                    {...register("password")}
+                    type={showPassword ? "text" : "password"}
                     autoComplete="new-password"
                     className="w-full px-4 py-4 pr-12 bg-primary-50/50 border border-primary-200/60 rounded-full focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500/50 transition-all duration-300 placeholder-primary-400 text-primary-900"
                     placeholder="Create a secure password"
@@ -150,13 +161,16 @@ const RegisterPage: React.FC = () => {
               </div>
 
               <div>
-                <label htmlFor="confirmPassword" className="block text-sm font-semibold text-primary-700 mb-3">
+                <label
+                  htmlFor="confirmPassword"
+                  className="block text-sm font-semibold text-primary-700 mb-3"
+                >
                   Confirm Password <span className="text-red-400">*</span>
                 </label>
                 <div className="relative">
                   <input
-                    {...register('confirmPassword')}
-                    type={showConfirmPassword ? 'text' : 'password'}
+                    {...register("confirmPassword")}
+                    type={showConfirmPassword ? "text" : "password"}
                     autoComplete="new-password"
                     className="w-full px-4 py-4 pr-12 bg-primary-50/50 border border-primary-200/60 rounded-full focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500/50 transition-all duration-300 placeholder-primary-400 text-primary-900"
                     placeholder="Confirm your password"
@@ -182,15 +196,20 @@ const RegisterPage: React.FC = () => {
 
               {/* Additional Profile Information */}
               <div className="pt-6 border-t border-primary-200/50">
-                <h3 className="text-lg font-semibold text-primary-700 mb-6">Business Information</h3>
-                
+                <h3 className="text-lg font-semibold text-primary-700 mb-6">
+                  Business Information
+                </h3>
+
                 <div className="space-y-6">
                   <div>
-                    <label htmlFor="address" className="block text-sm font-semibold text-primary-700 mb-3">
+                    <label
+                      htmlFor="address"
+                      className="block text-sm font-semibold text-primary-700 mb-3"
+                    >
                       Address <span className="text-red-400">*</span>
                     </label>
                     <input
-                      {...register('address')}
+                      {...register("address")}
                       type="text"
                       className="w-full px-4 py-4 bg-primary-50/50 border border-primary-200/60 rounded-full focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500/50 transition-all duration-300 placeholder-primary-400 text-primary-900"
                       placeholder="Enter your business address"
@@ -200,12 +219,16 @@ const RegisterPage: React.FC = () => {
                         {errors.address?.message}
                       </p>
                     )}
-                  </div>                  <div>
-                    <label htmlFor="phone" className="block text-sm font-semibold text-primary-700 mb-3">
+                  </div>{" "}
+                  <div>
+                    <label
+                      htmlFor="phone"
+                      className="block text-sm font-semibold text-primary-700 mb-3"
+                    >
                       Phone Number <span className="text-red-400">*</span>
                     </label>
                     <input
-                      {...register('phone')}
+                      {...register("phone")}
                       type="tel"
                       className="w-full px-4 py-4 bg-primary-50/50 border border-primary-200/60 rounded-full focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500/50 transition-all duration-300 placeholder-primary-400 text-primary-900"
                       placeholder="Enter your phone number"
@@ -216,13 +239,15 @@ const RegisterPage: React.FC = () => {
                       </p>
                     )}
                   </div>
-
                   <div>
-                    <label htmlFor="bank_name" className="block text-sm font-semibold text-primary-700 mb-3">
+                    <label
+                      htmlFor="bank_name"
+                      className="block text-sm font-semibold text-primary-700 mb-3"
+                    >
                       Bank Name <span className="text-red-400">*</span>
                     </label>
                     <input
-                      {...register('bank_name')}
+                      {...register("bank_name")}
                       type="text"
                       className="w-full px-4 py-4 bg-primary-50/50 border border-primary-200/60 rounded-full focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500/50 transition-all duration-300 placeholder-primary-400 text-primary-900"
                       placeholder="Enter your bank name"
@@ -233,13 +258,15 @@ const RegisterPage: React.FC = () => {
                       </p>
                     )}
                   </div>
-
                   <div>
-                    <label htmlFor="bank_account_name" className="block text-sm font-semibold text-primary-700 mb-3">
+                    <label
+                      htmlFor="bank_account_name"
+                      className="block text-sm font-semibold text-primary-700 mb-3"
+                    >
                       Bank Account Name <span className="text-red-400">*</span>
                     </label>
                     <input
-                      {...register('bank_account_name')}
+                      {...register("bank_account_name")}
                       type="text"
                       className="w-full px-4 py-4 bg-primary-50/50 border border-primary-200/60 rounded-full focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500/50 transition-all duration-300 placeholder-primary-400 text-primary-900"
                       placeholder="Enter account holder name"
@@ -250,13 +277,16 @@ const RegisterPage: React.FC = () => {
                       </p>
                     )}
                   </div>
-
                   <div>
-                    <label htmlFor="bank_account_number" className="block text-sm font-semibold text-primary-700 mb-3">
-                      Bank Account Number <span className="text-red-400">*</span>
+                    <label
+                      htmlFor="bank_account_number"
+                      className="block text-sm font-semibold text-primary-700 mb-3"
+                    >
+                      Bank Account Number{" "}
+                      <span className="text-red-400">*</span>
                     </label>
                     <input
-                      {...register('bank_account_number')}
+                      {...register("bank_account_number")}
                       type="text"
                       className="w-full px-4 py-4 bg-primary-50/50 border border-primary-200/60 rounded-full focus:ring-2 focus:ring-sky-500/20 focus:border-sky-500/50 transition-all duration-300 placeholder-primary-400 text-primary-900"
                       placeholder="Enter your account number"
@@ -275,7 +305,7 @@ const RegisterPage: React.FC = () => {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white font-semibold py-4 px-6 rounded-full transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed shadow-xl shadow-sky-500/25 hover:shadow-2xl hover:shadow-sky-500/30 flex justify-center items-center"
+                className="w-full bg-gradient-to-r from-accent-500 to-accent-600 hover:from-accent-600 hover:to-accent-700 text-white font-semibold py-4 px-6 rounded-full transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed shadow-xl shadow-sky-500/25 hover:shadow-2xl hover:shadow-sky-500/30 flex justify-center items-center"
               >
                 {isLoading ? (
                   <>
@@ -293,7 +323,7 @@ const RegisterPage: React.FC = () => {
               <div className="text-center">
                 <Link
                   to="/"
-                  className="text-sm text-primary-500 hover:text-sky-600 transition-colors duration-300 font-medium"
+                  className="text-sm text-primary-500 hover:text-accent-600 transition-colors duration-300 font-medium"
                 >
                   ← Back to Home
                 </Link>

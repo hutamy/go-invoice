@@ -132,7 +132,7 @@ const HomePage: React.FC = () => {
                 </p>
                 <button
                   onClick={handleScrollToDemo}
-                  className="group relative px-8 py-2 bg-gradient-to-r from-accent-600 to-accent-700 via-accent-700 text-white rounded-full font-semibold transition-all hover:from-accent-700 hover:to-accent-800 hover:shadow-2xl hover:shadow-sky-500/25 active:scale-[0.98] text-lg"
+                  className="group relative px-8 py-2 bg-gradient-to-r from-accent-500 to-accent-600 text-white rounded-full font-semibold transition-all hover:from-accent-600 hover:to-accent-700 hover:shadow-2xl hover:shadow-sky-500/25 active:scale-[0.98] text-lg"
                 >
                   <span className="relative z-10">Try Demo</span>
                 </button>
@@ -231,7 +231,7 @@ const HomePage: React.FC = () => {
                       className={`w-full inline-flex items-center justify-center px-8 py-4 text-base font-semibold rounded-full transition-all ${
                         isGenerating
                           ? "bg-primary-100 text-primary-400 cursor-not-allowed"
-                          : "bg-gradient-to-r  from-accent-600 via-accent-700 to-accent-700 hover:from-accent-700 hover:via-accent-800 hover:to-accent-800 text-white shadow-xl hover:shadow-2xl hover:shadow-sky-500/25 active:scale-[0.98]"
+                          : "bg-gradient-to-r  from-accent-500 to-accent-600 hover:from-accent-600 hover:to-accent-700 text-white shadow-xl hover:shadow-2xl hover:shadow-sky-500/25 active:scale-[0.98]"
                       }`}
                     >
                       {isGenerating ? (

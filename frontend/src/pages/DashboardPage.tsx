@@ -125,7 +125,7 @@ const DashboardPage: React.FC = () => {
     <div className="min-h-screen bg-gradient-to-br from-white via-primary-50/50 to-sky-50/40">
       <Navbar />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 py-12">
         {/* Stats Grid */}
 
         <div className="grid grid-cols-1 bg-white sm:grid-cols-2 lg:grid-cols-4 mb-8">
@@ -457,7 +457,7 @@ const DashboardPage: React.FC = () => {
             <div>
               <Link
                 to="/invoices/create"
-                className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-accent-600 via-accent-700 to-accent-700 hover:from-accent-700 hover:via-accent-800 hover:to-accent-800 text-white font-semibold rounded-full transition-all duration-300 shadow-xl shadow-sky-500/25 hover:shadow-2xl hover:shadow-sky-500/30"
+                className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-accent-500 to-accent-600 hover:from-accent-600 hover:to-accent-700 text-white font-semibold rounded-full transition-all duration-300 shadow-xl shadow-sky-500/25 hover:shadow-2xl hover:shadow-sky-500/30"
               >
                 <Plus className="-ml-1 mr-3 h-5 w-5" />
                 Create Invoice
