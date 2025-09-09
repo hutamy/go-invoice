@@ -17,7 +17,6 @@ import { apiService } from "../utils/api.ts";
 import type { Client } from "../types/index.ts";
 import Navbar from "../components/Navbar.tsx";
 import Pagination from "../components/Pagination.tsx";
-import { formatDate } from "../utils/helper.ts";
 
 const clientSchema = z.object({
   name: z.string().min(1, "Name is required"),
@@ -180,7 +179,7 @@ const ClientsPage: React.FC = () => {
             </div>
             <button
               onClick={openCreateModal}
-              className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-accent-500 to-accent-600 hover:from-accent-600 hover:to-accent-700 text-white font-semibold rounded-full transition-all duration-300 shadow-xl shadow-sky-500/25 hover:shadow-2xl hover:shadow-sky-500/30"
+              className="inline-flex items-center text-sm px-6 py-3 bg-gradient-to-r from-accent-500 to-accent-600 hover:from-accent-600 hover:to-accent-700 text-white font-semibold rounded-full transition-all duration-300 shadow-xl shadow-sky-500/25 hover:shadow-2xl hover:shadow-sky-500/30"
             >
               <Plus className="h-4 w-4 mr-3" />
               Create Client
@@ -219,7 +218,7 @@ const ClientsPage: React.FC = () => {
               <div>
                 <button
                   onClick={openCreateModal}
-                  className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-accent-500 to-accent-600 hover:from-accent-600 hover:to-accent-700 text-white font-semibold rounded-full transition-all duration-300 shadow-xl shadow-sky-500/25 hover:shadow-2xl hover:shadow-sky-500/30"
+                  className="inline-flex text-sm items-center px-6 py-3 bg-gradient-to-r from-accent-500 to-accent-600 hover:from-accent-600 hover:to-accent-700 text-white font-semibold rounded-full transition-all duration-300 shadow-xl shadow-sky-500/25 hover:shadow-2xl hover:shadow-sky-500/30"
                 >
                   <Plus className="h-4 w-4 mr-3" />
                   Create Client
@@ -259,12 +258,6 @@ const ClientsPage: React.FC = () => {
                         <MapPin className="h-4 w-4 mr-2 text-gray-400" />
                         {client.address}
                       </div>
-                    )}
-
-                    {client.created_at && (
-                      <p className="text-xs text-gray-500">
-                        Added {formatDate(client.created_at)}
-                      </p>
                     )}
                   </div>
                 </div>

@@ -4,8 +4,6 @@ import {
   FileText,
   Users,
   Plus,
-  Calendar,
-  User,
   Eye,
   Download,
   ChevronDown,
@@ -132,7 +130,7 @@ const DashboardPage: React.FC = () => {
           <div className="border border-gray-200/50 px-4 py-6 sm:px-6 lg:px-8 lg:rounded-l-2xl sm:rounded-t-2xl lg:rounded-tr-none hover:shadow-2xl hover:shadow-sky-500/10 transition-all duration-300 hover:border-sky-300/50">
             <p className="text-sm/6 font-medium text-gray-500">Total Invoice</p>
             <p className="mt-2 flex items-baseline gap-x-2">
-              <span className="text-4xl font-semibold tracking-tight text-gray-900">
+              <span className="text-2xl font-bold tracking-tight text-gray-900">
                 {stats.totalInvoices}
               </span>
             </p>
@@ -141,7 +139,7 @@ const DashboardPage: React.FC = () => {
           <div className="border border-gray-200/50 px-4 py-6 sm:px-6 lg:px-8 hover:shadow-2xl hover:shadow-sky-500/10 transition-all duration-300 hover:border-sky-300/50">
             <p className="text-sm/6 font-medium text-gray-500">Total Revenue</p>
             <p className="mt-2 flex items-baseline gap-x-2">
-              <span className="text-4xl font-semibold tracking-tight text-gray-900">
+              <span className="text-2xl font-bold tracking-tight text-gray-900">
                 IDR {stats.totalAmount.toLocaleString()}
               </span>
             </p>
@@ -150,7 +148,7 @@ const DashboardPage: React.FC = () => {
           <div className="border border-gray-200/50 px-4 py-6 sm:px-6 lg:px-8 hover:shadow-2xl hover:shadow-sky-500/10 transition-all duration-300 hover:border-sky-300/50">
             <p className="text-sm/6 font-medium text-gray-500">Paid Amount</p>
             <p className="mt-2 flex items-baseline gap-x-2">
-              <span className="text-4xl font-semibold tracking-tight text-gray-900">
+              <span className="text-2xl font-bold tracking-tight text-gray-900">
                 IDR {stats.paidAmount.toLocaleString()}
               </span>
             </p>
@@ -159,7 +157,7 @@ const DashboardPage: React.FC = () => {
           <div className="border border-gray-200/50 px-4 py-6 sm:px-6 lg:px-8 lg:rounded-r-2xl sm:rounded-b-2xl lg:rounded-bl-none hover:shadow-2xl hover:shadow-sky-500/10 transition-all duration-300 hover:border-sky-300/50">
             <p className="text-sm/6 font-medium text-gray-500">Total Clients</p>
             <p className="mt-2 flex items-baseline gap-x-2">
-              <span className="text-4xl font-semibold tracking-tight text-gray-900">
+              <span className="text-2xl font-bold tracking-tight text-gray-900">
                 {stats.totalClients}
               </span>
             </p>
@@ -168,7 +166,7 @@ const DashboardPage: React.FC = () => {
 
         {/* Quick Actions */}
         <div className="mb-8">
-          <h2 className="text-3xl font-bold text-primary-900 mb-8 tracking-tight">
+          <h2 className="text-2xl font-bold text-primary-900 mb-8 tracking-tight">
             Quick Actions
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -180,7 +178,7 @@ const DashboardPage: React.FC = () => {
                 <Plus className="h-7 w-7 text-accent-600" />
               </div>
               <div>
-                <h3 className="font-bold text-primary-900 text-lg">
+                <h3 className="font-bold text-primary-900 text-base">
                   Create Invoice
                 </h3>
                 <p className="text-primary-600 font-light leading-relaxed text-sm">
@@ -197,7 +195,7 @@ const DashboardPage: React.FC = () => {
                 <Users className="h-7 w-7 text-purple-600" />
               </div>
               <div>
-                <h3 className="font-bold text-primary-900 text-lg">
+                <h3 className="font-bold text-primary-900 text-base">
                   Manage Clients
                 </h3>
                 <p className="text-primary-600 font-light leading-relaxed text-sm">
@@ -214,7 +212,7 @@ const DashboardPage: React.FC = () => {
                 <FileText className="h-7 w-7 text-emerald-600" />
               </div>
               <div>
-                <h3 className="font-bold text-primary-900 text-lg">
+                <h3 className="font-bold text-primary-900 text-base">
                   View Invoices
                 </h3>
                 <p className="text-primary-600 font-light leading-relaxed text-sm">
@@ -230,7 +228,7 @@ const DashboardPage: React.FC = () => {
           <div className="mb-16">
             <div className="flex justify-between items-center mb-8">
               <div>
-                <h2 className="text-3xl font-bold text-primary-900 tracking-tight">
+                <h2 className="text-2xl font-bold text-primary-900 tracking-tight">
                   Recent Invoices
                 </h2>
                 <p className="text-sm text-primary-600 mt-1">
@@ -239,7 +237,7 @@ const DashboardPage: React.FC = () => {
               </div>
               <Link
                 to="/invoices"
-                className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-sky-500 to-blue-600 hover:from-sky-600 hover:to-blue-700 text-white font-semibold rounded-full transition-all duration-300 shadow-xl shadow-sky-500/25 hover:shadow-2xl hover:shadow-sky-500/30"
+                className="inline-flex items-center px-6 py-3 text-sm bg-gradient-to-r from-accent-500 to-accent-600 hover:from-accent-600 hover:to-accent-700 text-white font-semibold rounded-full transition-all duration-300 shadow-xl shadow-sky-500/25 hover:shadow-2xl hover:shadow-sky-500/30"
               >
                 View all invoices
               </Link>
@@ -270,7 +268,7 @@ const DashboardPage: React.FC = () => {
                       <th className="px-8 py-5 text-left text-xs font-bold text-primary-700 uppercase tracking-wider">
                         Due Date
                       </th>
-                      <th className="px-8 py-5 text-right text-xs font-bold text-primary-700 uppercase tracking-wider">
+                      <th className="px-8 py-5 text-center text-xs font-bold text-primary-700 uppercase tracking-wider">
                         Actions
                       </th>
                     </tr>
@@ -283,20 +281,15 @@ const DashboardPage: React.FC = () => {
                       >
                         <td className="px-8 py-5 whitespace-nowrap">
                           <div className="flex items-center">
-                            <FileText className="h-5 w-5 text-sky-500 mr-4" />
                             <div>
                               <div className="text-sm font-semibold text-primary-900">
                                 {invoice.invoice_number}
-                              </div>
-                              <div className="text-sm text-primary-600 font-medium">
-                                Due: {formatDate(invoice.due_date)}
                               </div>
                             </div>
                           </div>
                         </td>
                         <td className="px-8 py-5 whitespace-nowrap">
                           <div className="flex items-center">
-                            <User className="h-5 w-5 text-purple-500 mr-4" />
                             <div className="text-sm text-primary-800 font-medium">
                               {invoice.client_name}
                             </div>
@@ -393,7 +386,6 @@ const DashboardPage: React.FC = () => {
                         </td>
                         <td className="px-8 py-5 whitespace-nowrap">
                           <div className="flex items-center">
-                            <Calendar className="h-4 w-4 text-primary-400 mr-3" />
                             <div className="text-sm text-primary-700 font-medium">
                               {formatDate(invoice.issue_date ?? "")}
                             </div>
@@ -401,7 +393,6 @@ const DashboardPage: React.FC = () => {
                         </td>
                         <td className="px-8 py-5 whitespace-nowrap">
                           <div className="flex items-center">
-                            <Calendar className="h-4 w-4 text-primary-400 mr-3" />
                             <div className="text-sm text-primary-700 font-medium">
                               {formatDate(invoice.due_date ?? "")}
                             </div>
@@ -457,7 +448,7 @@ const DashboardPage: React.FC = () => {
             <div>
               <Link
                 to="/invoices/create"
-                className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-accent-500 to-accent-600 hover:from-accent-600 hover:to-accent-700 text-white font-semibold rounded-full transition-all duration-300 shadow-xl shadow-sky-500/25 hover:shadow-2xl hover:shadow-sky-500/30"
+                className="inline-flex items-center text-sm px-6 py-3 bg-gradient-to-r from-accent-500 to-accent-600 hover:from-accent-600 hover:to-accent-700 text-white font-semibold rounded-full transition-all duration-300 shadow-xl shadow-sky-500/25 hover:shadow-2xl hover:shadow-sky-500/30"
               >
                 <Plus className="-ml-1 mr-3 h-5 w-5" />
                 Create Invoice

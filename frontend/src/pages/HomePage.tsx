@@ -228,7 +228,7 @@ const HomePage: React.FC = () => {
                     <button
                       onClick={handleGenerateInvoice}
                       disabled={isGenerating}
-                      className={`w-full inline-flex items-center justify-center px-8 py-4 text-base font-semibold rounded-full transition-all ${
+                      className={`w-full inline-flex items-center justify-center px-8 py-3 text-sm font-semibold rounded-full transition-all ${
                         isGenerating
                           ? "bg-primary-100 text-primary-400 cursor-not-allowed"
                           : "bg-gradient-to-r  from-accent-500 to-accent-600 hover:from-accent-600 hover:to-accent-700 text-white shadow-xl hover:shadow-2xl hover:shadow-sky-500/25 active:scale-[0.98]"

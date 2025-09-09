@@ -1,15 +1,12 @@
 import React, { useState, useEffect, Fragment } from "react";
 import { Link } from "react-router-dom";
 import {
-  FileText,
   Search,
   Plus,
   Eye,
   Edit,
   Trash2,
   Download,
-  Calendar,
-  User,
   Filter,
   ChevronDown,
 } from "lucide-react";
@@ -178,7 +175,7 @@ const InvoicesPage: React.FC = () => {
             </div>
             <Link
               to="/invoices/create"
-              className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-accent-500 to-accent-600 hover:from-accent-600 hover:to-accent-700 text-white font-semibold rounded-full transition-all duration-300 shadow-xl shadow-sky-500/25 hover:shadow-2xl hover:shadow-sky-500/30"
+              className="inline-flex text-sm items-center px-6 py-3 bg-gradient-to-r from-accent-500 to-accent-600 hover:from-accent-600 hover:to-accent-700 text-white font-semibold rounded-full transition-all duration-300 shadow-xl shadow-sky-500/25 hover:shadow-2xl hover:shadow-sky-500/30"
             >
               <Plus className="h-4 w-4 mr-3" />
               Create Invoice
@@ -237,7 +234,7 @@ const InvoicesPage: React.FC = () => {
               <div>
                 <Link
                   to="/invoices/create"
-                  className="inline-flex items-center px-6 py-3 bg-gradient-to-r from-accent-500 to-accent-600 hover:from-accent-600 hover:to-accent-700 text-white font-semibold rounded-full transition-all duration-300 shadow-xl shadow-sky-500/25 hover:shadow-2xl hover:shadow-sky-500/30"
+                  className="inline-flex text-sm items-center px-6 py-3 bg-gradient-to-r from-accent-500 to-accent-600 hover:from-accent-600 hover:to-accent-700 text-white font-semibold rounded-full transition-all duration-300 shadow-xl shadow-sky-500/25 hover:shadow-2xl hover:shadow-sky-500/30"
                 >
                   <Plus className="h-4 w-4 mr-3" />
                   Create Invoice
@@ -246,12 +243,9 @@ const InvoicesPage: React.FC = () => {
             )}
           </div>
         ) : (
-          <div
-            className="bg-white/70 backdrop-blur-sm border border-primary-200/50 rounded-3xl shadow-xl"
-            style={{ overflow: "visible" }}
-          >
-            <div className="overflow-x-auto" style={{ overflow: "visible" }}>
-              <table className="min-w-full divide-y divide-primary-200/50">
+          <div className="bg-white/70 backdrop-blur-sm border border-primary-200/50 rounded-3xl shadow-xl">
+            <div className="overflow-x-auto overflow-y-visible max-w-full">
+              <table className="w-full min-w-full divide-y divide-primary-200/50">
                 <thead className="bg-gradient-to-r from-primary-50 to-sky-50/30">
                   <tr>
                     <th className="px-8 py-5 text-left text-xs font-bold text-primary-700 uppercase tracking-wider">
@@ -272,7 +266,7 @@ const InvoicesPage: React.FC = () => {
                     <th className="px-8 py-5 text-left text-xs font-bold text-primary-700 uppercase tracking-wider">
                       Due Date
                     </th>
-                    <th className="px-8 py-5 text-right text-xs font-bold text-primary-700 uppercase tracking-wider">
+                    <th className="px-8 py-5 text-center text-xs font-bold text-primary-700 uppercase tracking-wider">
                       Actions
                     </th>
                   </tr>
@@ -285,20 +279,15 @@ const InvoicesPage: React.FC = () => {
                     >
                       <td className="px-8 py-5 whitespace-nowrap">
                         <div className="flex items-center">
-                          <FileText className="h-5 w-5 text-sky-500 mr-4" />
                           <div>
                             <div className="text-sm font-semibold text-primary-900">
                               {invoice.invoice_number}
-                            </div>
-                            <div className="text-sm text-primary-600 font-medium">
-                              Due: {formatDate(invoice.due_date)}
                             </div>
                           </div>
                         </div>
                       </td>
                       <td className="px-8 py-5 whitespace-nowrap">
                         <div className="flex items-center">
-                          <User className="h-5 w-5 text-purple-500 mr-4" />
                           <div className="text-sm text-primary-800 font-medium">
                             {invoice.client_name}
                           </div>
@@ -344,7 +333,7 @@ const InvoicesPage: React.FC = () => {
                                 leaveFrom="opacity-100"
                                 leaveTo="opacity-0"
                               >
-                                <Listbox.Options className="absolute z-[9999] w-24 mt-1 bg-white/95 backdrop-blur-sm border border-primary-200 rounded-xl shadow-2xl overflow-hidden right-0">
+                                <Listbox.Options className="absolute z-50 w-24 mt-1 bg-white/95 backdrop-blur-sm border border-primary-200 rounded-xl shadow-xl overflow-hidden right-0">
                                   <Listbox.Option
                                     value="draft"
                                     className={({ active, selected }) =>
@@ -395,7 +384,6 @@ const InvoicesPage: React.FC = () => {
                       </td>
                       <td className="px-8 py-5 whitespace-nowrap">
                         <div className="flex items-center">
-                          <Calendar className="h-4 w-4 text-primary-400 mr-3" />
                           <div className="text-sm text-primary-700 font-medium">
                             {formatDate(invoice.issue_date ?? "")}
                           </div>
@@ -403,7 +391,6 @@ const InvoicesPage: React.FC = () => {
                       </td>
                       <td className="px-8 py-5 whitespace-nowrap">
                         <div className="flex items-center">
-                          <Calendar className="h-4 w-4 text-primary-400 mr-3" />
                           <div className="text-sm text-primary-700 font-medium">
                             {formatDate(invoice.due_date ?? "")}
                           </div>

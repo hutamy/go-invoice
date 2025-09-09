@@ -336,11 +336,6 @@ class ApiService {
     return response.data;
   }
 
-  async sendInvoiceEmail(id: number): Promise<ApiResponse<null>> {
-    const response: AxiosResponse<ApiResponse<null>> = await this.api.post(`/v1/protected/invoices/${id}/send-email`);
-    return response.data;
-  }
-
   async getInvoiceSummary(): Promise<InvoiceSummary> {
     const response: AxiosResponse<ApiResponse<InvoiceSummary>> = await this.api.get('/v1/protected/invoices/summary');
     return response.data.data!;

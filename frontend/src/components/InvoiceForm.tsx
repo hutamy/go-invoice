@@ -703,7 +703,7 @@ const InvoiceForm: React.FC<InvoiceFormProps> = ({
               <button
                 type="button"
                 onClick={addItem}
-                className="mt-8 bg-gradient-to-r from-accent-500 to-accent-600 hover:from-accent-600 hover:to-accent-700 text-white font-semibold px-8 py-3 rounded-full transition-all duration-300 inline-flex items-center shadow-xl shadow-sky-500/25 hover:shadow-2xl hover:shadow-sky-500/30 hover:-translate-y-0.5"
+                className="mt-8 text-sm bg-gradient-to-r from-accent-500 to-accent-600 hover:from-accent-600 hover:to-accent-700 text-white font-semibold px-6 py-3 rounded-full transition-all duration-300 inline-flex items-center shadow-xl shadow-sky-500/25 hover:shadow-2xl hover:shadow-sky-500/30 hover:-translate-y-0.5"
               >
                 <Plus className="h-5 w-5 mr-3" />
                 Add Item

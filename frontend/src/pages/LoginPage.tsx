@@ -140,7 +140,7 @@ const LoginPage: React.FC = () => {
               <button
                 type="submit"
                 disabled={isLoading}
-                className="w-full bg-gradient-to-r from-accent-500 to-accent-600 hover:from-accent-600 hover:to-accent-700 text-white font-semibold py-4 px-6 rounded-full transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed shadow-xl shadow-sky-500/25 hover:shadow-2xl hover:shadow-sky-500/30 flex justify-center items-center"
+                className="w-full bg-gradient-to-r text-sm from-accent-500 to-accent-600 hover:from-accent-600 hover:to-accent-700 text-white font-semibold py-4 px-6 rounded-full transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed shadow-xl shadow-sky-500/25 hover:shadow-2xl hover:shadow-sky-500/30 flex justify-center items-center"
               >
                 {isLoading ? (
                   <>
