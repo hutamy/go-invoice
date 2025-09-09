@@ -19,6 +19,6 @@ RUN apk --no-cache upgrade
 COPY --from=builder /app/go-invoice .
 COPY --from=builder /app/templates ./templates
 
-EXPOSE 8000
+EXPOSE 8080
 
 CMD ["./go-invoice"]
