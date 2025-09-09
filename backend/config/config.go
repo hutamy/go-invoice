@@ -22,9 +22,10 @@ var (
 )
 
 func LoadEnv() Config {
+	// Try to load .env file, but don't fail if it doesn't exist (e.g., in production)
 	err := godotenv.Load()
 	if err != nil {
-		log.Fatalf("failed to load .env file: %v", err)
+		log.Printf("No .env file found or failed to load .env file: %v", err)
 	}
 
 	if err := env.Parse(&configuration); err != nil {
