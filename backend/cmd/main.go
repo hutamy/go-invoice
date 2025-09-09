@@ -30,16 +30,7 @@ func (cv *CustomValidator) Validate(i interface{}) error {
 
 func main() {
 	cfg := config.LoadEnv()
-	dbUrl := fmt.Sprintf(
-		"host=%s user=%s password=%s dbname=%s port=%d sslmode=disable",
-		cfg.PostgresHost,
-		cfg.PostgresUser,
-		cfg.PostgresPassword,
-		cfg.PostgresDB,
-		cfg.PostgresPort,
-	)
-	db := config.InitDB(dbUrl)
-
+	db := config.InitDB(cfg.DatabaseURL)
 	e := echo.New()
 	e.Validator = &CustomValidator{validator: validator.New()}
 	e.Use(middleware.Logger())

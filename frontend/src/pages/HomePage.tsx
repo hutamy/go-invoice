@@ -116,7 +116,7 @@ const HomePage: React.FC = () => {
       <div className="relative overflow-hidden">
         <div className="max-w-7xl mx-auto">
           <div className="relative z-10 pb-16 sm:pb-20 md:pb-24 lg:max-w-2xl lg:w-full lg:pb-32 xl:pb-40">
-            <main className="mt-16 mx-auto max-w-7xl px-4 sm:mt-20 sm:px-6 md:mt-24 lg:mt-32 lg:px-8 xl:mt-40">
+            <main className="mt-16 mx-auto max-w-7xl px-4 sm:mt-20 sm:px-6 md:mt-24 lg:mt-32 lg:px-12 xl:mt-40">
               <div className="sm:text-center lg:text-left">
                 <div className="flex flex-row items-center gap-4 mb-4">
                   <h1 className="text-4xl sm:text-5xl md:text-7xl font-bold text-primary-900 leading-[0.9] tracking-tight">

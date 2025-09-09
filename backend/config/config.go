@@ -11,15 +11,10 @@ import (
 )
 
 type Config struct {
-	Port int `env:"PORT" envDefault:"8080"`
-
-	JwtSecret string `env:"JWT_SECRET"`
-
-	PostgresUser     string `env:"POSTGRES_USER"`
-	PostgresPassword string `env:"POSTGRES_PASSWORD"`
-	PostgresHost     string `env:"POSTGRES_HOST"`
-	PostgresPort     int    `env:"POSTGRES_PORT" envDefault:"5432"`
-	PostgresDB       string `env:"POSTGRES_DB"`
+	Port        int    `env:"PORT" envDefault:"8080"`
+	JwtSecret   string `env:"JWT_SECRET"`
+	DatabaseURL string `env:"DATABASE_URL"`
+	SkipMigrate bool   `env:"SKIP_MIGRATE" envDefault:"false"` // Add option to skip migration
 }
 
 var (
@@ -44,7 +39,9 @@ func GetConfig() Config {
 }
 
 func InitDB(dbUrl string) *gorm.DB {
-	db, err := gorm.Open(postgres.Open(dbUrl), &gorm.Config{})
+	db, err := gorm.Open(postgres.Open(dbUrl), &gorm.Config{
+		DisableForeignKeyConstraintWhenMigrating: true,
+	})
 	if err != nil {
 		log.Fatalf("failed to connect database: %v", err)
 	}
@@ -58,17 +55,37 @@ func InitDB(dbUrl string) *gorm.DB {
 		log.Fatalf("failed to ping database: %v", err)
 	}
 
-	migrate(db)
+	// Only migrate if not explicitly skipped
+	cfg := GetConfig()
+	if !cfg.SkipMigrate {
+		log.Println("Running database migration...")
+		migrate(db)
+		log.Println("Migration completed successfully!")
+	} else {
+		log.Println("Skipping database migration (SKIP_MIGRATE=true)")
+	}
+
 	return db
 }
 
 func migrate(db *gorm.DB) {
-	if err := db.AutoMigrate(
+	// Check if tables exist before migrating
+	models := []interface{}{
 		&models.User{},
 		&models.Client{},
 		&models.Invoice{},
 		&models.InvoiceItem{},
-	); err != nil {
-		log.Fatalf("failed to migrate database: %v", err)
+	}
+
+	for _, model := range models {
+		if !db.Migrator().HasTable(model) {
+			log.Printf("Creating table for %T...", model)
+		} else {
+			log.Printf("Table for %T already exists, checking for updates...", model)
+		}
+	}
+
+	if err := db.AutoMigrate(models...); err != nil {
+		log.Printf("Migration warning: %v", err)
 	}
 }

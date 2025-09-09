@@ -44,13 +44,15 @@ git clone https://github.com/hutamy/invoice-generator.git
 cd invoice-generator
 ```
 
-### 2. Environment Variables
+### 2. Database Setup
 
-Copy and edit the example env files:
+1. Install PostgreSQL locally
+2. Create a database
+3. Copy and edit the environment files:
 
 ```bash
 cp backend/.env.example backend/.env
-# Edit backend/.env as needed
+# Edit backend/.env with your local database credentials
 ```
 
 ### 3. Run with Docker Compose
