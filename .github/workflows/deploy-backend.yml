@@ -22,19 +22,19 @@ jobs:
         with:
           project_id: ${{ secrets.GCP_PROJECT_ID }}
 
-      - name: Configure Docker for GCR
-        run: gcloud auth configure-docker
+      - name: Configure Docker for Artifact Registry
+        run: gcloud auth configure-docker asia-southeast1-docker.pkg.dev
 
       - name: Build and push Docker image
         run: |
           cd backend
-          docker build -t gcr.io/${{ secrets.GCP_PROJECT_ID }}/go-invoice-backend .
-          docker push gcr.io/${{ secrets.GCP_PROJECT_ID }}/go-invoice-backend
+          docker build -t asia-southeast1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/go-invoice/go-invoice-backend .
+          docker push asia-southeast1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/go-invoice/go-invoice-backend
 
       - name: Deploy to Cloud Run
         run: |
           gcloud run deploy go-invoice-backend \
-            --image gcr.io/${{ secrets.GCP_PROJECT_ID }}/go-invoice-backend \
+            --image asia-southeast1-docker.pkg.dev/${{ secrets.GCP_PROJECT_ID }}/go-invoice/go-invoice-backend \
             --region asia-southeast1 \
             --platform managed \
             --allow-unauthenticated \
