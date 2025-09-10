@@ -41,8 +41,10 @@ func GetConfig() Config {
 }
 
 func InitDB(dbUrl string) *gorm.DB {
-	// Configure GORM to work better with connection pools
-	db, err := gorm.Open(postgres.Open(dbUrl), &gorm.Config{
+	db, err := gorm.Open(postgres.New(postgres.Config{
+		DSN:                  dbUrl,
+		PreferSimpleProtocol: true, // Use simple protocol to avoid prepared statements
+	}), &gorm.Config{
 		DisableForeignKeyConstraintWhenMigrating: true,
 		PrepareStmt:                              false,                                // Disable prepared statements
 		Logger:                                   logger.Default.LogMode(logger.Error), // Only log errors
@@ -51,16 +53,15 @@ func InitDB(dbUrl string) *gorm.DB {
 		log.Fatalf("failed to connect database: %v", err)
 	}
 
-	// Get underlying sql.DB to configure connection pool
 	sqlDB, err := db.DB()
 	if err != nil {
 		log.Fatalf("failed to get database instance: %v", err)
 	}
 
-	// Configure connection pool settings for Supabase
-	sqlDB.SetMaxIdleConns(5)                  // Reduce idle connections
-	sqlDB.SetMaxOpenConns(10)                 // Limit max connections
-	sqlDB.SetConnMaxLifetime(5 * time.Minute) // Close connections after 5 minutes
+	// Very aggressive connection pool settings to minimize reuse
+	sqlDB.SetMaxIdleConns(1)
+	sqlDB.SetMaxOpenConns(3)
+	sqlDB.SetConnMaxLifetime(30 * time.Second)
 
 	if err := sqlDB.Ping(); err != nil {
 		log.Fatalf("failed to ping database: %v", err)
@@ -80,7 +81,6 @@ func InitDB(dbUrl string) *gorm.DB {
 }
 
 func migrate(db *gorm.DB) {
-	// Check if tables exist before migrating
 	models := []interface{}{
 		&models.User{},
 		&models.Client{},
