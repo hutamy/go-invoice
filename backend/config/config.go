@@ -2,12 +2,14 @@ package config
 
 import (
 	"log"
+	"time"
 
 	"github.com/caarlos0/env"
 	"github.com/hutamy/go-invoice-backend/models"
 	"github.com/joho/godotenv"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
+	"gorm.io/gorm/logger"
 )
 
 type Config struct {
@@ -39,18 +41,26 @@ func GetConfig() Config {
 }
 
 func InitDB(dbUrl string) *gorm.DB {
+	// Configure GORM to work better with connection pools
 	db, err := gorm.Open(postgres.Open(dbUrl), &gorm.Config{
 		DisableForeignKeyConstraintWhenMigrating: true,
-		PrepareStmt:                              false,
+		PrepareStmt:                              false,                                // Disable prepared statements
+		Logger:                                   logger.Default.LogMode(logger.Error), // Only log errors
 	})
 	if err != nil {
 		log.Fatalf("failed to connect database: %v", err)
 	}
 
+	// Get underlying sql.DB to configure connection pool
 	sqlDB, err := db.DB()
 	if err != nil {
 		log.Fatalf("failed to get database instance: %v", err)
 	}
+
+	// Configure connection pool settings for Supabase
+	sqlDB.SetMaxIdleConns(5)                  // Reduce idle connections
+	sqlDB.SetMaxOpenConns(10)                 // Limit max connections
+	sqlDB.SetConnMaxLifetime(5 * time.Minute) // Close connections after 5 minutes
 
 	if err := sqlDB.Ping(); err != nil {
 		log.Fatalf("failed to ping database: %v", err)
