@@ -22,7 +22,6 @@ var (
 )
 
 func LoadEnv() Config {
-	// Try to load .env file, but don't fail if it doesn't exist (e.g., in production)
 	err := godotenv.Load()
 	if err != nil {
 		log.Printf("No .env file found or failed to load .env file: %v", err)
@@ -42,6 +41,7 @@ func GetConfig() Config {
 func InitDB(dbUrl string) *gorm.DB {
 	db, err := gorm.Open(postgres.Open(dbUrl), &gorm.Config{
 		DisableForeignKeyConstraintWhenMigrating: true,
+		PrepareStmt:                              false,
 	})
 	if err != nil {
 		log.Fatalf("failed to connect database: %v", err)
