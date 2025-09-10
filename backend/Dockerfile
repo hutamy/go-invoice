@@ -10,11 +10,28 @@ COPY . .
 RUN go build -o go-invoice ./cmd/main.go
 
 # Run stage
-FROM alpine:3.19
+FROM debian:bookworm-slim
 
 WORKDIR /app
 
-RUN apk --no-cache upgrade
+# Install Chrome and dependencies
+RUN apt-get update && apt-get install -y \
+  chromium \
+  ca-certificates \
+  fonts-liberation \
+  libasound2 \
+  libatk-bridge2.0-0 \
+  libdrm2 \
+  libxcomposite1 \
+  libxdamage1 \
+  libxrandr2 \
+  libgbm1 \
+  libxss1 \
+  libgtk-3-0 \
+  && rm -rf /var/lib/apt/lists/*
+
+# Set Chrome path for chromedp
+ENV CHROME_BIN=/usr/bin/chromium
 
 COPY --from=builder /app/go-invoice .
 COPY --from=builder /app/templates ./templates
