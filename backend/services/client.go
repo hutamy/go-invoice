@@ -1,10 +1,10 @@
 package services
 
 import (
-	"github.com/hutamy/go-invoice-backend/dto"
-	"github.com/hutamy/go-invoice-backend/models"
-	"github.com/hutamy/go-invoice-backend/repositories"
-	"github.com/hutamy/go-invoice-backend/utils"
+	"go-invoice-backend/dto"
+	"go-invoice-backend/models"
+	"go-invoice-backend/repositories"
+	"go-invoice-backend/utils"
 )
 
 type ClientService interface {

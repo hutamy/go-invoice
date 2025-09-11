@@ -1,8 +1,8 @@
 package repositories
 
 import (
-	"github.com/hutamy/go-invoice-backend/dto"
-	"github.com/hutamy/go-invoice-backend/models"
+	"go-invoice-backend/dto"
+	"go-invoice-backend/models"
 	"gorm.io/gorm"
 )
 

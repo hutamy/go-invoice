@@ -10,10 +10,10 @@ import (
 	"github.com/chromedp/cdproto/page"
 	"github.com/chromedp/chromedp"
 	"github.com/dustin/go-humanize"
-	"github.com/hutamy/go-invoice-backend/dto"
-	"github.com/hutamy/go-invoice-backend/models"
-	"github.com/hutamy/go-invoice-backend/repositories"
-	"github.com/hutamy/go-invoice-backend/utils"
+	"go-invoice-backend/dto"
+	"go-invoice-backend/models"
+	"go-invoice-backend/repositories"
+	"go-invoice-backend/utils"
 )
 
 type InvoiceService interface {

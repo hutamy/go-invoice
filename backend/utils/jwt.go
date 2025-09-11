@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
-	"github.com/hutamy/go-invoice-backend/config"
+	"go-invoice-backend/config"
 )
 
 var secret = []byte(config.GetConfig().JwtSecret)

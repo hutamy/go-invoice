@@ -7,12 +7,12 @@ import (
 
 	e "errors"
 
-	"github.com/hutamy/go-invoice-backend/dto"
-	"github.com/hutamy/go-invoice-backend/models"
-	"github.com/hutamy/go-invoice-backend/services"
-	"github.com/hutamy/go-invoice-backend/utils"
-	"github.com/hutamy/go-invoice-backend/utils/errors"
 	"github.com/labstack/echo/v4"
+	"go-invoice-backend/dto"
+	"go-invoice-backend/models"
+	"go-invoice-backend/services"
+	"go-invoice-backend/utils"
+	"go-invoice-backend/utils/errors"
 	"gorm.io/gorm"
 )
 

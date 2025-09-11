@@ -4,9 +4,9 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/hutamy/go-invoice-backend/utils"
-	"github.com/hutamy/go-invoice-backend/utils/errors"
 	"github.com/labstack/echo/v4"
+	"go-invoice-backend/utils"
+	"go-invoice-backend/utils/errors"
 )
 
 func JWTMiddleware(next echo.HandlerFunc) echo.HandlerFunc {

@@ -1,14 +1,14 @@
 package routes
 
 import (
-	"github.com/hutamy/go-invoice-backend/controllers"
-	_ "github.com/hutamy/go-invoice-backend/docs"
-	"github.com/hutamy/go-invoice-backend/middleware"
-	"github.com/hutamy/go-invoice-backend/repositories"
-	"github.com/hutamy/go-invoice-backend/services"
-	"github.com/hutamy/go-invoice-backend/utils"
 	"github.com/labstack/echo/v4"
 	echoSwagger "github.com/swaggo/echo-swagger"
+	"go-invoice-backend/controllers"
+	_ "go-invoice-backend/docs"
+	"go-invoice-backend/middleware"
+	"go-invoice-backend/repositories"
+	"go-invoice-backend/services"
+	"go-invoice-backend/utils"
 	"gorm.io/gorm"
 )
 

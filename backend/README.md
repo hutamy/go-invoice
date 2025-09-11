@@ -20,7 +20,7 @@ A self-hosted, developer-friendly backend API for freelancers to manage clients 
 ### 1. Clone the repo
 
 ```bash
-git clone https://github.com/hutamy/go-invoice-backend.git
+git clone https://go-invoice-backend.git
 cd go-invoice
 ```
 

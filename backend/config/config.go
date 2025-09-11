@@ -5,8 +5,8 @@ import (
 	"time"
 
 	"github.com/caarlos0/env"
-	"github.com/hutamy/go-invoice-backend/models"
 	"github.com/joho/godotenv"
+	"go-invoice-backend/models"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"

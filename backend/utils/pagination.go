@@ -3,7 +3,7 @@ package utils
 import (
 	"math"
 
-	"github.com/hutamy/go-invoice-backend/dto"
+	"go-invoice-backend/dto"
 )
 
 // PaginatedResponse represents a paginated response

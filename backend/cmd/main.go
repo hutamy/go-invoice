@@ -14,10 +14,10 @@ import (
 	"log"
 
 	"github.com/go-playground/validator/v10"
-	"github.com/hutamy/go-invoice-backend/config"
-	"github.com/hutamy/go-invoice-backend/routes"
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	"go-invoice-backend/config"
+	"go-invoice-backend/routes"
 )
 
 type CustomValidator struct {
